@@ -1,0 +1,419 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{41888492-c4ca-4924-8c6c-a9992776dfbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui">
+      <UniqueIdentifier>{29475090-6783-42ff-8c2e-cfeb06554002}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{3aa28cf9-7bd5-4b04-af23-af7644a51594}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{204cc706-e5b9-4e7d-a9ed-dac58a66d730}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\misc">
+      <UniqueIdentifier>{b34875ad-64d4-47ce-bd56-812c209e210e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\misc\cpp">
+      <UniqueIdentifier>{332aedd7-abda-4695-bc4f-08473f10485f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\misc\fonts">
+      <UniqueIdentifier>{6fa44d1b-723e-4f9c-bdd9-a3537a2595c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\misc\freetype">
+      <UniqueIdentifier>{95746ee1-fbee-42d1-a6ae-19ee7b626295}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\misc\natvis">
+      <UniqueIdentifier>{090c2ad3-7c55-4e95-8adb-e69c56fb86af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Primatives">
+      <UniqueIdentifier>{9944ed70-1679-44f8-b534-8ab941121393}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="stb">
+      <UniqueIdentifier>{75864b5d-c697-4594-8466-87ac0b325ed2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{f44cb185-df2f-4c7b-8eb5-5b00a7466e16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entt">
+      <UniqueIdentifier>{502f7513-26d2-4e37-b1c0-485308aaf1ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entt\config">
+      <UniqueIdentifier>{a4104d80-8378-429e-8f3c-eba48b39e771}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entt\core">
+      <UniqueIdentifier>{01b6623b-ba00-41d1-aaa0-fb46f2739ebd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entt\entity">
+      <UniqueIdentifier>{9f61a660-7968-452f-b4d4-0869d9cdc078}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entt\meta">
+      <UniqueIdentifier>{69f80883-566a-4bc3-822a-4326349eb866}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entt\process">
+      <UniqueIdentifier>{309ccfa3-add4-462d-b2e0-443dd0fc19bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entt\signal">
+      <UniqueIdentifier>{b41ee4a7-93ee-4c4f-8f4a-17cb318fb46e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entt\resource">
+      <UniqueIdentifier>{22b1b13f-59dd-430d-abcc-5f45d9946950}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entt\locator">
+      <UniqueIdentifier>{9eb03ec6-377b-469b-9afc-c20edfb0069e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="glad">
+      <UniqueIdentifier>{7018e8f9-7a84-46b2-b83b-26362d91daa1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="glm">
+      <UniqueIdentifier>{9bca6a2d-41b1-4c21-bfa5-fa04d5f7a99b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{b660d60a-bb46-45d8-b03a-7c47c79da616}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="magic_enum">
+      <UniqueIdentifier>{d3a821b0-9bbc-40a0-b72e-69a34c9555b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generic">
+      <UniqueIdentifier>{233b2ed7-cefb-47c1-be1f-ade726ac0134}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Graphics\Shader.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\ShaderProgram.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Mesh.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_impl_glfw.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_impl_opengl3.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_demo.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_draw.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_widgets.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\misc\cpp\imgui_stdlib.cpp">
+      <Filter>Imgui\misc\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Triangle.cpp">
+      <Filter>Graphics\Primatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Square.cpp">
+      <Filter>Graphics\Primatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\TextureLoader.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Texture.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Logger.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Renderer.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Renderable.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Cube.cpp">
+      <Filter>Graphics\Primatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Camera.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Window.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\TransformComponent.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>glad</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\InputSystem.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ResourceManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Subsystem.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\EnumBitmask.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\LoggingWindow.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Delegate.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Graphics\ShaderProgram.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Shader.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Mesh.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui_impl_glfw.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui_impl_opengl3.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imconfig.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui_internal.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imstb_rectpack.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imstb_textedit.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imstb_truetype.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\misc\cpp\imgui_stdlib.h">
+      <Filter>Imgui\misc\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Renderer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Renderable.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\TextureLoader.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\MeshLoader.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Camera.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\InputSystem.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Triangle.h">
+      <Filter>Graphics\Primatives</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Square.h">
+      <Filter>Graphics\Primatives</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Texture.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="stb\stb_image.h">
+      <Filter>stb</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Logger.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Cube.h">
+      <Filter>Graphics\Primatives</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\MeshComponent.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ShaderComponent.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\TextureComponent.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\TransformComponent.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Window.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\entt.hpp">
+      <Filter>entt</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\fwd.hpp">
+      <Filter>entt</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\config\config.h">
+      <Filter>entt\config</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\config\version.h">
+      <Filter>entt\config</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\core\algorithm.hpp">
+      <Filter>entt\core</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\core\attribute.h">
+      <Filter>entt\core</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\core\family.hpp">
+      <Filter>entt\core</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\core\hashed_string.hpp">
+      <Filter>entt\core</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\core\ident.hpp">
+      <Filter>entt\core</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\core\monostate.hpp">
+      <Filter>entt\core</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\core\type_info.hpp">
+      <Filter>entt\core</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\core\type_traits.hpp">
+      <Filter>entt\core</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\core\utility.hpp">
+      <Filter>entt\core</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\entity\actor.hpp">
+      <Filter>entt\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\entity\entity.hpp">
+      <Filter>entt\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\entity\fwd.hpp">
+      <Filter>entt\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\entity\group.hpp">
+      <Filter>entt\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\entity\helper.hpp">
+      <Filter>entt\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\entity\observer.hpp">
+      <Filter>entt\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\entity\registry.hpp">
+      <Filter>entt\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\entity\runtime_view.hpp">
+      <Filter>entt\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\entity\snapshot.hpp">
+      <Filter>entt\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\entity\sparse_set.hpp">
+      <Filter>entt\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\entity\storage.hpp">
+      <Filter>entt\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\entity\view.hpp">
+      <Filter>entt\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\locator\locator.hpp">
+      <Filter>entt\locator</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\meta\factory.hpp">
+      <Filter>entt\meta</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\meta\meta.hpp">
+      <Filter>entt\meta</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\meta\policy.hpp">
+      <Filter>entt\meta</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\process\process.hpp">
+      <Filter>entt\process</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\process\scheduler.hpp">
+      <Filter>entt\process</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\resource\cache.hpp">
+      <Filter>entt\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\resource\fwd.hpp">
+      <Filter>entt\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\resource\handle.hpp">
+      <Filter>entt\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\resource\loader.hpp">
+      <Filter>entt\resource</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\signal\delegate.hpp">
+      <Filter>entt\signal</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\signal\dispatcher.hpp">
+      <Filter>entt\signal</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\signal\emitter.hpp">
+      <Filter>entt\signal</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\signal\fwd.hpp">
+      <Filter>entt\signal</Filter>
+    </ClInclude>
+    <ClInclude Include="entt\signal\sigh.hpp">
+      <Filter>entt\signal</Filter>
+    </ClInclude>
+    <ClInclude Include="glad\glad.h">
+      <Filter>glad</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Subsystem.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ResourceManager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="magic_enum\magic_enum.hpp">
+      <Filter>magic_enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\EnumBitmask.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\InputAction.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Generic\NameComponent.h">
+      <Filter>Generic</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\CoreRegistry.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\LoggingWindow.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Delegate.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="Imgui\misc\natvis\imgui.natvis">
+      <Filter>Imgui\misc\natvis</Filter>
+    </Natvis>
+  </ItemGroup>
+</Project>
