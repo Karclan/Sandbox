@@ -3,8 +3,13 @@
 #include "Subsystem.h"
 
 #include "../Graphics/Window.h"
-#include "../Imgui/imgui.h"
+
+#include "../Graphics/CameraSystem.h"
 #include "../Utils/LoggingWindow.h"
+
+#include "../Input/InputSystem.h"
+
+#include "../Imgui/imgui.h"
 
 namespace Core
 {
@@ -20,6 +25,8 @@ namespace Core
         m_window = std::make_unique<Graphics::Window>( m_mainRegistry );
         m_baseImguiWindowBuilder = std::make_unique<Core::BaseImGuiWindowBuilder>( m_mainRegistry, *m_window.get() );
         m_logWindow = std::make_unique<Utils::LoggingWindow>( m_mainRegistry );
+        m_cameraSystem = std::make_unique<Graphics::CameraSystem>( m_mainRegistry );
+        m_inputSystem = std::make_unique<Input::InputSystem>( m_mainRegistry );
     }
 
     Game::~Game()
@@ -79,6 +86,7 @@ namespace Core
 
         m_baseImguiWindowBuilder->BuildWindow( frameTime );
         m_logWindow->BuildWindow( frameTime );
+        m_cameraSystem->BuildWindow( frameTime );
 		m_window->GetRenderer()->BuildImGui( static_cast<float>( frameTime ) );
 		for( auto & imguiWindow : m_imguiWindows )
 		{

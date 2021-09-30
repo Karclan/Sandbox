@@ -7,11 +7,10 @@
 
 namespace Utils
 {
-
-	class LoggingWindow : public Core::ImGuiWindowBuilder
+	class LoggingWindow : public Core::Subsystem, public Core::ImGuiWindowBuilder
 	{
 	public:
-		LoggingWindow( entt::registry& registry );
+		LoggingWindow( Core::Registry& registry );
 		~LoggingWindow();
 		void BuildWindow( double deltaTime ) override;
 
@@ -27,9 +26,3 @@ namespace Utils
 		Utils::LogCallback::Handle LogHandle {};
 	};
 }
-
-struct ExampleAppLog
-{
-
-
-};

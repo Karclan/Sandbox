@@ -13,9 +13,8 @@
 
 namespace Game
 {
-    BasicSpriteTestSubsystem::BasicSpriteTestSubsystem( entt::registry & registryRef, Graphics::Window * window )
+    BasicSpriteTestSubsystem::BasicSpriteTestSubsystem( Core::Registry & registryRef, Graphics::Window * window )
         : Subsystem( registryRef )
-        , ImGuiWindowBuilder( registryRef )
         , m_windowPtr( window )
     {
         AStart = glm::vec3( 5.f, 0.f, 0.f );
@@ -45,11 +44,11 @@ namespace Game
         Graphics::TransformComponent triangleTransform;
         triangleTransform.Position = { 1.f, 1.f, 1.f };
 
-        m_entity = Subsystem::m_registry.create();
-        Subsystem::m_registry.assign<Graphics::TransformComponent>( m_entity, triangleTransform );
-        Subsystem::m_registry.assign<Graphics::MeshComponent>( m_entity, renderer->GetMesh( Graphics::PrimativeType::Square ) );
-        Subsystem::m_registry.assign<Graphics::TextureComponent>( m_entity, containerTextureComp );
-        Subsystem::m_registry.assign<Graphics::ShaderComponent>( m_entity, textureEnabledShaderComp );
+        m_entity = Subsystem::m_registry.CreateEntity();
+        Subsystem::m_registry.AddComponent<Graphics::TransformComponent>( m_entity, triangleTransform );
+        Subsystem::m_registry.AddComponent<Graphics::MeshComponent>( m_entity, renderer->GetMesh( Graphics::PrimativeType::Cube ) );
+        Subsystem::m_registry.AddComponent<Graphics::TextureComponent>( m_entity, containerTextureComp );
+        Subsystem::m_registry.AddComponent<Graphics::ShaderComponent>( m_entity, textureEnabledShaderComp );
         //}
 
     }
@@ -73,7 +72,7 @@ namespace Game
 
     void BasicSpriteTestSubsystem::BuildWindow( double deltaTime )
     {
-        auto & movementStruct = Subsystem::m_registry.get<Graphics::TransformComponent>( m_entity );
+        auto & movementStruct = Subsystem::m_registry.GetComponent<Graphics::TransformComponent>( m_entity );
 
 		if ( ImGui::BeginMainMenuBar() )
 		{
@@ -95,7 +94,17 @@ namespace Game
 				ImGui::DragFloat2( "Position B Start", &BStart.x );
 				ImGui::DragFloat2( "Position B End", &BEnd.x );
 
-				ImGui::DragFloat2( "Bob", &movementStruct.Position.x );
+				if ( !ImGui::IsAnyMouseDown() )
+				{
+                    m_bobsEulers = glm::degrees( glm::eulerAngles( movementStruct.RotationQuat ) );
+				}
+
+				ImGui::DragFloat3( "Bob", &movementStruct.Position.x );
+                if ( ImGui::DragFloat3( "Bob's Rotation", &m_bobsEulers.x ) )
+                {
+                    movementStruct.RotationQuat = glm::radians( m_bobsEulers );
+                }
+
 				ImGui::Separator();
 			}
 			ImGui::End();

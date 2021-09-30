@@ -2,6 +2,8 @@
 
 #include "Core/Subsystem.h"
 
+#include "Core/CoreRegistry.h"
+
 #include "glm/glm.hpp"
 
 namespace Graphics
@@ -14,7 +16,7 @@ namespace Game
     class BasicSpriteTestSubsystem final : public Core::Subsystem, public Core::ImGuiWindowBuilder
     {
     public:
-        BasicSpriteTestSubsystem( entt::registry & registryRef, Graphics::Window* window );
+        BasicSpriteTestSubsystem( Core::Registry& registryRef, Graphics::Window* window );
         virtual ~BasicSpriteTestSubsystem();
 
         void CreateComponents( Graphics::Window & windowRef );
@@ -29,6 +31,8 @@ namespace Game
         glm::vec3 BStart, BEnd;
 
         bool m_showWindow { false };
-        entt::entity m_entity;
+        Core::Entity m_entity;
+
+        glm::vec3 m_bobsEulers {0.f};
     };
 }

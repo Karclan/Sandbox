@@ -1,5 +1,7 @@
 #include "VectorMathExampleSubsystem.h"
 
+#include "Core/CoreRegistry.h"
+
 #include "Graphics/Window.h"
 #include "Graphics/TransformComponent.h"
 #include "Graphics/ShaderComponent.h"
@@ -8,9 +10,8 @@
 namespace Game
 {
 
-	VectorMathExampleSubsystem::VectorMathExampleSubsystem(entt::registry& registry)
-		: Subsystem(registry)
-		, ImGuiWindowBuilder(registry)
+	VectorMathExampleSubsystem::VectorMathExampleSubsystem( Core::Registry& registry)
+		: Core::Subsystem(registry)
 	{
 
 	}
@@ -25,53 +26,52 @@ namespace Game
 		auto containerTextureId = renderer->CreateTexture("container.jpg");
 		Graphics::TextureComponent containerTextureComp{ { containerTextureId } };
 
-
-
 		//A
 		{
-			PointAEntity = Subsystem::m_registry.create();
+			PointAEntity = m_registry.CreateEntity();
 			Graphics::TransformComponent transform{ PointA };
 			auto Entity = PointAEntity;
-			Subsystem::m_registry.assign<Graphics::TransformComponent>(Entity, transform);
-			Subsystem::m_registry.assign<Graphics::MeshComponent>(Entity, renderer->GetMesh(Graphics::PrimativeType::Cube));
-			Subsystem::m_registry.assign<Graphics::ShaderComponent>(Entity, basicShaderComp);
-			Subsystem::m_registry.assign<Graphics::TextureComponent>(Entity, containerTextureComp);
-			Subsystem::m_registry.assign<VectorMathExampleSubsystem::EntityTag>(Entity);
+			m_registry.AddComponent<Graphics::TransformComponent>(Entity, transform);
+			m_registry.AddComponent<Graphics::MeshComponent>(Entity, renderer->GetMesh(Graphics::PrimativeType::Cube));
+			m_registry.AddComponent<Graphics::ShaderComponent>(Entity, basicShaderComp);
+			m_registry.AddComponent<Graphics::TextureComponent>(Entity, containerTextureComp);
+			m_registry.AddComponent<VectorMathExampleSubsystem::EntityTag>(Entity);
 		}
 
 		//B
 		{
-			PointBEntity = Subsystem::m_registry.create();
+			PointBEntity = m_registry.CreateEntity();
 			auto Entity = PointBEntity;
 			Graphics::TransformComponent transform{ PointB };
-			Subsystem::m_registry.assign<Graphics::TransformComponent>(Entity, transform);
-			Subsystem::m_registry.assign<Graphics::MeshComponent>(Entity, renderer->GetMesh(Graphics::PrimativeType::Square));
-			Subsystem::m_registry.assign<Graphics::ShaderComponent>(Entity, basicShaderComp);
-			Subsystem::m_registry.assign<Graphics::TextureComponent>(Entity, containerTextureComp);
-			Subsystem::m_registry.assign<VectorMathExampleSubsystem::EntityTag>(Entity);
+			m_registry.AddComponent<Graphics::TransformComponent>(Entity, transform);
+			m_registry.AddComponent<Graphics::MeshComponent>(Entity, renderer->GetMesh(Graphics::PrimativeType::Square));
+			m_registry.AddComponent<Graphics::ShaderComponent>(Entity, basicShaderComp);
+			m_registry.AddComponent<Graphics::TextureComponent>(Entity, containerTextureComp);
+			m_registry.AddComponent<VectorMathExampleSubsystem::EntityTag>(Entity);
 		}
 
 		//C
 		{
-			PointCEntity = Subsystem::m_registry.create();
+			PointCEntity = m_registry.CreateEntity();
 			auto Entity = PointCEntity;
 			Graphics::TransformComponent transform{ PointC };
-			Subsystem::m_registry.assign<Graphics::TransformComponent>(Entity, transform);
-			Subsystem::m_registry.assign<Graphics::MeshComponent>(Entity, renderer->GetMesh(Graphics::PrimativeType::Triangle));
-			Subsystem::m_registry.assign<Graphics::ShaderComponent>(Entity, basicShaderComp);
-			Subsystem::m_registry.assign<Graphics::TextureComponent>(Entity, containerTextureComp);
-			Subsystem::m_registry.assign<VectorMathExampleSubsystem::EntityTag>(Entity);
+			m_registry.AddComponent<Graphics::TransformComponent>(Entity, transform);
+			m_registry.AddComponent<Graphics::MeshComponent>(Entity, renderer->GetMesh(Graphics::PrimativeType::Triangle));
+			m_registry.AddComponent<Graphics::ShaderComponent>(Entity, basicShaderComp);
+			m_registry.AddComponent<Graphics::TextureComponent>(Entity, containerTextureComp);
+			m_registry.AddComponent<VectorMathExampleSubsystem::EntityTag>(Entity);
 		}
 	}
 
 	void VectorMathExampleSubsystem::FixedUpdate(double deltaTime)
 	{
 		{
-			Graphics::TransformComponent& Transform = Subsystem::m_registry.get<Graphics::TransformComponent>(PointAEntity);
+			Graphics::TransformComponent& Transform = m_registry.GetComponent<Graphics::TransformComponent>(PointAEntity);
 			Transform.Position = PointA;
-			float const& pitch = Transform.Rotation.x;
-			float const& roll = Transform.Rotation.z;
-			float const& yaw = Transform.Rotation.y;
+			glm::vec3 rotation = glm::eulerAngles( Transform.RotationQuat );
+			float const& pitch = rotation.x;
+			float const& roll = rotation.z;
+			float const& yaw = rotation.y;
 			PointAForward.x = glm::cos(pitch) * glm::sin(yaw);
 			PointAForward.y = -glm::sin(pitch);
 			PointAForward.z = -( glm::cos(pitch) * glm::cos(yaw) );
@@ -86,12 +86,12 @@ namespace Game
 		}
 
 		{
-			Graphics::TransformComponent& Transform = Subsystem::m_registry.get<Graphics::TransformComponent>(PointBEntity);
+			Graphics::TransformComponent& Transform = m_registry.GetComponent<Graphics::TransformComponent>(PointBEntity);
 			Transform.Position = PointB;
 		}
 
 		{
-			Graphics::TransformComponent& Transform = Subsystem::m_registry.get<Graphics::TransformComponent>(PointCEntity);
+			Graphics::TransformComponent& Transform = m_registry.GetComponent<Graphics::TransformComponent>(PointCEntity);
 			Transform.Position = PointC;
 		}
 

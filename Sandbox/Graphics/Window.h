@@ -4,11 +4,14 @@
 
 #include <glad/glad.h>
 
-#include <entt/entt.hpp>
-
 #include <memory>
 
 struct GLFWwindow;
+
+namespace Core
+{
+    class Registry;
+}
 
 namespace Graphics
 {
@@ -16,8 +19,8 @@ namespace Graphics
     class Window
     {
     public:
-        Window( entt::registry & registry );
-        Window( unsigned int width, unsigned int height, entt::registry & registry );
+        Window( Core::Registry & registry );
+        Window( unsigned int width, unsigned int height, Core::Registry & registry );
         ~Window();
 
         Renderer * GetRenderer( );
@@ -44,7 +47,6 @@ namespace Graphics
         {
             return m_fps;
         }
-
 
         static constexpr glm::vec4 Red   { glm::vec4( 1.f, 0.f, 0.f, 1.f ) };
         static constexpr glm::vec4 Green { glm::vec4( 0.f, 1.f, 0.f, 1.f ) };
@@ -76,14 +78,13 @@ namespace Graphics
         void ProcessInput();
         void InitImgui();
 
-        entt::registry & m_registry;
+        Core::Registry & m_registry;
 
         GLFWwindow * m_glfwWindow;
         std::unique_ptr<Renderer> m_renderer;
 
         unsigned int m_screenWidth { 800 };
         unsigned int m_screenHeight { 600 };
-
 
         double m_lastFrameTime { 0.f };
         double m_deltaFrameTime { 0.f };
@@ -94,6 +95,4 @@ namespace Graphics
         int m_fps { 0 };
 
     };
-
-
 }

@@ -16,16 +16,12 @@ namespace Game
 	class VectorMathExampleSubsystem : public Core::Subsystem, public Core::ImGuiWindowBuilder
 	{
 	public:
-		VectorMathExampleSubsystem( entt::registry& registry );
+		VectorMathExampleSubsystem( Core::Registry& registry );
 
 		void CreateComponents( Graphics::Window& window );
 
-
 		void FixedUpdate(double deltaTime) override;
-
-
 		void Update(double deltaTime) override;
-
 
 		void BuildWindow(double deltaTime) override;
 
@@ -48,13 +44,13 @@ namespace Game
 		EDirection BDirection{ EDirection::Unknown };
 		EDirection CDirection{ EDirection::Unknown };
 
-		glm::vec3 PointAForward;
-		glm::vec3 PointARight;
+		glm::vec3 PointAForward { 0.f };
+		glm::vec3 PointARight { 0.f };
 
 		using EntityTag = entt::tag<"VectorMaths"_hs>;
 		
 		bool bShowWindow{ false };
 
-		Graphics::Window * m_window;
+		Graphics::Window* m_window { nullptr };
 	};
 }

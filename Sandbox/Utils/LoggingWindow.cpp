@@ -5,8 +5,8 @@
 
 namespace Utils
 {
-	LoggingWindow::LoggingWindow( entt::registry& registry )
-		: ImGuiWindowBuilder( registry )
+	LoggingWindow::LoggingWindow( Core::Registry& registry )
+		: Core::Subsystem( registry )
 	{
 		LogHandle = Logger::RegisterCallback( *this, &LoggingWindow::LogMessageCallback );
 		Clear();

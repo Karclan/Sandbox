@@ -11,8 +11,8 @@ int main( int argc, char * argv [] )
 {
 	Core::Game Game;
 
-	//std::shared_ptr<Game::VectorMathExampleSubsystem> VecSub = std::make_shared<Game::VectorMathExampleSubsystem>(Game.getRegistry());
-	//VecSub->CreateComponents(*Game.getWindow());
+	std::shared_ptr<Game::VectorMathExampleSubsystem> VecSub = std::make_shared<Game::VectorMathExampleSubsystem>(Game.GetRegistry());
+	VecSub->CreateComponents(*Game.GetWindow());
 	auto BasicSpriteSubsystem = std::make_shared<Game::BasicSpriteTestSubsystem>(Game.GetRegistry(), Game.GetWindow());
 	BasicSpriteSubsystem->CreateComponents(*Game.GetWindow());
 
@@ -20,8 +20,8 @@ int main( int argc, char * argv [] )
 	//BasicMovementSubsystem->createComponents(*Game.getWindow());
 
 	Game.Init();
-	//Game.registerSubsystem(VecSub);
-	//Game.registerImguiWindow(VecSub);
+	Game.RegisterSubsystem( VecSub );
+	Game.RegisterImguiWindow( VecSub );
 	Game.RegisterSubsystem(BasicSpriteSubsystem);
 	Game.RegisterImguiWindow(BasicSpriteSubsystem);
 

@@ -1,5 +1,7 @@
 #include "Window.h"
 
+#include "../Core/CoreRegistry.h"
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -59,7 +61,7 @@ namespace Graphics
 {
     Window * Window::GLFWCallbackWrapper::s_window = nullptr;
 
-    Window::Window( entt::registry & registry )
+    Window::Window( Core::Registry & registry )
         :m_registry( registry )
     {
         GLFWCallbackWrapper::SetApplication( this );
@@ -68,7 +70,7 @@ namespace Graphics
         m_renderer->Init();
     }
 
-    Window::Window( unsigned int width, unsigned int height, entt::registry & registry )
+    Window::Window( unsigned int width, unsigned int height, Core::Registry & registry )
         : m_registry( registry )
         , m_screenWidth( width )
         , m_screenHeight( height )

@@ -5,10 +5,12 @@
 
 namespace Input
 {
+	using InputActionValueType = std::uint64_t;
+
 	namespace Hash
 	{
-		// FNV-1a 32bit hashing algorithm.
-		constexpr std::uint64_t fnv1a_64(char const* s, size_t count)
+		// FNV-1a 64bit hashing algorithm.
+		constexpr InputActionValueType fnv1a_64(char const* s, size_t count)
 		{
 			return ((count ? fnv1a_64(s, count - 1) : 2166136261u) ^ s[count]) * 16777619u;
 		}
@@ -22,14 +24,21 @@ namespace Input
 			friend Action;
 			friend constexpr ActionId operator""_IA(char const* action, size_t count);
 
-			constexpr ActionId(std::uint64_t hash, std::string_view debugName)
+			constexpr ActionId(InputActionValueType hash, std::string_view debugName)
 				:m_hash(hash)
 				, m_debugName(debugName)
 			{
 
 			}
-			std::uint64_t m_hash;
+
+			InputActionValueType m_hash;
 			std::string_view m_debugName;
+
+		public:
+			constexpr operator InputActionValueType() const
+			{
+				return m_hash;
+			}
 		};
 
 		constexpr ActionId operator"" _IA(char const* string, size_t count)
@@ -47,12 +56,12 @@ namespace Input
 		{
 		}
 
-		operator std::uint64_t() const
+		operator InputActionValueType() const
 		{
 			return m_hash;
 		}
 
-		std::uint64_t hash() const
+		InputActionValueType hash() const
 		{
 			return m_hash;
 		}
@@ -63,7 +72,7 @@ namespace Input
 		}
 
 	private:
-		std::uint64_t m_hash;
+		InputActionValueType m_hash;
 		std::string_view m_debugName;
 
 	};

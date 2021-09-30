@@ -14,7 +14,7 @@ namespace Game
     class BasicMovementSubsystem : public Core::Subsystem
     {
     public:
-        BasicMovementSubsystem( entt::registry & registry );
+        BasicMovementSubsystem( Core::Registry& registry );
 
         void CreateComponents( Graphics::Window & window );
 

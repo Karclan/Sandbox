@@ -10,45 +10,44 @@ namespace Graphics
 
 namespace Core
 {
+	class Registry;
+
 	class Subsystem;
 	//A subsystem is created and registered to the game to have a fixed update order
 	class Subsystem
 	{
 	public:
-		Subsystem( entt::registry& registry ) : m_registry( registry )
+		Subsystem( Core::Registry& registry ) : m_registry( registry )
 		{
 		}
 		virtual ~Subsystem() = default;
 
-		virtual void FixedUpdate( double deltaTime ) = 0;
+		virtual void FixedUpdate( double deltaTime ) {};
 		virtual void Update( double deltaTime ) {};
 	protected:
-		entt::registry& m_registry;
+		Core::Registry& m_registry;
 	};
 
 	class ImGuiWindowBuilder
 	{
 	public:
-		ImGuiWindowBuilder( entt::registry& registry ) : m_registry( registry )
-		{
-		}
 		virtual void BuildWindow( double deltaTime ) = 0;
+
 	protected:
-		entt::registry& m_registry;
+
 	};
 
 
 	//Creates menu bar and some windows for base information
-	class BaseImGuiWindowBuilder final : public ImGuiWindowBuilder
+	class BaseImGuiWindowBuilder final : public Subsystem, public ImGuiWindowBuilder
 	{
 	public:
-		BaseImGuiWindowBuilder( entt::registry& registry, Graphics::Window const& windowRef );
+		BaseImGuiWindowBuilder( Core::Registry& registry, Graphics::Window const& windowRef );
 
 		void GetInfo();
 		void BuildWindow( double deltaTime ) override;
 
 	private:
-
 		std::string m_vendorName {};
 		std::string m_modelString {};
 		bool m_showGraphicsStats { false };

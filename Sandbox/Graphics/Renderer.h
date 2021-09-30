@@ -1,16 +1,15 @@
 #pragma once
 
-#include "ShaderProgram.h"
+#include "../Core/CoreRegistry.h"
+#include "../Utils/EnumBitmask.h"
+#include "../Imgui/imgui.h"
 
+#include "ShaderProgram.h"
 #include "TextureLoader.h"
 
 #include "Square.h"
 #include "Cube.h"
 #include "Triangle.h"
-
-#include "../Utils/EnumBitmask.h"
-
-#include <entt/entt.hpp>
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -19,7 +18,10 @@
 #include <vector>
 #include <array>
 
-#include "../Imgui/imgui.h"
+namespace Core
+{
+    class Registry;
+}
 
 namespace Graphics
 {
@@ -32,7 +34,7 @@ namespace Graphics
     class Renderer
     {
     public:
-        Renderer(entt::registry& Registry);
+        Renderer(Core::Registry& Registry);
         ~Renderer();
 
         unsigned int CreateShader(const std::string& name, Utils::EnumBitmask<Shader::Type> flags);
@@ -68,10 +70,10 @@ namespace Graphics
 
         void CreateRenderBufferObject();
 
-        static entt::entity m_nullCameraEntity;
+        static Core::Entity m_nullCameraEntity;
 
-        entt::registry& m_registry;
-        entt::entity& m_activeCamera;
+        Core::Registry& m_registry;
+        entt::entity m_activeCamera;
 
         TextureLoader m_textureLoader{};
 
@@ -105,11 +107,6 @@ namespace Graphics
 
         int m_width{ 800 };
         int m_height{ 600 };
-        bool m_updateCamera{ true };
-
-        bool m_showCameraControls{ false };
-        bool m_showCameraDebug { false };
-        bool m_liveCameraUpdate{ true };
 
         bool m_showTextureWindow{ false };
 
@@ -123,7 +120,7 @@ namespace Graphics
 		ImVec2 m_sceneSize{ 800, 600 };
 
         std::vector< std::unique_ptr<ShaderProgram> > m_shaderList;
-        std::vector<entt::entity> m_cameraEntities {};
+        std::vector<Core::Entity> m_cameraEntities {};
         std::vector<GLuint> m_boundTextures {};
 
     };

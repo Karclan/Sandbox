@@ -168,6 +168,13 @@
     <ClCompile Include="Utils\Delegate.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\CameraInspector.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\CameraSystem.cpp" />
+    <ClCompile Include="Core\CoreRegistry.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\ShaderProgram.h">
@@ -410,6 +417,10 @@
     <ClInclude Include="Utils\Delegate.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics\CameraInspector.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\CameraSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Imgui\misc\natvis\imgui.natvis">

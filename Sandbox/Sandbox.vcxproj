@@ -95,7 +95,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)External\Include\;$(SolutionDir)Sandbox\Imgui\;$(SolutionDir)Sandbox\stb\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -172,11 +172,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Core\CoreRegistry.cpp" />
     <ClCompile Include="Core\Game.cpp" />
     <ClCompile Include="Core\ResourceManager.cpp" />
     <ClCompile Include="Core\Subsystem.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Graphics\Camera.cpp" />
+    <ClCompile Include="Graphics\CameraInspector.cpp" />
+    <ClCompile Include="Graphics\CameraSystem.cpp" />
     <ClCompile Include="Graphics\Cube.cpp" />
     <ClCompile Include="Graphics\Mesh.cpp" />
     <ClCompile Include="Graphics\Renderable.cpp" />
@@ -250,6 +253,8 @@
     <ClInclude Include="Generic\NameComponent.h" />
     <ClInclude Include="glad\glad.h" />
     <ClInclude Include="Graphics\Camera.h" />
+    <ClInclude Include="Graphics\CameraInspector.h" />
+    <ClInclude Include="Graphics\CameraSystem.h" />
     <ClInclude Include="Graphics\Cube.h" />
     <ClInclude Include="Graphics\Mesh.h" />
     <ClInclude Include="Graphics\MeshComponent.h" />

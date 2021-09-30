@@ -5,8 +5,8 @@
 
 namespace Core
 {
-	BaseImGuiWindowBuilder::BaseImGuiWindowBuilder( entt::registry& registry, Graphics::Window const& windowRef )
-		: ImGuiWindowBuilder( registry )
+	BaseImGuiWindowBuilder::BaseImGuiWindowBuilder( Core::Registry& registry, Graphics::Window const& windowRef )
+		: Subsystem( registry )
 		, m_windowRef( windowRef )
 	{
 	}
@@ -21,7 +21,6 @@ namespace Core
 
 	void BaseImGuiWindowBuilder::BuildWindow( double deltaTime )
 	{
-
 		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_PassthruCentralNode;
 
 		// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
