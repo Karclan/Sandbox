@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../magic_enum/magic_enum.hpp"
+//#include "../magic_enum/magic_enum.hpp"
 
 #include <bitset>
 #include <type_traits>
@@ -22,17 +22,17 @@ namespace Utils
         ~EnumBitmask() = default;
 
         //Test
-        bool operator | ( const Enum & val )
+        bool operator | ( const Enum & val ) const
         {
             return m_bitset[ static_cast< utype >( val ) ] | true;
         }
 
-        bool operator & ( const Enum & val )
+        bool operator & ( const Enum & val ) const
         {
             return m_bitset.test( static_cast< utype >( val ) ) & true;
         }
 
-        bool operator ^ ( const Enum & val )
+        bool operator ^ ( const Enum & val ) const
         {
             return m_bitset.test( static_cast< utype >( val ) ) ^ true;
         }

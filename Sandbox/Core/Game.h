@@ -5,6 +5,8 @@
 #include <memory>
 #include <vector>
 
+#include "../Editor/Utilities.h"
+
 namespace Graphics
 {
 	class Window;
@@ -38,8 +40,13 @@ namespace Core
 		~Game();
 
 		virtual void Init();
-		virtual void RegisterSubsystem( std::shared_ptr<Subsystem> subsystem );
-		virtual void RegisterImguiWindow( std::shared_ptr<ImGuiWindowBuilder> subsystem );
+
+		//Subsystem functions
+		virtual void RegisterSubsystem( Subsystem * subsystem );
+		virtual void RegisterImguiWindow( ImGuiWindowBuilder * subsystem );
+		virtual void DeregisterSubsystem( Subsystem * subsystem );
+		virtual void DeregisterImguiWindow( ImGuiWindowBuilder * subsystem );
+
 		virtual bool ShouldClose();
 		virtual void Run();
 
@@ -62,14 +69,20 @@ namespace Core
 		Core::Registry m_mainRegistry {};
 		entt::entity UpdateStatsEntity;
 
-		std::unique_ptr<Input::InputSystem> m_inputSystem;
-
 		std::unique_ptr<Graphics::Window> m_window;
 
-		std::unique_ptr<Core::BaseImGuiWindowBuilder> m_baseImguiWindowBuilder;
-		std::unique_ptr<Utils::LoggingWindow> m_logWindow;
+		//Editor
+		Editor::Utilities EditorUtilities;
+
+		//Core Systems
+		std::unique_ptr<Input::InputSystem> m_inputSystem;
 		std::unique_ptr<Graphics::CameraSystem> m_cameraSystem;
-		std::vector<std::shared_ptr<Subsystem>> m_subsystems;
-		std::vector<std::shared_ptr<ImGuiWindowBuilder>> m_imguiWindows;
+
+		std::unique_ptr<Core::BaseImGuiWindowBuilder> m_baseImguiWindowBuilder;
+
+		std::unique_ptr<Utils::LoggingWindow> m_logWindow;
+
+		std::vector<Subsystem*> m_subsystems;
+		std::vector<ImGuiWindowBuilder*> m_imguiWindows;
 	};
 }

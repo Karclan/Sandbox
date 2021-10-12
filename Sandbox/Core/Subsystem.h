@@ -1,6 +1,7 @@
 #pragma once
 
-#include "entt/entt.hpp"
+#include "CoreRegistry.h"
+
 #include <array>
 
 namespace Graphics

@@ -47,6 +47,7 @@ namespace Game
 		glm::vec3 PointAForward { 0.f };
 		glm::vec3 PointARight { 0.f };
 
+	
 		using EntityTag = entt::tag<"VectorMaths"_hs>;
 		
 		bool bShowWindow{ false };

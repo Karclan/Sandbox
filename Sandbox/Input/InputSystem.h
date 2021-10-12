@@ -6,7 +6,7 @@
 
 namespace Input
 {
-    class Action;
+    class ActionId;
 
     class InputSystem : public Core::Subsystem, public Core::ImGuiWindowBuilder
     {
@@ -14,7 +14,7 @@ namespace Input
         InputSystem( Core::Registry& registry );
         ~InputSystem() = default;
 
-        bool TestAction(Action const & action) const;
+        bool TestAction(ActionId const & action) const;
 
         void BuildWindow( double deltaTime ) override;
 

@@ -16,41 +16,48 @@ namespace Input
 		}
 	}
 
-	class Action;
-	namespace Literals
+	class ActionIdLiteral;
+
+	inline namespace Literals
 	{
-		class ActionId
+		constexpr ActionIdLiteral operator"" _ActionId( char const* string, size_t count );
+	}
+
+	class ActionIdLiteral
+	{
+	public:
+		constexpr operator InputActionValueType() const
 		{
-			friend Action;
-			friend constexpr ActionId operator""_IA(char const* action, size_t count);
+			return m_hash;
+		}
 
-			constexpr ActionId(InputActionValueType hash, std::string_view debugName)
-				:m_hash(hash)
-				, m_debugName(debugName)
-			{
+	private:
+		friend class ActionId;
+		friend constexpr ActionIdLiteral Literals::operator""_ActionId( char const* action, size_t count );
 
-			}
-
-			InputActionValueType m_hash;
-			std::string_view m_debugName;
-
-		public:
-			constexpr operator InputActionValueType() const
-			{
-				return m_hash;
-			}
-		};
-
-		constexpr ActionId operator"" _IA(char const* string, size_t count)
+		constexpr ActionIdLiteral( InputActionValueType hash, std::string_view debugName )
+			:m_hash( hash )
+			, m_debugName( debugName )
 		{
-			return ActionId(Hash::fnv1a_64(string, count), string);
+
+		}
+
+		InputActionValueType const m_hash;
+		std::string_view const m_debugName;
+	};
+
+	inline namespace Literals
+	{
+		constexpr ActionIdLiteral operator"" _ActionId( char const* string, size_t count )
+		{
+			return ActionIdLiteral( Hash::fnv1a_64( string, count ), string );
 		}
 	}
 
-	class Action
+	class ActionId
 	{
 	public:
-		constexpr Action(Literals::ActionId Id)
+		constexpr ActionId(ActionIdLiteral Id)
 			: m_hash(Id.m_hash)
 			, m_debugName(Id.m_debugName)
 		{
@@ -61,12 +68,12 @@ namespace Input
 			return m_hash;
 		}
 
-		InputActionValueType hash() const
+		constexpr InputActionValueType hash() const
 		{
 			return m_hash;
 		}
 
-		std::string_view const & debugName() const
+		constexpr std::string_view const & debugName() const
 		{
 			return m_debugName;
 		}

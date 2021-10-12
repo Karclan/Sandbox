@@ -1,10 +1,19 @@
 #pragma once
 
+//#include "Entity.h"
+
 #include "entt/entt.hpp"
+
+#include <bitset>
+#include <type_traits>
+
+
+using namespace entt::literals;
 
 namespace Core
 {
 	using Entity = entt::entity;
+	constexpr auto NullEntity = entt::null;
 
 	class Registry
 	{
@@ -15,26 +24,31 @@ namespace Core
 		//////////////////////////////////////////////////////////////////////////
 		//Creation
 		//////////////////////////////////////////////////////////////////////////
-		Entity CreateEntity()
+		[[nodiscard]] Entity CreateEntity()
 		{
 			return m_registry.create();
 		}
 
-		Entity CreateEntity( Entity const hint )
+		[[nodiscard]] Entity CreateEntity( Entity const hint )
 		{
 			return m_registry.create( hint );
 		}
 
 		template<typename It>
-		Entity CreateEntity( It first, It last )
+		[[nodiscard]] Entity CreateEntity( It first, It last )
 		{
 			return m_registry.create( first, last );
+		}
+
+		bool IsValidEntity( Entity const entity ) const
+		{
+			return m_registry.valid( entity );
 		}
 
 		//////////////////////////////////////////////////////////////////////////
 		//Deletion
 		//////////////////////////////////////////////////////////////////////////
-		void destroy( Entity const entity )
+		void DestroyEntity( Entity const entity )
 		{
 			m_registry.destroy( entity );
 		}
@@ -51,27 +65,27 @@ namespace Core
 		template<typename Component, typename... Args>
 		decltype( auto ) AddComponent( Entity const entity, Args &&... args )
 		{
-			return m_registry.assign<Component>( entity, args ... );
+			return m_registry.emplace<Component>( entity, std::forward<Args...>(args)... );
 		}
 
 		template<typename Component, typename It>
 		std::enable_if_t<std::is_same_v<typename std::iterator_traits<It>::value_type, Entity>, void>
 			AddComponent( It first, It last, const Component& value = {} )
 		{
-			return m_registry.assign<Component>( first, last, value );
+			return m_registry.emplace<Component>( first, last, value );
 		}
 
 		template<typename Component, typename EIt, typename CIt>
 		std::enable_if_t<std::is_same_v<typename std::iterator_traits<EIt>::value_type, Entity>, void>
 			AddComponent( EIt first, EIt last, CIt value )
 		{
-			return m_registry.assign<Component>( first, last, value );
+			return m_registry.emplace<Component>( first, last, value );
 		}
 
 		template<typename It>
 		void AddComponent( It first, It last )
 		{
-			return m_registry.assign( first, last );
+			return m_registry.emplace( first, last );
 		}
 
 		//////////////////////////////////////////////////////////////////////////
@@ -99,46 +113,64 @@ namespace Core
 		}
 
 		template<typename... Component>
-		void RemoveComponentIfExists( Entity const entity )
+		void TryRemoveComponent( Entity const entity )
 		{
-			m_registry.remove_if_exists<Component...>( entity );
+			if ( m_registry.all_of<Component...>( entity ) )
+			{
+				m_registry.remove<Component...>( entity );
+			}
 		}
 
 		//////////////////////////////////////////////////////////////////////////
 		//Has Components
 		//////////////////////////////////////////////////////////////////////////
-		template<typename... Component>
+		template<typename ...Component>
 		bool HasComponent( Entity const entity ) const
 		{
-			return m_registry.has<Component...>( entity );
+			return m_registry.all_of<Component ...>( entity );
 		}
 
 		template<typename... Component>
 		bool HasAnyComponent( Entity const entity ) const
 		{
-			return m_registry.any<Component ...>( entity );
+			return m_registry.any_of<Component ...>( entity );
 		}
+
+		//template <typename ...Component>
+		//std::bitset<sizeof...( Component )> GetComponentBitset( Entity const entity )
+		//{
+		//	using List = entt::type_list<Component ...>;
+		//	
+		//	std::bitset<sizeof...( Component )> bitset = 0;
+		//	size_t index = 0;
+		//	Utils::forEach<List>( [&bitset, &index, &reg, entity] ( auto type ) {
+		//		using Component = UTILS_TYPE( type );
+		//		bitset[ index ] = reg.has<Component>( entity );
+		//		++index;
+		//						  } );
+		//	return bitset;
+		//}
 
 		//////////////////////////////////////////////////////////////////////////
 		//Get Components
 		//////////////////////////////////////////////////////////////////////////
 		template<typename... Component>
-		decltype( auto ) GetComponent( [[maybe_unused]] Entity const entity ) const {
+		[[nodiscard]] decltype( auto ) GetComponent( [[maybe_unused]] Entity const entity ) const {
 			return m_registry.get<Component ...>( entity );
 		}
 
 		template<typename... Component>
-		decltype( auto ) GetComponent( [[maybe_unused]] Entity const entity ) {
+		[[nodiscard]] decltype( auto ) GetComponent( [[maybe_unused]] Entity const entity ) {
 			return m_registry.get<Component ...>( entity );
 		}
 
 		template<typename... Component>
-		auto TryGetComponent( [[maybe_unused]] Entity const entity ) const {
+		[[nodiscard]] auto TryGetComponent( [[maybe_unused]] Entity const entity ) const {
 			return m_registry.try_get<Component ...>( entity );
 		}
 
 		template<typename... Component>
-		auto TryGetComponent( [[maybe_unused]] Entity const entity ) {
+		[[nodiscard]] auto TryGetComponent( [[maybe_unused]] Entity const entity ) {
 			return m_registry.try_get<Component ...>( entity );
 		}
 
@@ -146,13 +178,13 @@ namespace Core
 		//Views
 		//////////////////////////////////////////////////////////////////////////
 		template<typename... Component, typename... Exclude>
-		entt::basic_view<Entity, entt::exclude_t<Exclude...>, Component...> View( entt::exclude_t<Exclude...> = {} ) {
+		[[nodiscard]] entt::basic_view<Entity, entt::exclude_t<Exclude...>, Component...> View( entt::exclude_t<Exclude...> = {} ) {
 			return m_registry.view<Component ...>( entt::exclude<Exclude>... );
 		}
 
 		/*! @copydoc view */
 		template<typename... Component, typename... Exclude>
-		entt::basic_view<Entity, entt::exclude_t<Exclude...>, Component...> View( entt::exclude_t<Exclude...> = {} ) const {
+		[[nodiscard]] entt::basic_view<Entity, entt::exclude_t<Exclude...>, Component...> View( entt::exclude_t<Exclude...> = {} ) const {
 			return m_registry.view<Component ...>( entt::exclude<Exclude>... );
 		}
 
@@ -169,7 +201,7 @@ namespace Core
 		template<typename... Component, typename... Exclude, typename Func>
 		void ForConstView( Func func, entt::exclude_t<Exclude>... ) const
 		{
-			auto view = View<Component ...>( entt::exclude<Exclude>... );
+			auto const view = View<Component ...>( entt::exclude<Exclude>... );
 			view.each( func );
 		}
 

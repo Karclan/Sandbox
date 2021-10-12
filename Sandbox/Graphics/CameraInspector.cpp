@@ -3,7 +3,7 @@
 #include "../Core/CoreRegistry.h"
 #include "../Utils/Logger.h"
 
-#include "Camera.h"
+#include "CameraComponent.h"
 #include "TransformComponent.h"
 
 #include "imgui.h"
@@ -20,7 +20,7 @@ namespace Graphics
 	{
 		if ( ImGui::BeginMainMenuBar() )
 		{
-			if ( ImGui::BeginMenu( "Cameras" ) )
+			if ( ImGui::BeginMenu( "Camera Inspector" ) )
 			{
 				ImGui::Checkbox( "View Cameras", &m_showCameraControls );
 				ImGui::Checkbox( "Camera Controls", &m_showCameraControls );
@@ -38,8 +38,8 @@ namespace Graphics
 
 	void CameraInspector::BuildCameraControlsWindow()
 	{
-		m_registry.ForView<CameraComponent, TransformComponent, ActiveCameraTag>(
-			[this] ( entt::entity const entity, CameraComponent& cameraComponent, TransformComponent& transformComponent, ActiveCameraTag const Tag )
+		m_registry.ForView<CameraComponent, TransformComponent, ActiveCameraTag>( 
+			[this] ( CameraComponent& cameraComponent, TransformComponent& transformComponent )
 			{
 				if ( ImGui::Begin( "Graphics" ) )
 				{
@@ -114,7 +114,8 @@ namespace Graphics
 					ImGui::Separator();
 				}
 				ImGui::End();
-			} );
+			}
+		);
 	}
 
 }

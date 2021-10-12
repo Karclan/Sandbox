@@ -7,6 +7,8 @@
 #include "Graphics/ShaderComponent.h"
 #include "Graphics/TextureComponent.h"
 
+#include "magic_enum/magic_enum.hpp"
+
 namespace Game
 {
 

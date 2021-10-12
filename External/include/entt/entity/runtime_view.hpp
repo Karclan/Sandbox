@@ -8,8 +8,8 @@
 #include <algorithm>
 #include <type_traits>
 #include "../config/config.h"
-#include "sparse_set.hpp"
 #include "entity.hpp"
+#include "sparse_set.hpp"
 #include "fwd.hpp"
 
 
@@ -55,94 +55,83 @@ namespace entt {
  * @tparam Entity A valid entity type (see entt_traits for more details).
  */
 template<typename Entity>
-class basic_runtime_view {
-    /*! @brief A registry is allowed to create views. */
-    friend class basic_registry<Entity>;
+class basic_runtime_view final {
+    using basic_common_type = basic_sparse_set<Entity>;
+    using underlying_iterator = typename basic_common_type::iterator;
 
-    using underlying_iterator_type = typename sparse_set<Entity>::iterator_type;
+    class view_iterator final {
+        [[nodiscard]] bool valid() const {
+            const auto entt = *it;
 
-    class iterator {
-        friend class basic_runtime_view<Entity>;
+            return (!stable_storage || (entt != tombstone))
+                && std::all_of(pools->begin()++, pools->end(), [entt](const auto *curr) { return curr->contains(entt); })
+                && std::none_of(filter->cbegin(), filter->cend(), [entt](const auto *curr) { return curr && curr->contains(entt); });
+        }
 
-        using direct_type = std::vector<const sparse_set<Entity> *>;
+    public:
+        using difference_type = typename underlying_iterator::difference_type;
+        using value_type = typename underlying_iterator::value_type;
+        using pointer = typename underlying_iterator::pointer;
+        using reference = typename underlying_iterator::reference;
+        using iterator_category = std::bidirectional_iterator_tag;
 
-        iterator(const direct_type *all, underlying_iterator_type curr) ENTT_NOEXCEPT
-            : pools{all},
-              it{curr}
+        view_iterator() ENTT_NOEXCEPT = default;
+
+        view_iterator(const std::vector<const basic_common_type *> &cpools, const std::vector<const basic_common_type *> &ignore, underlying_iterator curr) ENTT_NOEXCEPT
+            : pools{&cpools},
+              filter{&ignore},
+              it{curr},
+              stable_storage{std::any_of(pools->cbegin(), pools->cend(), [](const basic_common_type *cpool) { return (cpool->policy() == deletion_policy::in_place); })}
         {
             if(it != (*pools)[0]->end() && !valid()) {
                 ++(*this);
             }
         }
 
-        bool valid() const {
-            return std::all_of(pools->begin()++, pools->end(), [entt = *it](const auto *curr) {
-                return curr->has(entt);
-            });
-        }
-
-    public:
-        using difference_type = typename underlying_iterator_type::difference_type;
-        using value_type = typename underlying_iterator_type::value_type;
-        using pointer = typename underlying_iterator_type::pointer;
-        using reference = typename underlying_iterator_type::reference;
-        using iterator_category = std::bidirectional_iterator_tag;
-
-        iterator() ENTT_NOEXCEPT = default;
-
-        iterator & operator++() {
+        view_iterator & operator++() {
             while(++it != (*pools)[0]->end() && !valid());
             return *this;
         }
 
-        iterator operator++(int) {
-            iterator orig = *this;
-            return operator++(), orig;
+        view_iterator operator++(int) {
+            view_iterator orig = *this;
+            return ++(*this), orig;
         }
 
-        iterator & operator--() ENTT_NOEXCEPT {
+        view_iterator & operator--() ENTT_NOEXCEPT {
             while(--it != (*pools)[0]->begin() && !valid());
             return *this;
         }
 
-        iterator operator--(int) ENTT_NOEXCEPT {
-            iterator orig = *this;
+        view_iterator operator--(int) ENTT_NOEXCEPT {
+            view_iterator orig = *this;
             return operator--(), orig;
         }
 
-        bool operator==(const iterator &other) const ENTT_NOEXCEPT {
+        [[nodiscard]] bool operator==(const view_iterator &other) const ENTT_NOEXCEPT {
             return other.it == it;
         }
 
-        bool operator!=(const iterator &other) const ENTT_NOEXCEPT {
+        [[nodiscard]] bool operator!=(const view_iterator &other) const ENTT_NOEXCEPT {
             return !(*this == other);
         }
 
-        pointer operator->() const {
+        [[nodiscard]] pointer operator->() const {
             return it.operator->();
         }
 
-        reference operator*() const {
+        [[nodiscard]] reference operator*() const {
             return *operator->();
         }
 
     private:
-        const direct_type *pools;
-        underlying_iterator_type it;
+        const std::vector<const basic_common_type *> *pools;
+        const std::vector<const basic_common_type *> *filter;
+        underlying_iterator it;
+        bool stable_storage;
     };
 
-    basic_runtime_view(std::vector<const sparse_set<Entity> *> others) ENTT_NOEXCEPT
-        : pools{std::move(others)}
-    {
-        const auto it = std::min_element(pools.begin(), pools.end(), [](const auto *lhs, const auto *rhs) {
-            return (!lhs && rhs) || (lhs && rhs && lhs->size() < rhs->size());
-        });
-
-        // brings the best candidate (if any) on front of the vector
-        std::rotate(pools.begin(), it, pools.end());
-    }
-
-    bool valid() const {
+    [[nodiscard]] bool valid() const {
         return !pools.empty() && pools.front();
     }
 
@@ -151,23 +140,36 @@ public:
     using entity_type = Entity;
     /*! @brief Unsigned integer type. */
     using size_type = std::size_t;
-    /*! @brief Input iterator type. */
-    using iterator_type = iterator;
+    /*! @brief Bidirectional iterator type. */
+    using iterator = view_iterator;
+
+    /*! @brief Default constructor to use to create empty, invalid views. */
+    basic_runtime_view() ENTT_NOEXCEPT
+        : pools{},
+          filter{}
+    {}
 
     /**
-     * @brief Estimates the number of entities that have the given components.
-     * @return Estimated number of entities that have the given components.
+     * @brief Constructs a runtime view from a set of storage classes.
+     * @param cpools The storage for the types to iterate.
+     * @param epools The storage for the types used to filter the view.
      */
-    size_type size() const {
-        return valid() ? pools.front()->size() : size_type{};
+    basic_runtime_view(std::vector<const basic_common_type *> cpools, std::vector<const basic_common_type *> epools) ENTT_NOEXCEPT
+        : pools{std::move(cpools)},
+          filter{std::move(epools)}
+    {
+        // brings the best candidate (if any) on front of the vector
+        std::rotate(pools.begin(), std::min_element(pools.begin(), pools.end(), [](const auto *lhs, const auto *rhs) {
+            return (!lhs && rhs) || (lhs && rhs && lhs->size() < rhs->size());
+        }), pools.end());
     }
 
     /**
-     * @brief Checks if the view is definitely empty.
-     * @return True if the view is definitely empty, false otherwise.
+     * @brief Estimates the number of entities iterated by the view.
+     * @return Estimated number of entities iterated by the view.
      */
-    bool empty() const {
-        return !valid() || pools.front()->empty();
+    [[nodiscard]] size_type size_hint() const {
+        return valid() ? pools.front()->size() : size_type{};
     }
 
     /**
@@ -178,20 +180,10 @@ public:
      * components. If the view is empty, the returned iterator will be equal to
      * `end()`.
      *
-     * @note
-     * Input iterators stay true to the order imposed to the underlying data
-     * structures.
-     *
      * @return An iterator to the first entity that has the given components.
      */
-    iterator_type begin() const {
-        iterator_type it{};
-
-        if(valid()) {
-            it = { &pools, pools[0]->begin() };
-        }
-
-        return it;
+    [[nodiscard]] iterator begin() const {
+        return valid() ? iterator{pools, filter, pools[0]->begin()} : iterator{};
     }
 
     /**
@@ -202,21 +194,11 @@ public:
      * has the given components. Attempting to dereference the returned iterator
      * results in undefined behavior.
      *
-     * @note
-     * Input iterators stay true to the order imposed to the underlying data
-     * structures.
-     *
      * @return An iterator to the entity following the last entity that has the
      * given components.
      */
-    iterator_type end() const {
-        iterator_type it{};
-
-        if(valid()) {
-            it = { &pools, pools[0]->end() };
-        }
-
-        return it;
+    [[nodiscard]] iterator end() const {
+        return valid() ? iterator{pools, filter, pools[0]->end()} : iterator{};
     }
 
     /**
@@ -224,10 +206,9 @@ public:
      * @param entt A valid entity identifier.
      * @return True if the view contains the given entity, false otherwise.
      */
-    bool contains(const entity_type entt) const {
-        return valid() && std::all_of(pools.cbegin(), pools.cend(), [entt](const auto *view) {
-            return view->find(entt) != view->end();
-        });
+    [[nodiscard]] bool contains(const entity_type entt) const {
+        return valid() && std::all_of(pools.cbegin(), pools.cend(), [entt](const auto *curr) { return curr->contains(entt); })
+                && std::none_of(filter.cbegin(), filter.cend(), [entt](const auto *curr) { return curr && curr->contains(entt); });
     }
 
     /**
@@ -253,7 +234,8 @@ public:
     }
 
 private:
-    std::vector<const sparse_set<Entity> *> pools;
+    std::vector<const basic_common_type *> pools;
+    std::vector<const basic_common_type *> filter;
 };
 
 

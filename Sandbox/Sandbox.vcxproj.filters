@@ -37,33 +37,6 @@
     <Filter Include="Physics">
       <UniqueIdentifier>{f44cb185-df2f-4c7b-8eb5-5b00a7466e16}</UniqueIdentifier>
     </Filter>
-    <Filter Include="entt">
-      <UniqueIdentifier>{502f7513-26d2-4e37-b1c0-485308aaf1ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="entt\config">
-      <UniqueIdentifier>{a4104d80-8378-429e-8f3c-eba48b39e771}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="entt\core">
-      <UniqueIdentifier>{01b6623b-ba00-41d1-aaa0-fb46f2739ebd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="entt\entity">
-      <UniqueIdentifier>{9f61a660-7968-452f-b4d4-0869d9cdc078}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="entt\meta">
-      <UniqueIdentifier>{69f80883-566a-4bc3-822a-4326349eb866}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="entt\process">
-      <UniqueIdentifier>{309ccfa3-add4-462d-b2e0-443dd0fc19bc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="entt\signal">
-      <UniqueIdentifier>{b41ee4a7-93ee-4c4f-8f4a-17cb318fb46e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="entt\resource">
-      <UniqueIdentifier>{22b1b13f-59dd-430d-abcc-5f45d9946950}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="entt\locator">
-      <UniqueIdentifier>{9eb03ec6-377b-469b-9afc-c20edfb0069e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="glad">
       <UniqueIdentifier>{7018e8f9-7a84-46b2-b83b-26362d91daa1}</UniqueIdentifier>
     </Filter>
@@ -78,6 +51,9 @@
     </Filter>
     <Filter Include="Generic">
       <UniqueIdentifier>{233b2ed7-cefb-47c1-be1f-ade726ac0134}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{7a436337-da9f-417a-bdf6-00aa6a657423}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -135,7 +111,7 @@
     <ClCompile Include="Graphics\Cube.cpp">
       <Filter>Graphics\Primatives</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Camera.cpp">
+    <ClCompile Include="Graphics\CameraComponent.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\Window.cpp">
@@ -171,9 +147,17 @@
     <ClCompile Include="Graphics\CameraInspector.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\CameraSystem.cpp" />
     <ClCompile Include="Core\CoreRegistry.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\Utilities.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\CameraSystem.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\ArcballBehaviour.cpp">
+      <Filter>Editor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -225,7 +209,7 @@
     <ClInclude Include="Graphics\MeshLoader.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\Camera.h">
+    <ClInclude Include="Graphics\CameraComponent.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Input\InputSystem.h">
@@ -264,126 +248,6 @@
     <ClInclude Include="Graphics\Window.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="entt\entt.hpp">
-      <Filter>entt</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\fwd.hpp">
-      <Filter>entt</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\config\config.h">
-      <Filter>entt\config</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\config\version.h">
-      <Filter>entt\config</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\core\algorithm.hpp">
-      <Filter>entt\core</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\core\attribute.h">
-      <Filter>entt\core</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\core\family.hpp">
-      <Filter>entt\core</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\core\hashed_string.hpp">
-      <Filter>entt\core</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\core\ident.hpp">
-      <Filter>entt\core</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\core\monostate.hpp">
-      <Filter>entt\core</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\core\type_info.hpp">
-      <Filter>entt\core</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\core\type_traits.hpp">
-      <Filter>entt\core</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\core\utility.hpp">
-      <Filter>entt\core</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\entity\actor.hpp">
-      <Filter>entt\entity</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\entity\entity.hpp">
-      <Filter>entt\entity</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\entity\fwd.hpp">
-      <Filter>entt\entity</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\entity\group.hpp">
-      <Filter>entt\entity</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\entity\helper.hpp">
-      <Filter>entt\entity</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\entity\observer.hpp">
-      <Filter>entt\entity</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\entity\registry.hpp">
-      <Filter>entt\entity</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\entity\runtime_view.hpp">
-      <Filter>entt\entity</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\entity\snapshot.hpp">
-      <Filter>entt\entity</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\entity\sparse_set.hpp">
-      <Filter>entt\entity</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\entity\storage.hpp">
-      <Filter>entt\entity</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\entity\view.hpp">
-      <Filter>entt\entity</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\locator\locator.hpp">
-      <Filter>entt\locator</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\meta\factory.hpp">
-      <Filter>entt\meta</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\meta\meta.hpp">
-      <Filter>entt\meta</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\meta\policy.hpp">
-      <Filter>entt\meta</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\process\process.hpp">
-      <Filter>entt\process</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\process\scheduler.hpp">
-      <Filter>entt\process</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\resource\cache.hpp">
-      <Filter>entt\resource</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\resource\fwd.hpp">
-      <Filter>entt\resource</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\resource\handle.hpp">
-      <Filter>entt\resource</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\resource\loader.hpp">
-      <Filter>entt\resource</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\signal\delegate.hpp">
-      <Filter>entt\signal</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\signal\dispatcher.hpp">
-      <Filter>entt\signal</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\signal\emitter.hpp">
-      <Filter>entt\signal</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\signal\fwd.hpp">
-      <Filter>entt\signal</Filter>
-    </ClInclude>
-    <ClInclude Include="entt\signal\sigh.hpp">
-      <Filter>entt\signal</Filter>
-    </ClInclude>
     <ClInclude Include="glad\glad.h">
       <Filter>glad</Filter>
     </ClInclude>
@@ -420,7 +284,18 @@
     <ClInclude Include="Graphics\CameraInspector.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\CameraSystem.h" />
+    <ClInclude Include="Core\Entity.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\Utilities.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\CameraSystem.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\ArcballBehaviour.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Imgui\misc\natvis\imgui.natvis">

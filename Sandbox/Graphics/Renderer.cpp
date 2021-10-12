@@ -1,12 +1,13 @@
 #include "Renderer.h"
 
 #include "../Utils/Logger.h"
+#include "../Editor/Utilities.h"
 
 #include "TextureComponent.h"
 #include "ShaderComponent.h"
 #include "TransformComponent.h"
 #include "ShaderProgram.h"
-#include "Camera.h"
+#include "CameraComponent.h"
 #include "Mesh.h"
 
 #include "../Imgui/imgui.h"
@@ -46,11 +47,8 @@ namespace Graphics
 		glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof( float ), ( void* ) ( 2 * sizeof( float ) ) );
 	}
 
-	entt::entity Renderer::m_nullCameraEntity = entt::null;
-
 	Renderer::Renderer( Core::Registry& Registry )
 		: m_registry( Registry )
-		, m_activeCamera( m_nullCameraEntity )
 	{
 	}
 
@@ -81,20 +79,6 @@ namespace Graphics
 		return ReturnId;
 	}
 
-	unsigned int Renderer::CreateCamera( const std::string& cameraName )
-	{
-		auto entity = m_registry.CreateEntity();
-
-		Graphics::CameraComponent cameraComponent;
-		cameraComponent.m_name = cameraName;
-		cameraComponent.id = m_cameraEntities.size();
-		m_registry.AddComponent<Graphics::CameraComponent>( entity, cameraComponent );
-		m_registry.AddComponent<Graphics::TransformComponent>( entity, Graphics::TransformComponent {} );
-		m_cameraEntities.push_back( entity );
-
-		return m_cameraEntities.size() - 1;
-	}
-
 	MeshComponent Renderer::GetMesh( PrimativeType type )
 	{
 		MeshComponent comp;
@@ -105,19 +89,6 @@ namespace Graphics
 
 	void Renderer::Init()
 	{
-		auto defaultCamera = m_registry.CreateEntity();
-		Graphics::CameraComponent cameraComponent;
-		cameraComponent.m_name = "Default";
-		cameraComponent.id = m_cameraEntities.size();
-		m_registry.AddComponent<CameraComponent>( defaultCamera, cameraComponent );
-		Graphics::TransformComponent transformComponent;
-		transformComponent.Position.z = -10.f;
-
-		m_registry.AddComponent<TransformComponent>( defaultCamera, transformComponent );
-		m_cameraEntities.push_back( defaultCamera );
-
-		SetActiveCamera( 0 );
-
 		{
 			CreateShader( "line", { Shader::Type::Vertex, Shader::Type::Fragment } );
 
@@ -157,21 +128,7 @@ namespace Graphics
 		}
 	}
 
-	void Renderer::SetActiveCamera( unsigned int cameraId )
-	{
-		Utils::Logger::LogMessage( Utils::LogType::Info, "Changed Camera\n" );
-		if ( cameraId != -1 && m_cameraEntities.size() )
-		{
-			if ( m_activeCamera != entt::null )
-			{
-				m_registry.RemoveComponentIfExists<ActiveCameraTag>( m_activeCamera );
-			}
-			m_activeCamera = m_cameraEntities[ cameraId ];
-			m_registry.AddComponent<ActiveCameraTag>( m_activeCamera );
-		}
-	}
-
-	void Renderer::BuildImGui( float deltaTime )
+	void Renderer::BuildWindow( double deltaTime )
 	{
 		if ( ImGui::BeginMainMenuBar() )
 		{
@@ -188,15 +145,12 @@ namespace Graphics
 					float HeightToUse = static_cast< float >( m_useFrameBufferObject ? m_sceneSize.y : m_height );
 					float WidthToUse = static_cast< float >( m_useFrameBufferObject ? m_sceneSize.x : m_width );
 
-					if ( m_registry.HasComponent<CameraComponent, TransformComponent>( m_activeCamera ) )
-					{
-						CameraComponent& cameraComponent = m_registry.GetComponent<CameraComponent>( m_activeCamera );
-						TransformComponent& transformComponent = m_registry.GetComponent<TransformComponent>( m_activeCamera );
-
-						cameraComponent.m_viewPortHeight = static_cast< float >( HeightToUse );
-						cameraComponent.m_viewPortWidth = static_cast< float >( WidthToUse );
-						cameraComponent.m_dirtyProjectionMatrix = true;
-					}
+					m_registry.ForView<CameraComponent, ActiveCameraTag>( [&HeightToUse, &WidthToUse] ( CameraComponent& cameraComponent )
+																		  {
+																			  cameraComponent.m_viewPortHeight = static_cast< float >( HeightToUse );
+																			  cameraComponent.m_viewPortWidth = static_cast< float >( WidthToUse );
+																			  cameraComponent.m_dirtyProjectionMatrix = true;
+																		  } );
 
 					//Resize the render texture buffer
 					glBindTexture( GL_TEXTURE_2D, m_renderedTexture );
@@ -235,15 +189,11 @@ namespace Graphics
 
 				if ( windowSizeChanged )
 				{
-					if ( m_registry.HasComponent<CameraComponent, TransformComponent>( m_activeCamera ) )
-					{
-						CameraComponent& cameraComponent = m_registry.GetComponent<CameraComponent>( m_activeCamera );
-						TransformComponent& transformComponent = m_registry.GetComponent<TransformComponent>( m_activeCamera );
-
+					m_registry.ForView<CameraComponent, ActiveCameraTag>( [this] ( CameraComponent& cameraComponent ) {
 						cameraComponent.m_viewPortHeight = static_cast< float >( m_sceneSize.y );
 						cameraComponent.m_viewPortWidth = static_cast< float >( m_sceneSize.x );
 						cameraComponent.m_dirtyProjectionMatrix = true;
-					}
+																		  } );
 
 					//Resize the render texture buffer
 					glBindTexture( GL_TEXTURE_2D, m_renderedTexture );
@@ -365,14 +315,12 @@ namespace Graphics
 			m_lineShader->useProgram();
 
 			m_lineShader->setUniform( "model", glm::mat4( 1.f ) );
-			if ( m_registry.HasComponent<CameraComponent, TransformComponent>( m_activeCamera ) )
-			{
-				CameraComponent& cameraComponent = m_registry.GetComponent<CameraComponent>( m_activeCamera );
-				TransformComponent& transformComponent = m_registry.GetComponent<TransformComponent>( m_activeCamera );
-				m_lineShader->setUniform( "projection", cameraComponent.m_projectionMatrix );
-				m_lineShader->setUniform( "view", cameraComponent.m_viewMatrix );
-
-			}
+			m_registry.ForConstView<CameraComponent const, ActiveCameraTag const>(
+				[this] ( CameraComponent const& cameraComponent )
+				{
+					m_lineShader->setUniform( "projection", cameraComponent.m_projectionMatrix );
+					m_lineShader->setUniform( "view", cameraComponent.m_viewMatrix );
+				} );
 			glBindVertexArray( m_lineVao );
 			for ( unsigned int i = 0; i <= m_lineDrawCalls; ++i )
 			{
@@ -435,74 +383,34 @@ namespace Graphics
 		m_width = width;
 		m_height = height;
 
-		if ( m_registry.HasComponent<CameraComponent, TransformComponent>( m_activeCamera ) )
+		m_registry.ForView<CameraComponent, ActiveCameraTag>( [this] ( CameraComponent& cameraComponent ) 
 		{
-			CameraComponent& cameraComponent = m_registry.GetComponent<CameraComponent>( m_activeCamera );
-			TransformComponent& transformComponent = m_registry.GetComponent<TransformComponent>( m_activeCamera );
-
 			if ( !m_useFrameBufferObject )
 			{
 				cameraComponent.m_viewPortHeight = static_cast< float >( m_height );
 				cameraComponent.m_viewPortWidth = static_cast< float >( m_width );
 			}
 
-			cameraComponent.m_dirtyProjectionMatrix = true;
-		}
+			cameraComponent.m_dirtyProjectionMatrix = true;													 
+		});
 	}
 
 	void Renderer::UpdateCamera()
 	{
 		//Camera
-		if ( m_registry.HasComponent<CameraComponent, TransformComponent>( m_activeCamera ) )
+		m_registry.ForView<CameraComponent, ActiveCameraTag>( [this] ( CameraComponent & cameraComponent)
 		{
-			CameraComponent& cameraComponent = m_registry.GetComponent<CameraComponent>( m_activeCamera );
-			TransformComponent& transformComponent = m_registry.GetComponent<TransformComponent>( m_activeCamera );
-			if ( cameraComponent.m_dirtyProjectionMatrix || cameraComponent.m_dirtyViewMatrix )
+			if ( cameraComponent.m_dirtyProjectionMatrix )
 			{
-				if ( cameraComponent.m_dirtyProjectionMatrix )
-				{
-					float aspect = static_cast< float >( ( cameraComponent.m_viewPortWidth ) / ( cameraComponent.m_viewPortHeight > 0 ? cameraComponent.m_viewPortHeight : 1.f ) );
-
-					cameraComponent.m_projectionMatrix = glm::perspective( glm::radians( cameraComponent.m_fov ), aspect, cameraComponent.m_nearPlane, cameraComponent.m_farPlane );
-					cameraComponent.m_dirtyProjectionMatrix = false;
-				}
-
-				if ( cameraComponent.m_dirtyViewMatrix )
-				{
-					glm::mat4 rotationMatrix = glm::toMat4( transformComponent.RotationQuat );
-
-					glm::vec3 const forward = glm::normalize( rotationMatrix * glm::vec4( Constants::Forward, 1.f ) );
-					glm::vec3 const right = glm::normalize( rotationMatrix * glm::vec4( Constants::Right, 1.f ) );
-					glm::vec3 const up = glm::normalize( rotationMatrix * glm::vec4( Constants::Up, 1.f ) );
-
-					if ( cameraComponent.m_orbit )
-					{
-						//glm::mat4 translation = glm::translate( glm::mat4( 1.0f ), transformComponent.Position );
-						//glm::mat4 rotationMatrix = glm::toMat4( transformComponent.RotationQuat );
-						//glm::mat4 scale = glm::scale( glm::mat4( 1.f ), transformComponent.Scale );
-						//cameraComponent.m_viewMatrix = translation * rotationMatrix * scale;
-
-						glm::vec3 rotatedPosition = glm::vec4( transformComponent.Position, 1.f ) * rotationMatrix;
-						cameraComponent.m_viewMatrix = glm::lookAt( rotatedPosition, cameraComponent.m_target, up );
-					}
-					else
-					{
-						//glm::vec3 rotatedPosition = glm::vec4( transformComponent.Position, 1.f ) * rotationMatrix;
-						//cameraComponent.m_viewMatrix = glm::lookAt( rotatedPosition, cameraComponent.m_target, up );
-						//Look at 0,0,0?
-						//cameraComponent.m_viewMatrix = glm::lookAt( transformComponent.Position, glm::vec3{0.f}, up );
-						//LookAt "forwards"
-						cameraComponent.m_viewMatrix = glm::lookAt( transformComponent.Position, transformComponent.Position + forward, up );
-					}
-
-					cameraComponent.m_dirtyViewMatrix = false;
-				}
-
+				cameraComponent.m_dirtyProjectionMatrix = false;
 				m_activeShader->setUniform( "projection", cameraComponent.m_projectionMatrix );
+			}
+			if ( cameraComponent.m_dirtyViewMatrix )
+			{
+				cameraComponent.m_dirtyViewMatrix = false;
 				m_activeShader->setUniform( "view", cameraComponent.m_viewMatrix );
 			}
-		}
-
+		} );
 	}
 
 	void Renderer::UpdateTransform( TransformComponent& transform )

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Core/CoreRegistry.h"
+#include "../Core/Subsystem.h"
 #include "../Utils/EnumBitmask.h"
 #include "../Imgui/imgui.h"
 
@@ -31,7 +32,7 @@ namespace Graphics
     struct ShaderComponent;
     struct MeshComponent;
 
-    class Renderer
+    class Renderer : public Core::ImGuiWindowBuilder
     {
     public:
         Renderer(Core::Registry& Registry);
@@ -39,15 +40,12 @@ namespace Graphics
 
         unsigned int CreateShader(const std::string& name, Utils::EnumBitmask<Shader::Type> flags);
         unsigned int CreateTexture(const std::string& textureName);
-        unsigned int CreateCamera(const std::string& cameraName);
 
         MeshComponent GetMesh(PrimativeType type);
 
         void Init();// makes window
 
-        void SetActiveCamera(unsigned int cameraId);
-
-        void BuildImGui(float deltaTime);
+        void BuildWindow(double deltaTime);
 
         void Render();
 
@@ -70,10 +68,7 @@ namespace Graphics
 
         void CreateRenderBufferObject();
 
-        static Core::Entity m_nullCameraEntity;
-
         Core::Registry& m_registry;
-        entt::entity m_activeCamera;
 
         TextureLoader m_textureLoader{};
 
@@ -120,7 +115,7 @@ namespace Graphics
 		ImVec2 m_sceneSize{ 800, 600 };
 
         std::vector< std::unique_ptr<ShaderProgram> > m_shaderList;
-        std::vector<Core::Entity> m_cameraEntities {};
+        
         std::vector<GLuint> m_boundTextures {};
 
     };

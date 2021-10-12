@@ -31,6 +31,6 @@ namespace Game
         void Integrate( double deltaTime );
 
         MovementStruct m_movementStruct;
-        entt::entity m_entity;
+        Core::Entity m_entity;
     };
 }

@@ -2,11 +2,12 @@
 #define ENTT_CORE_IDENT_HPP
 
 
-#include <tuple>
 #include <cstddef>
 #include <utility>
 #include <type_traits>
 #include "../config/config.h"
+#include "fwd.hpp"
+#include "type_traits.hpp"
 
 
 namespace entt {
@@ -41,17 +42,15 @@ namespace entt {
  */
 template<typename... Types>
 class identifier {
-    using tuple_type = std::tuple<std::decay_t<Types>...>;
-
-    template<typename Type, std::size_t... Indexes>
-    static constexpr ENTT_ID_TYPE get(std::index_sequence<Indexes...>) {
-        static_assert(std::disjunction_v<std::is_same<Type, Types>...>);
-        return (0 + ... + (std::is_same_v<Type, std::tuple_element_t<Indexes, tuple_type>> ? ENTT_ID_TYPE(Indexes) : ENTT_ID_TYPE{}));
+    template<typename Type, std::size_t... Index>
+    [[nodiscard]] static constexpr id_type get(std::index_sequence<Index...>) {
+        static_assert(std::disjunction_v<std::is_same<Type, Types>...>, "Invalid type");
+        return (0 + ... + (std::is_same_v<Type, type_list_element_t<Index, type_list<std::decay_t<Types>...>>> ? id_type{Index} : id_type{}));
     }
 
 public:
     /*! @brief Unsigned integer type. */
-    using identifier_type = ENTT_ID_TYPE;
+    using identifier_type = id_type;
 
     /*! @brief Statically generated unique identifier for the given type. */
     template<typename Type>

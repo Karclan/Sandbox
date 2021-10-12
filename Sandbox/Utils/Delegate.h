@@ -10,6 +10,7 @@ namespace  Utils
 {
 	//Taken from https://codereview.stackexchange.com/questions/36251/c-delegate-implementation-with-member-functions
 	//And http://coliru.stacked-crooked.com/a/55858bdee7561e79
+	/*
 	template <typename... Params>
 	class Delegate1 {
 	private:
@@ -81,7 +82,7 @@ namespace  Utils
 						handler( args... );
 				}
 	};
-
+	*/
 	//////////////////////////////////////////////////////////////////////////
 	//Hybrid of Delegate 1 and 2
 	//////////////////////////////////////////////////////////////////////////

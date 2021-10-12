@@ -10,12 +10,12 @@ namespace Input
 
     }
 
-	bool InputSystem::TestAction( Action const& action ) const
+	bool InputSystem::TestAction( ActionId const& action ) const
 	{
         using namespace Literals;
         switch ( action )
         {
-            case "Test"_IA:
+            case "Test"_ActionId:
             {
 
             }
