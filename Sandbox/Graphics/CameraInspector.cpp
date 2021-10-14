@@ -2,6 +2,7 @@
 
 #include "../Core/CoreRegistry.h"
 #include "../Utils/Logger.h"
+#include "../Utils/UnusedMacro.h"
 
 #include "CameraComponent.h"
 #include "TransformComponent.h"
@@ -18,6 +19,7 @@ namespace Graphics
 
 	void CameraInspector::BuildWindow( double deltaTime )
 	{
+		UNUSED( deltaTime );
 		if ( ImGui::BeginMainMenuBar() )
 		{
 			if ( ImGui::BeginMenu( "Camera Inspector" ) )

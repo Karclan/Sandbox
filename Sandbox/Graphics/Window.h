@@ -13,14 +13,19 @@ namespace Core
     class Registry;
 }
 
+namespace Input
+{
+    class InputSystem;
+}
+
 namespace Graphics
 {
 
     class Window
     {
     public:
-        Window( Core::Registry & registry );
-        Window( unsigned int width, unsigned int height, Core::Registry & registry );
+        Window( Core::Registry & registry, Input::InputSystem & inInputSystem );
+        Window( unsigned int width, unsigned int height, Core::Registry & registry, Input::InputSystem& inInputSystem );
         ~Window();
 
         Renderer * GetRenderer( );
@@ -67,6 +72,10 @@ namespace Graphics
             ~GLFWCallbackWrapper() = delete;
 
             static void FramebufferSizeCallback( GLFWwindow * window, int width, int height );
+			static void KeyCallback( GLFWwindow* window, int key, int scancode, int action, int mods );
+			static void MouseButtonCallback( GLFWwindow* window, int button, int action, int mods );
+			static void CursorPositionCallback( GLFWwindow* window, double xPosition, double yPosition );
+			static void ScrollCallback( GLFWwindow* window, double xOffset, double yOffset );
             static void SetApplication( Window * application );
         private:
             static Window * s_window;
@@ -75,10 +84,17 @@ namespace Graphics
         void CreateWindow();
 
         void FramebufferSizeCallback( GLFWwindow * window, int width, int height );
+		void KeyCallback( GLFWwindow* window, int key, int scancode, int action, int mods );
+		void MouseButtonCallback( GLFWwindow* window, int button, int action, int mods );
+		void CursorPositionCallback( GLFWwindow* window, double xPosition, double yPosition );
+		void ScrollCallback( GLFWwindow* window, double xOffset, double yOffset );
+
         void ProcessInput();
         void InitImgui();
 
         Core::Registry & m_registry;
+        Input::InputSystem & m_inputSystem;
+
 
         GLFWwindow * m_glfwWindow;
         std::unique_ptr<Renderer> m_renderer;

@@ -1,6 +1,7 @@
 #include "InputSystem.h"
 
 #include "InputAction.h"
+#include "../Utils/UnusedMacro.h"
 
 namespace Input
 {
@@ -26,7 +27,7 @@ namespace Input
 
 	void InputSystem::BuildWindow( double deltaTime )
 	{
-	
+        UNUSED( deltaTime );
 	}
 
 }

@@ -8,6 +8,7 @@
 #include "Graphics/TextureComponent.h"
 
 #include "magic_enum/magic_enum.hpp"
+#include "Utils/UnusedMacro.h"
 
 namespace Game
 {
@@ -67,12 +68,13 @@ namespace Game
 
 	void VectorMathExampleSubsystem::FixedUpdate(double deltaTime)
 	{
+		UNUSED( deltaTime );
 		{
 			Graphics::TransformComponent& Transform = m_registry.GetComponent<Graphics::TransformComponent>(PointAEntity);
 			Transform.Position = PointA;
 			glm::vec3 rotation = glm::eulerAngles( Transform.RotationQuat );
 			float const& pitch = rotation.x;
-			float const& roll = rotation.z;
+			//float const& roll = rotation.z;
 			float const& yaw = rotation.y;
 			PointAForward.x = glm::cos(pitch) * glm::sin(yaw);
 			PointAForward.y = -glm::sin(pitch);
@@ -101,10 +103,13 @@ namespace Game
 
 	void VectorMathExampleSubsystem::Update(double deltaTime)
 	{
+		UNUSED( deltaTime );
 	}
 
 	void VectorMathExampleSubsystem::BuildWindow(double deltaTime)
 	{
+		UNUSED( deltaTime );
+
 		if (ImGui::BeginMainMenuBar())
 		{
 			if (ImGui::BeginMenu("Maths"))

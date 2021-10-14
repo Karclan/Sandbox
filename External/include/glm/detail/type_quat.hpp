@@ -3,6 +3,8 @@
 
 #pragma once
 
+#pragma warning (push, 3)
+
 // Dependency:
 #include "../detail/type_mat3x3.hpp"
 #include "../detail/type_mat4x4.hpp"
@@ -176,3 +178,5 @@ namespace glm
 #ifndef GLM_EXTERNAL_TEMPLATE
 #include "type_quat.inl"
 #endif//GLM_EXTERNAL_TEMPLATE
+
+#pragma warning ( pop )

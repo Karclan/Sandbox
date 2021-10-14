@@ -74,6 +74,8 @@
     <LinkIncremental>true</LinkIncremental>
     <SourcePath>$(SolutionDir)Sandbox\;$(SourcePath)</SourcePath>
     <TargetName>$(ProjectName)_d</TargetName>
+    <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -96,6 +98,11 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)External\Include\;$(SolutionDir)Sandbox\Imgui\;$(SolutionDir)Sandbox\stb\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -106,6 +113,8 @@
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)External\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <TreatLibWarningAsErrors>
+      </TreatLibWarningAsErrors>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -135,7 +144,9 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)External\Include\;$(SolutionDir)Sandbox\Imgui\;$(SolutionDir)Sandbox\stb\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -253,6 +264,7 @@
     <ClInclude Include="Utils\EnumBitmask.h" />
     <ClInclude Include="Utils\Logger.h" />
     <ClInclude Include="Utils\LoggingWindow.h" />
+    <ClInclude Include="Utils\UnusedMacro.h" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Imgui\misc\natvis\imgui.natvis" />

@@ -12,11 +12,9 @@ namespace Graphics
 		CameraSystem( Core::Registry& registry );
 		~CameraSystem() = default;
 
-		void CreateCamera( const std::string&& CameraName );
+		void CreateCamera( std::string&& CameraName );
 
 		void SetActiveCamera( const std::string& CameraName );
-	
-
 
 		void FixedUpdate( double deltaTime ) override;
 		void Update( double deltaTime ) override;

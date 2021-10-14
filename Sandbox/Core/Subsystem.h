@@ -23,8 +23,8 @@ namespace Core
 		}
 		virtual ~Subsystem() = default;
 
-		virtual void FixedUpdate( double deltaTime ) {};
-		virtual void Update( double deltaTime ) {};
+		virtual void FixedUpdate( [[maybe_unused]] double deltaTime ) { };
+		virtual void Update( [[maybe_unused]] double deltaTime ) {};
 	protected:
 		Core::Registry& m_registry;
 	};

@@ -31,7 +31,7 @@ namespace Game
         glm::vec3 BStart, BEnd;
 
         bool m_showWindow { false };
-        Core::Entity m_entity;
+        Core::Entity m_entity {};
 
         glm::vec3 m_bobsEulers {0.f};
     };

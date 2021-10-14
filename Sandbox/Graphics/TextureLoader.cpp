@@ -88,8 +88,8 @@ namespace Graphics
         }
         else
         {
-            return false;
             std::cout << "Failed to load texture" << std::endl;
+            return false;
         }
         stbi_image_free( data );
 

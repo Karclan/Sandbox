@@ -4,40 +4,29 @@
 
 #include "../Graphics/Window.h"
 
-#include "../Graphics/CameraSystem.h"
-#include "../Utils/LoggingWindow.h"
-
-#include "../Input/InputSystem.h"
-
-#include "../Imgui/imgui.h"
+#include "imgui.h"
 
 namespace Core
 {
 	static constexpr double fixedUpdateRate = 1.f / 60.f;
 
 	Game::Game()
-		: m_subsystems()
-		, m_mainRegistry()
-		, m_window( nullptr )
-		, m_baseImguiWindowBuilder( nullptr )
-		, m_logWindow( nullptr )
+		: m_inputSystem( m_mainRegistry )
+		, m_logWindow( m_mainRegistry )
+		, m_cameraSystem( m_mainRegistry )
 	{
+		m_window = std::make_unique<Graphics::Window>( m_mainRegistry, m_inputSystem );
+		m_baseImguiWindowBuilder = std::make_unique<Core::BaseImGuiWindowBuilder>( m_mainRegistry, *m_window.get() );
+
 		EditorUtilities.CreateEditorCamera( m_mainRegistry );
 
+		RegisterSubsystem( &m_inputSystem );
+		RegisterSubsystem( &m_cameraSystem );
 
-		m_window = std::make_unique<Graphics::Window>( m_mainRegistry );
-		m_baseImguiWindowBuilder = std::make_unique<Core::BaseImGuiWindowBuilder>( m_mainRegistry, *m_window.get() );
-		m_logWindow = std::make_unique<Utils::LoggingWindow>( m_mainRegistry );
-		m_cameraSystem = std::make_unique<Graphics::CameraSystem>( m_mainRegistry );
-		m_inputSystem = std::make_unique<Input::InputSystem>( m_mainRegistry );
+		RegisterImguiWindow( &m_inputSystem );
+		RegisterImguiWindow( &m_cameraSystem );
 
-		RegisterSubsystem( m_inputSystem.get() );
-		RegisterSubsystem( m_cameraSystem.get() );
-		
-		RegisterImguiWindow( m_inputSystem.get() );
-		RegisterImguiWindow( m_cameraSystem.get() );
-
-		RegisterImguiWindow( m_logWindow.get() );
+		RegisterImguiWindow( &m_logWindow );
 		RegisterImguiWindow( m_window->GetRenderer() );
 	}
 
@@ -105,20 +94,20 @@ namespace Core
 			imguiWindow->BuildWindow( frameTime );
 		}
 
-		accumulator += frameTime;
+		m_accumulator += frameTime;
 
-		int const framesToCatchUpOn = static_cast< int >( accumulator / fixedUpdateRate );
+		int const framesToCatchUpOn = static_cast< int >( m_accumulator / fixedUpdateRate );
 
-		m_accumulator = accumulator;
+		m_accumulator = m_accumulator;
 		m_framesToCatchUpOn = framesToCatchUpOn;
 
-		while ( accumulator >= fixedUpdateRate )
+		while ( m_accumulator >= fixedUpdateRate )
 		{
 			for ( auto& subSystem : m_subsystems )
 			{
 				subSystem->FixedUpdate( fixedUpdateRate );
 			}
-			accumulator -= fixedUpdateRate;
+			m_accumulator -= fixedUpdateRate;
 		}
 
 		for ( auto& subSystem : m_subsystems )

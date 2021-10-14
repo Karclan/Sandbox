@@ -1,7 +1,8 @@
 #include "LoggingWindow.h"
 
+#include "UnusedMacro.h"
+
 #include "imgui.h"
-#include <functional>
 
 namespace Utils
 {
@@ -48,6 +49,8 @@ namespace Utils
 
 	void LoggingWindow::BuildWindow( double deltaTime )
 	{
+		UNUSED( deltaTime );
+
 		if ( ImGui::Begin( "Log" ) )
 		{
 			// Options menu

@@ -1,6 +1,7 @@
 #include "Window.h"
 
 #include "../Core/CoreRegistry.h"
+#include "../Input/InputSystem.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -10,14 +11,15 @@
 #include "imgui_impl_opengl3.h"
 
 #include <iostream>
+#include "../Utils/UnusedMacro.h"
 
 void APIENTRY glDebugOutput( GLenum source,
     GLenum type,
     unsigned int id,
-    GLenum severity,
-    GLsizei length,
+    [[maybe_unused]]  GLenum severity,
+    [[maybe_unused]] GLsizei length,
     const char * message,
-    const void * userParam )
+    [[maybe_unused]] const void * userParam )
 {
     if( id == 131169 || id == 131185 || id == 131218 || id == 131204 ) return; // ignore these non-significant error codes
 
@@ -61,8 +63,9 @@ namespace Graphics
 {
     Window * Window::GLFWCallbackWrapper::s_window = nullptr;
 
-    Window::Window( Core::Registry & registry )
-        :m_registry( registry )
+    Window::Window( Core::Registry & registry, Input::InputSystem& inInputSystem )
+        : m_registry( registry )
+        , m_inputSystem( inInputSystem )
     {
         GLFWCallbackWrapper::SetApplication( this );
         CreateWindow();
@@ -70,8 +73,9 @@ namespace Graphics
         m_renderer->Init();
     }
 
-    Window::Window( unsigned int width, unsigned int height, Core::Registry & registry )
+    Window::Window( unsigned int width, unsigned int height, Core::Registry & registry, Input::InputSystem & inInputSystem )
         : m_registry( registry )
+        , m_inputSystem( inInputSystem )
         , m_screenWidth( width )
         , m_screenHeight( height )
     {
@@ -206,6 +210,8 @@ namespace Graphics
 
     void Window::FramebufferSizeCallback( GLFWwindow * window, int width, int height )
     {
+        UNUSED( window );
+
         m_screenWidth = width;
         m_screenHeight = width;
         glViewport( 0, 0, width, height );

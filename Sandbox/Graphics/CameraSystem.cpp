@@ -6,6 +6,7 @@
 #include "TransformComponent.h"
 
 #include "imgui.h"
+#include "../Utils/UnusedMacro.h"
 
 namespace Graphics
 {
@@ -16,7 +17,7 @@ namespace Graphics
 
 	}
 
-	void CameraSystem::CreateCamera( const std::string&& CameraName )
+	void CameraSystem::CreateCamera( std::string&& CameraName )
 	{
 		auto entity = m_registry.CreateEntity();
 
@@ -48,6 +49,8 @@ namespace Graphics
 
 	void CameraSystem::FixedUpdate( double deltaTime )
 	{
+		UNUSED( deltaTime );
+
 		m_registry.ForView<CameraComponent, TransformComponent>(
 			[] ( CameraComponent& cameraComponent, TransformComponent& transformComponent )
 			{
@@ -93,7 +96,7 @@ namespace Graphics
 
 	void CameraSystem::Update( double deltaTime )
 	{
-
+		UNUSED( deltaTime );
 	}
 
 	void CameraSystem::BuildWindow( double deltaTime )

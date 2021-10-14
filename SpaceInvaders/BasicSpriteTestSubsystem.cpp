@@ -10,12 +10,14 @@
 
 
 #include "Imgui/imgui.h"
+#include "Utils/UnusedMacro.h"
 
 namespace Game
 {
     BasicSpriteTestSubsystem::BasicSpriteTestSubsystem( Core::Registry & registryRef, Graphics::Window * window )
         : Subsystem( registryRef )
         , m_windowPtr( window )
+        , m_entity ( Core::NullEntity )
     {
         AStart = glm::vec3( 5.f, 0.f, 0.f );
         AEnd = glm::vec3(0.f, 5.f, 0.f);
@@ -55,11 +57,12 @@ namespace Game
 
     void BasicSpriteTestSubsystem::FixedUpdate( double deltaTime )
     {
-
+        UNUSED( deltaTime );
     }
 
     void BasicSpriteTestSubsystem::Update( double deltaTime )
     {
+        UNUSED( deltaTime );
 		m_windowPtr->DrawLine(AStart, AEnd, { 1.f, 1.f, 0.f, 1.f }, 1.f);
 		m_windowPtr->DrawLine(BStart, BEnd, { 1.f, 1.f, 0.f, 1.f }, 1.f);
 
@@ -72,6 +75,7 @@ namespace Game
 
     void BasicSpriteTestSubsystem::BuildWindow( double deltaTime )
     {
+        UNUSED( deltaTime );
         auto & movementStruct = Subsystem::m_registry.GetComponent<Graphics::TransformComponent>( m_entity );
 
 		if ( ImGui::BeginMainMenuBar() )

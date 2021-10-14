@@ -6,19 +6,19 @@
 
 namespace Input
 {
-    class ActionId;
+	class ActionId;
 
-    class InputSystem : public Core::Subsystem, public Core::ImGuiWindowBuilder
-    {
-    public:
-        InputSystem( Core::Registry& registry );
-        ~InputSystem() = default;
+	class InputSystem : public Core::Subsystem, public Core::ImGuiWindowBuilder
+	{
+	public:
+		InputSystem( Core::Registry& registry );
+		~InputSystem() = default;
 
-        bool TestAction(ActionId const & action) const;
+		bool TestAction( ActionId const& action ) const;
 
-        void BuildWindow( double deltaTime ) override;
+		void BuildWindow( double deltaTime ) override;
 
-    private:
+	private:
 
-    };
+	};
 }

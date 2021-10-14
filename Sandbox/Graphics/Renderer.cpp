@@ -1,7 +1,9 @@
 #include "Renderer.h"
 
 #include "../Utils/Logger.h"
+#include "../Utils/UnusedMacro.h"
 #include "../Editor/Utilities.h"
+#include "../Imgui/imgui.h"
 
 #include "TextureComponent.h"
 #include "ShaderComponent.h"
@@ -10,12 +12,9 @@
 #include "CameraComponent.h"
 #include "Mesh.h"
 
-#include "../Imgui/imgui.h"
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
-
 
 #include <algorithm>
 
@@ -61,10 +60,10 @@ namespace Graphics
 	{
 		unsigned int ReturnId = 0;
 		//duplicate and valid
-		auto m_activeShader = std::make_unique<ShaderProgram>( name.c_str(), flags );
-		ReturnId = m_activeShader->getId();
+		auto shader = std::make_unique<ShaderProgram>( name.c_str(), flags );
+		ReturnId = shader->getId();
 
-		m_shaderList.push_back( std::move( m_activeShader ) );
+		m_shaderList.push_back( std::move( shader ) );
 
 		return ReturnId;
 	}
@@ -130,6 +129,8 @@ namespace Graphics
 
 	void Renderer::BuildWindow( double deltaTime )
 	{
+		UNUSED( deltaTime );
+
 		if ( ImGui::BeginMainMenuBar() )
 		{
 			if ( ImGui::BeginMenu( "Graphics" ) )
@@ -226,7 +227,7 @@ namespace Graphics
 					names.push_back( tex.first );
 				}
 
-				static int item_current_idx = 0; // Here our selection data is an index.
+				static unsigned int item_current_idx = 0; // Here our selection data is an index.
 				if ( ImGui::BeginCombo( "Textures", names[ item_current_idx ].c_str()/*, flags*/ ) )
 				{
 					for ( unsigned int n = 0; n < names.size(); n++ )
@@ -429,7 +430,7 @@ namespace Graphics
 		glm::mat4 transformation = translation * rotationMatrix * scale;
 		m_activeShader->setUniform( "model", transformation );
 	}
-
+	
 	void Renderer::UpdateTextures( TextureComponent& textureComponent )
 	{
 		bool rebindTextures = false;
@@ -439,8 +440,11 @@ namespace Graphics
 		{
 			for ( size_t i = 0; i < newTexturesSize; ++i )
 			{
-				rebindTextures = textures[ i ] != m_boundTextures[ i ];
-				break;
+				if ( textures[ i ] != m_boundTextures[ i ] )
+				{
+					rebindTextures = true;
+					break;
+				}
 			}
 		}
 		else

@@ -15,7 +15,6 @@ namespace Core
     class ResourceManager
     {
     public:
-
         ResourceManager();
         ~ResourceManager();
 
@@ -23,8 +22,7 @@ namespace Core
         ResourceId createOrLoadTexture();
 
     private:
-
-
         std::map<std::string, ResourceId> m_loadedResourceMap;
+
     };
 }

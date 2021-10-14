@@ -20,10 +20,9 @@ namespace Game
 
 		void CreateComponents( Graphics::Window& window );
 
-		void FixedUpdate(double deltaTime) override;
-		void Update(double deltaTime) override;
-
-		void BuildWindow(double deltaTime) override;
+		void FixedUpdate( double deltaTime) override;
+		void Update( double deltaTime) override;
+		void BuildWindow( double deltaTime) override;
 
 	private:
 		enum class EDirection

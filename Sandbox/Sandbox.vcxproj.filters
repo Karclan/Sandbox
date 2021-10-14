@@ -40,9 +40,6 @@
     <Filter Include="glad">
       <UniqueIdentifier>{7018e8f9-7a84-46b2-b83b-26362d91daa1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="glm">
-      <UniqueIdentifier>{9bca6a2d-41b1-4c21-bfa5-fa04d5f7a99b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{b660d60a-bb46-45d8-b03a-7c47c79da616}</UniqueIdentifier>
     </Filter>
@@ -295,6 +292,9 @@
     </ClInclude>
     <ClInclude Include="Editor\ArcballBehaviour.h">
       <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\UnusedMacro.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
