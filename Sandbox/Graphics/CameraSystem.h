@@ -13,14 +13,12 @@ namespace Graphics
 		~CameraSystem() = default;
 
 		void CreateCamera( std::string&& CameraName );
-
 		void SetActiveCamera( const std::string& CameraName );
 
-		void FixedUpdate( double deltaTime ) override;
-		void Update( double deltaTime ) override;
+		void FixedUpdate( double deltaTime ) noexcept override;
+		void Update( double deltaTime ) noexcept override;
 		void BuildWindow( double deltaTime ) override;
 	private:
-
 		CameraInspector m_cameraInspector;
 	};
 }

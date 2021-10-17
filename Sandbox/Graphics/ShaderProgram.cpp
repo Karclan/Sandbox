@@ -1,5 +1,8 @@
 #include "ShaderProgram.h"
 
+#include "../Utils/Logger.h"
+#include "../Utils/format.h"
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -7,7 +10,7 @@
 
 namespace Graphics
 {
-    ShaderProgram::ShaderProgram()
+    ShaderProgram::ShaderProgram() noexcept
     {
         m_Id = glCreateProgram();
     }
@@ -20,16 +23,12 @@ namespace Graphics
         create();
     }
 
-    ShaderProgram::~ShaderProgram()
-    {
-    }
-
-    unsigned int ShaderProgram::getId() const
+    unsigned int ShaderProgram::getId() const noexcept
     {
         return m_Id;
     }
 
-    bool ShaderProgram::attachShader( std::vector<Shader> & shaders )
+    bool ShaderProgram::attachShader( std::vector<Shader> const & shaders )
     {
         GLint success = GL_FALSE;
 
@@ -39,7 +38,7 @@ namespace Graphics
         }
         else
         {
-            std::cout << "Shader Warning! Attached shaders ignored as shader already has had shaders attached\n";
+            Utils::Logger::LogMessage(Utils::LogType::Error, "Shader Warning! Attached shaders ignored as shader already has had shaders attached\n" );
         }
 
         for( auto & shader : m_shaders )
@@ -56,14 +55,15 @@ namespace Graphics
             std::vector<GLchar> infoLogVec( infoLogSize );
             if( !infoLogVec.empty() )
             {
-
-                glGetProgramInfoLog( m_Id, infoLogSize, NULL, &infoLogVec[ 0 ] );
+                glGetProgramInfoLog( m_Id, infoLogSize, nullptr, &infoLogVec[ 0 ] );
                 std::string infoLog( infoLogVec.begin(), infoLogVec.end() );
-                std::cout << "Error::Shader::Program::Linking_Failed\n" << infoLog << std::endl;
+                std::string error = "Error::Shader::Program::Linking_Failed\n";
+                error.append(infoLog);
+                Utils::Logger::LogMessage(Utils::LogType::Error, error);
             }
             else
             {
-                std::cout << "Error::Shader::Program::Linking_Failed\n" << "No error log output!" << std::endl;
+                Utils::Logger::LogMessage(Utils::LogType::Error, "Error::Shader::Program::Linking_Failed\nNo error log output!");
             }
         }
 
@@ -80,16 +80,16 @@ namespace Graphics
     {
         std::vector<Shader> shaders;
         
-        size_t setBits = m_shaderTypeFlags.count();
+        size_t const setBits = m_shaderTypeFlags.count();
         
         for( size_t i = 0; i < setBits; ++i )
         {
             if( m_shaderTypeFlags.test( i ) )
             {
-                Shader::Type t = static_cast<Shader::Type>(i);
-                if( t < Shader::Type::Total && t != Shader::Type::Invalid )
+                Shader::Type const type = static_cast<Shader::Type>(i);
+                if( type < Shader::Type::Total && type != Shader::Type::Invalid )
                 {
-                    shaders.push_back( { t, m_shaderName.c_str() } );
+                    shaders.push_back( { type, m_shaderName.c_str() } );
                 }
             }
         }
@@ -97,14 +97,14 @@ namespace Graphics
         return attachShader(shaders);
     }
 
-    void ShaderProgram::useProgram() const
+    void ShaderProgram::useProgram() const noexcept
     {
         glUseProgram( m_Id );
     }
 
     void ShaderProgram::setUniform( const char * name, float x, float y, float z )
     {
-        GLint loc = getUniformLocation( name );
+        GLint const loc = getUniformLocation( name );
         glUniform3f( loc, x, y, z );
     }
 
@@ -115,49 +115,49 @@ namespace Graphics
 
     void ShaderProgram::setUniform( const char * name, glm::vec4 const & v )
     {
-        GLint loc = getUniformLocation( name );
+        GLint const loc = getUniformLocation( name );
         glUniform4f( loc, v.x, v.y, v.z, v.w );
     }
 
     void ShaderProgram::setUniform( const char * name, glm::vec2 const & v )
     {
-        GLint loc = getUniformLocation( name );
+        GLint const loc = getUniformLocation( name );
         glUniform2f( loc, v.x, v.y );
     }
 
     void ShaderProgram::setUniform( const char * name, glm::mat4 const & m )
     {
-        GLint loc = getUniformLocation( name );
+        GLint const loc = getUniformLocation( name );
         glUniformMatrix4fv( loc, 1, GL_FALSE, &m[ 0 ][ 0 ] );
     }
 
     void ShaderProgram::setUniform( const char * name, glm::mat3 const & m )
     {
-        GLint loc = getUniformLocation( name );
+        GLint const loc = getUniformLocation( name );
         glUniformMatrix3fv( loc, 1, GL_FALSE, &m[ 0 ][ 0 ] );
     }
 
     void ShaderProgram::setUniform( const char * name, float val )
     {
-        GLint loc = getUniformLocation( name );
+        GLint const loc = getUniformLocation( name );
         glUniform1f( loc, val );
     }
 
     void ShaderProgram::setUniform( const char * name, int val )
     {
-        GLint loc = getUniformLocation( name );
+        GLint const loc = getUniformLocation( name );
         glUniform1i( loc, val );
     }
 
     void ShaderProgram::setUniform( const char * name, GLuint val )
     {
-        GLint loc = getUniformLocation( name );
+        GLint const loc = getUniformLocation( name );
         glUniform1ui( loc, val );
     }
 
     void ShaderProgram::setUniform( const char * name, bool val )
     {
-        int loc = getUniformLocation( name );
+        int const loc = getUniformLocation( name );
         glUniform1i( loc, val );
     }
 
@@ -166,9 +166,9 @@ namespace Graphics
         GLint numUniforms = 0;
         glGetProgramInterfaceiv( m_Id, GL_UNIFORM, GL_ACTIVE_RESOURCES, &numUniforms );
 
-        GLenum properties [] = { GL_NAME_LENGTH, GL_TYPE, GL_LOCATION, GL_BLOCK_INDEX };
-
-        printf( "Active uniforms:\n" );
+        GLenum const properties [] = { GL_NAME_LENGTH, GL_TYPE, GL_LOCATION, GL_BLOCK_INDEX };
+        
+        Utils::Logger::LogMessage(Utils::LogType::Info, "Active Uniforms\n");
         for( int i = 0; i < numUniforms; ++i )
         {
             GLint results[ 4 ];
@@ -179,10 +179,11 @@ namespace Graphics
                 continue;
             }
 
-            GLint nameBufSize = results[ 0 ] + 1;
+            GLint const nameBufSize = results[ 0 ] + 1;
             char * name = new char[ nameBufSize ];
             glGetProgramResourceName( m_Id, GL_UNIFORM, i, nameBufSize, NULL, name );
-            printf( "%-5d %s (%s)\n", results[ 2 ], name, getTypeString( results[ 1 ] ) );
+            std::string uniform = fmt::format("{} {} ({})\n",results[2], name, getTypeString(results[1]) );
+			Utils::Logger::LogMessage(Utils::LogType::Info, uniform);
             delete [] name;
         }
     }
@@ -191,36 +192,38 @@ namespace Graphics
     {
         GLint numBlocks = 0;
         glGetProgramInterfaceiv( m_Id, GL_UNIFORM_BLOCK, GL_ACTIVE_RESOURCES, &numBlocks );
-        GLenum blockProps [] = { GL_NUM_ACTIVE_VARIABLES, GL_NAME_LENGTH };
-        GLenum blockIndex [] = { GL_ACTIVE_VARIABLES };
-        GLenum props [] = { GL_NAME_LENGTH, GL_TYPE, GL_BLOCK_INDEX };
+		GLenum const blockProps[] = { GL_NUM_ACTIVE_VARIABLES, GL_NAME_LENGTH };
+		GLenum const blockIndex[] = { GL_ACTIVE_VARIABLES };
+		GLenum const props[] = { GL_NAME_LENGTH, GL_TYPE, GL_BLOCK_INDEX };
 
         for( int block = 0; block < numBlocks; ++block )
         {
             GLint blockInfo[ 2 ];
             glGetProgramResourceiv( m_Id, GL_UNIFORM_BLOCK, block, 2, blockProps, 2, NULL, blockInfo );
 
-            GLint numUnis = blockInfo[ 0 ];
+            GLint const numUnis = blockInfo[ 0 ];
             char * blockName = new char[ blockInfo[ 1 ] + 1 ];
             glGetProgramResourceName( m_Id, GL_UNIFORM_BLOCK, block, blockInfo[ 1 ] + 1, NULL, blockName );
-
-            printf( "Uniform block \"%s\":\n", blockName );
+            
+            std::string uniformBlockName = fmt::format( "Uniform Block \"{}\":\n", blockName);
             delete [] blockName;
+            Utils::Logger::LogMessage(Utils::LogType::Info, uniformBlockName);
 
             GLint * unifIndexes = new GLint[ numUnis ];
             glGetProgramResourceiv( m_Id, GL_UNIFORM_BLOCK, block, 1, blockIndex, numUnis, NULL, unifIndexes );
 
             for( int unif = 0; unif < numUnis; ++unif )
             {
-                GLint uniIndex = unifIndexes[ unif ];
+                GLint const uniIndex = unifIndexes[ unif ];
                 GLint results[ 3 ];
                 glGetProgramResourceiv( m_Id, GL_UNIFORM, uniIndex, 3, props, 3, NULL, results );
 
-                GLint nameBufSize = results[ 0 ] + 1;
+                GLint const nameBufSize = results[ 0 ] + 1;
                 char * name = new char[ nameBufSize ];
                 glGetProgramResourceName( m_Id, GL_UNIFORM, uniIndex, nameBufSize, NULL, name );
-                printf( "    %s (%s)\n", name, getTypeString( results[ 1 ] ) );
+				std::string uniformName = fmt::format("    {} ({})\n", name, getTypeString(results[1]));
                 delete [] name;
+				Utils::Logger::LogMessage(Utils::LogType::Info, uniformName);
             }
 
             delete [] unifIndexes;
@@ -232,19 +235,21 @@ namespace Graphics
         GLint numAttribs;
         glGetProgramInterfaceiv( m_Id, GL_PROGRAM_INPUT, GL_ACTIVE_RESOURCES, &numAttribs );
 
-        GLenum properties [] = { GL_NAME_LENGTH, GL_TYPE, GL_LOCATION };
+        GLenum const properties [] = { GL_NAME_LENGTH, GL_TYPE, GL_LOCATION };
 
         printf( "Active attributes:\n" );
+		Utils::Logger::LogMessage(Utils::LogType::Info, "Active attributes:\n");
         for( int i = 0; i < numAttribs; ++i )
         {
             GLint results[ 3 ];
             glGetProgramResourceiv( m_Id, GL_PROGRAM_INPUT, i, 3, properties, 3, NULL, results );
 
-            GLint nameBufSize = results[ 0 ] + 1;
+            GLint const nameBufSize = results[ 0 ] + 1;
             char * name = new char[ nameBufSize ];
             glGetProgramResourceName( m_Id, GL_PROGRAM_INPUT, i, nameBufSize, NULL, name );
-            printf( "%-5d %s (%s)\n", results[ 2 ], name, getTypeString( results[ 1 ] ) );
+			std::string attribute = fmt::format("{} {} ({})\n", results[2], name, getTypeString(results[1]));
             delete [] name;
+			Utils::Logger::LogMessage(Utils::LogType::Info, attribute);
         }
     }
 
@@ -259,14 +264,15 @@ namespace Graphics
             uniformLocations[ name ] = loc;
             if( loc == -1 )
             {
-                printf( "Unable to find Uniform Location: %s. Check the %s shader!\n", name,  m_shaderName.c_str() );
+				std::string uniformBlockName = fmt::format("Unable to find Uniform Location: %s. Check the %s shader!\n", name, m_shaderName );
+				Utils::Logger::LogMessage(Utils::LogType::Info, uniformBlockName);
             }
         }
 
         return uniformLocations[ name ];
     }
 
-    const char * ShaderProgram::getTypeString( GLenum type ) const
+    const char * ShaderProgram::getTypeString( GLenum type ) const noexcept
     {
         switch( type )
         {

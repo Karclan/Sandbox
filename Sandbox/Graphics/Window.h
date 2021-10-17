@@ -28,7 +28,10 @@ namespace Graphics
         Window( unsigned int width, unsigned int height, Core::Registry & registry, Input::InputSystem& inInputSystem );
         ~Window();
 
-        Renderer * GetRenderer( );
+		Renderer& GetRenderer() noexcept
+		{
+			return *m_renderer.get();
+		}
 
         void PollInput();
         void PreRender();
@@ -41,14 +44,14 @@ namespace Graphics
         void ImguiPreRender();
         void ImguiRender();
 
-        bool ShouldClose() const;
+        bool ShouldClose() const noexcept;
 
-        operator bool()
+        operator bool() const noexcept
         {
             return m_glfwWindow != nullptr;
         }
 
-        int GetRenderedFrames() const
+        int GetRenderedFrames() const noexcept
         {
             return m_fps;
         }
@@ -59,7 +62,7 @@ namespace Graphics
         static constexpr glm::vec4 Black { glm::vec4( 0.f, 0.f, 0.f, 1.f ) };
         static constexpr glm::vec4 White { glm::vec4( 1.f, 1.f, 1.f, 1.f ) };
 
-        bool DrawLine( glm::vec3 A, glm::vec3 B, glm::vec4 colour = White, float thickness = 1.f );
+        bool DrawLine( glm::vec3 A, glm::vec3 B, glm::vec4 colour = White, float thickness = 1.f ) noexcept;
 
     private:
 

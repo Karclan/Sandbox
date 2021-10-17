@@ -23,7 +23,7 @@ namespace Utils
 
 	struct LogMessagePair
 	{
-		LogMessagePair( LogType inType, char const* inMessage )
+		LogMessagePair( LogType inType, char const* inMessage ) noexcept
 			: type( inType )
 			, message( inMessage )
 		{}
@@ -37,7 +37,8 @@ namespace Utils
 	class Logger
 	{
 	public:
-		static void LogMessage( LogType const type, char const* message );
+		static void LogMessage( LogType const type, std::string const & message ) noexcept;
+		static void LogMessage( LogType const type, char const* message ) noexcept;
 		static void LogMessage( LogMessagePair Message );
 
 		template<class Class>

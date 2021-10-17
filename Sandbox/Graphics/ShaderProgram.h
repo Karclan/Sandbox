@@ -17,13 +17,13 @@ namespace Graphics
     class ShaderProgram
     {
     public:    
-        ShaderProgram();
+        ShaderProgram() noexcept;
         ShaderProgram( const char * shaderName, Utils::EnumBitmask<Shader::Type> flags );
-        ~ShaderProgram();
+        ~ShaderProgram() = default;
 
-        unsigned int getId() const;
+        unsigned int getId() const noexcept;
 
-        void useProgram() const;
+        void useProgram() const noexcept;
 
         void setUniform( const char * name, float x, float y, float z );
         void setUniform( const char * name, glm::vec2 const & v );
@@ -42,10 +42,10 @@ namespace Graphics
 
     private:
         bool create();
-        bool attachShader( std::vector<Shader>& shaders );
+        bool attachShader( std::vector<Shader> const & shaders );
 
         GLint  getUniformLocation( const char * name );
-        const char * getTypeString( GLenum type ) const;
+        const char * getTypeString( GLenum type ) const noexcept;
 
         unsigned int m_Id {};
 

@@ -12,9 +12,9 @@ int main( [[maybe_unused]] int argc, [[maybe_unused]] char* argv [] )
 	Core::Game Game;
 
 	auto VecSub = std::make_unique<Game::VectorMathExampleSubsystem>( Game.GetRegistry() );
-	VecSub->CreateComponents( *Game.GetWindow() );
+	VecSub->CreateComponents( Game.GetWindow() );
 	auto BasicSpriteSubsystem = std::make_unique<Game::BasicSpriteTestSubsystem>( Game.GetRegistry(), Game.GetWindow() );
-	BasicSpriteSubsystem->CreateComponents( *Game.GetWindow() );
+	BasicSpriteSubsystem->CreateComponents( Game.GetWindow() );
 
 	//auto BasicMovementSubsystem = std::make_shared<Game::BasicMovementSubsystem>(Game.getRegistry());
 	//BasicMovementSubsystem->createComponents(*Game.getWindow());

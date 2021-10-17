@@ -27,7 +27,7 @@ namespace Core
 		RegisterImguiWindow( &m_cameraSystem );
 
 		RegisterImguiWindow( &m_logWindow );
-		RegisterImguiWindow( m_window->GetRenderer() );
+		RegisterImguiWindow( &m_window->GetRenderer() );
 	}
 
 	Game::~Game()

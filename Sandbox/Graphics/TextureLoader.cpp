@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "../Imgui/imgui.h"
+#include "../Utils/Logger.h"
 
 namespace Graphics
 {
@@ -80,7 +81,7 @@ namespace Graphics
                 break;
             case Texture::InfoStruct::Format::UNKNOWN:
             default:
-                std::cout << "This is bad" << std::endl;
+                Utils::Logger::LogMessage(Utils::LogType::Error, "Texture loader, unknown format!\n");
                 return false;
             }
 
@@ -88,7 +89,7 @@ namespace Graphics
         }
         else
         {
-            std::cout << "Failed to load texture" << std::endl;
+            Utils::Logger::LogMessage(Utils::LogType::Error, "Failed to load texture.\n");
             return false;
         }
         stbi_image_free( data );

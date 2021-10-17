@@ -25,7 +25,7 @@ namespace Game
             glm::vec2 m_xy {0.f, 0.f};
         };
         // Inherited via Subsystem
-        virtual void FixedUpdate( double deltaTime ) override;
+        virtual void FixedUpdate( double deltaTime ) noexcept override;
 
     private:
         void Integrate( double deltaTime );

@@ -12,7 +12,11 @@
 
 namespace Utils
 {
-	void Logger::LogMessage( LogType const type, char const* message )
+	void Logger::LogMessage(LogType const type, std::string const& message) noexcept
+	{
+		LogMessage( LogMessagePair( type, message.c_str() ) );
+	}
+	void Logger::LogMessage( LogType const type, char const* message ) noexcept
 	{
 		LogMessage( LogMessagePair( type, message ) );
 	}
@@ -43,7 +47,7 @@ namespace Utils
 		OS << message.message;
 		OutputDebugString( OS.str().c_str() );
 
-		Logger& logger = GetInstance();
+		Logger const & logger = GetInstance();
 		logger.callbackDelegate( message );
 	}
 

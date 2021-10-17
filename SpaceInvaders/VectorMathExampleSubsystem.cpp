@@ -22,20 +22,20 @@ namespace Game
 	void VectorMathExampleSubsystem::CreateComponents(Graphics::Window& window)
 	{
 		m_window = &window;
-		Graphics::Renderer* renderer = window.GetRenderer();
+		Graphics::Renderer & renderer = window.GetRenderer();
 		using namespace magic_enum::bitwise_operators;
-		unsigned int basicShaderId = renderer->CreateShader("basic", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment });
+		unsigned int basicShaderId = renderer.CreateShader("basic", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment });
 		Graphics::ShaderComponent basicShaderComp{ basicShaderId };
-		auto containerTextureId = renderer->CreateTexture("container.jpg");
+		auto containerTextureId = renderer.CreateTexture("container.jpg");
 		Graphics::TextureComponent containerTextureComp{ { containerTextureId } };
 
 		//A
 		{
 			PointAEntity = m_registry.CreateEntity();
-			Graphics::TransformComponent transform{ PointA };
-			auto Entity = PointAEntity;
+			Graphics::TransformComponent const transform{ PointA };
+			auto const Entity = PointAEntity;
 			m_registry.AddComponent<Graphics::TransformComponent>(Entity, transform);
-			m_registry.AddComponent<Graphics::MeshComponent>(Entity, renderer->GetMesh(Graphics::PrimativeType::Cube));
+			m_registry.AddComponent<Graphics::MeshComponent>(Entity, renderer.GetMesh(Graphics::PrimativeType::Cube));
 			m_registry.AddComponent<Graphics::ShaderComponent>(Entity, basicShaderComp);
 			m_registry.AddComponent<Graphics::TextureComponent>(Entity, containerTextureComp);
 			m_registry.AddComponent<VectorMathExampleSubsystem::EntityTag>(Entity);
@@ -44,10 +44,10 @@ namespace Game
 		//B
 		{
 			PointBEntity = m_registry.CreateEntity();
-			auto Entity = PointBEntity;
-			Graphics::TransformComponent transform{ PointB };
+			auto const Entity = PointBEntity;
+			Graphics::TransformComponent const transform{ PointB };
 			m_registry.AddComponent<Graphics::TransformComponent>(Entity, transform);
-			m_registry.AddComponent<Graphics::MeshComponent>(Entity, renderer->GetMesh(Graphics::PrimativeType::Square));
+			m_registry.AddComponent<Graphics::MeshComponent>(Entity, renderer.GetMesh(Graphics::PrimativeType::Square));
 			m_registry.AddComponent<Graphics::ShaderComponent>(Entity, basicShaderComp);
 			m_registry.AddComponent<Graphics::TextureComponent>(Entity, containerTextureComp);
 			m_registry.AddComponent<VectorMathExampleSubsystem::EntityTag>(Entity);
@@ -56,23 +56,23 @@ namespace Game
 		//C
 		{
 			PointCEntity = m_registry.CreateEntity();
-			auto Entity = PointCEntity;
-			Graphics::TransformComponent transform{ PointC };
+			auto const Entity = PointCEntity;
+			Graphics::TransformComponent const transform{ PointC };
 			m_registry.AddComponent<Graphics::TransformComponent>(Entity, transform);
-			m_registry.AddComponent<Graphics::MeshComponent>(Entity, renderer->GetMesh(Graphics::PrimativeType::Triangle));
+			m_registry.AddComponent<Graphics::MeshComponent>(Entity, renderer.GetMesh(Graphics::PrimativeType::Triangle));
 			m_registry.AddComponent<Graphics::ShaderComponent>(Entity, basicShaderComp);
 			m_registry.AddComponent<Graphics::TextureComponent>(Entity, containerTextureComp);
 			m_registry.AddComponent<VectorMathExampleSubsystem::EntityTag>(Entity);
 		}
 	}
 
-	void VectorMathExampleSubsystem::FixedUpdate(double deltaTime)
+	void VectorMathExampleSubsystem::FixedUpdate(double deltaTime) noexcept
 	{
 		UNUSED( deltaTime );
 		{
 			Graphics::TransformComponent& Transform = m_registry.GetComponent<Graphics::TransformComponent>(PointAEntity);
 			Transform.Position = PointA;
-			glm::vec3 rotation = glm::eulerAngles( Transform.RotationQuat );
+			glm::vec3 const rotation = glm::eulerAngles( Transform.RotationQuat );
 			float const& pitch = rotation.x;
 			//float const& roll = rotation.z;
 			float const& yaw = rotation.y;
@@ -101,7 +101,7 @@ namespace Game
 
 	}
 
-	void VectorMathExampleSubsystem::Update(double deltaTime)
+	void VectorMathExampleSubsystem::Update(double deltaTime) noexcept
 	{
 		UNUSED( deltaTime );
 	}
@@ -129,15 +129,15 @@ namespace Game
 				ImGui::DragFloat3("Position C", &PointC.x, 0.01f);
 
 				ImGui::Separator();
-				glm::vec3 up = glm::cross(PointARight, PointAForward);
+				glm::vec3 const up = glm::cross(PointARight, PointAForward);
 				ImGui::Text("A Forward: %f, %f, %f", PointAForward.x, PointAForward.y, PointAForward.z);
 				ImGui::Text("A Right: %f, %f, %f", PointARight.x, PointARight.y, PointARight.z);
 				ImGui::Text("A Up: %f, %f, %f", up.x, up.y, up.z);
 				ImGui::Separator();
-				auto PointAN = glm::length(PointA) != 0 ? glm::normalize(PointA) : PointA;
+				auto const PointAN = glm::length(PointA) != 0 ? glm::normalize(PointA) : PointA;
 
-				glm::vec3 AB = PointB - PointA;
-				glm::vec3 AC = PointC - PointA;
+				glm::vec3 const AB = PointB - PointA;
+				glm::vec3 const AC = PointC - PointA;
 
 				m_window->DrawLine(PointA, PointA + AB, Graphics::Window::Black);
 				m_window->DrawLine(PointA, PointA + AC, Graphics::Window::White);
@@ -146,8 +146,8 @@ namespace Game
 				m_window->DrawLine(PointA, PointA + PointARight, Graphics::Window::Red );
 				m_window->DrawLine(PointA, PointA + up, Graphics::Window::Green);
 
-				float ADotB = glm::dot(PointARight, glm::normalize(AB));
-				float ADotC = glm::dot(PointARight, glm::normalize(AC));
+				float const ADotB = glm::dot(PointARight, glm::normalize(AB));
+				float const ADotC = glm::dot(PointARight, glm::normalize(AC));
 				ImGui::Text("ADotB: %f", ADotB);
 				ImGui::Text("ADotC: %f", ADotC);
 
@@ -177,8 +177,8 @@ namespace Game
 					CDirection = EDirection::Right;
 				}
 
-				std::string bDir(magic_enum::enum_name(BDirection));
-				std::string cDir(magic_enum::enum_name(CDirection));
+				std::string const bDir(magic_enum::enum_name(BDirection));
+				std::string const cDir(magic_enum::enum_name(CDirection));
 				ImGui::Text("BDirection : %s", bDir.c_str());
 				ImGui::Text("CDirection : %s", cDir.c_str());
 				ImGui::Separator();

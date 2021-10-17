@@ -1,9 +1,9 @@
 #include "Mesh.h"
 
+#include "../Utils/Logger.h"
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
-#include <iostream>
 
 namespace Graphics
 {
@@ -99,16 +99,16 @@ namespace Graphics
             }
             else //Not successfully generated and bound expected buffers
             {
-                std::cout << "Mesh Creation Error!, trying to set created when buffers aren't made." << std::endl;
+                Utils::Logger::LogMessage(Utils::LogType::Error, "Mesh Creation Error!, trying to set created when buffers aren't made.");
             }
         }
         else if (!flag && m_created) //Improper use of setCreated
         {
-            std::cout << "Mesh Creation Error!, trying to set uncreated when created, use cleanup!" << std::endl;
+            Utils::Logger::LogMessage(Utils::LogType::Error, "Mesh Creation Error!, trying to set uncreated when created, use cleanup!");
         }
         else //flag and created
         {
-            std::cout << "Mesh Creation Error!, trying to set created when already created." << std::endl;
+            Utils::Logger::LogMessage(Utils::LogType::Error, "Mesh Creation Error!, trying to set created when already created.");
         }
     }
 

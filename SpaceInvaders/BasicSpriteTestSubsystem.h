@@ -16,17 +16,16 @@ namespace Game
     class BasicSpriteTestSubsystem final : public Core::Subsystem, public Core::ImGuiWindowBuilder
     {
     public:
-        BasicSpriteTestSubsystem( Core::Registry& registryRef, Graphics::Window* window );
-        virtual ~BasicSpriteTestSubsystem();
+        BasicSpriteTestSubsystem( Core::Registry& registryRef, Graphics::Window& window );
 
         void CreateComponents( Graphics::Window & windowRef );
         
         // Inherited via Subsystem
-        void FixedUpdate( double deltaTime ) override;
-        void Update( double deltaTime ) override;
+        void FixedUpdate( double deltaTime ) noexcept override;
+        void Update( double deltaTime ) noexcept override;
         void BuildWindow( double deltaTime ) override;
     private:
-        Graphics::Window * m_windowPtr;
+        Graphics::Window & m_windowRef;
         glm::vec3 AStart, AEnd;
         glm::vec3 BStart, BEnd;
 

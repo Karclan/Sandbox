@@ -42,8 +42,10 @@ namespace Core
 		virtual bool ShouldClose();
 		virtual void Run();
 
-		Core::Registry& GetRegistry() { return m_mainRegistry; }
-		Graphics::Window* GetWindow() { return m_window.get(); }
+		Core::Registry const & GetRegistry() const noexcept { return m_mainRegistry; }
+		Core::Registry& GetRegistry() noexcept { return m_mainRegistry; }
+		Graphics::Window const & GetWindow() const noexcept { return *m_window.get(); }
+		Graphics::Window & GetWindow() noexcept { return *m_window.get(); }
 
 	private:
 		//Sorts subsystem vector based on update order

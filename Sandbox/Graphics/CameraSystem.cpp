@@ -47,7 +47,7 @@ namespace Graphics
 			} );
 	}
 
-	void CameraSystem::FixedUpdate( double deltaTime )
+	void CameraSystem::FixedUpdate( double deltaTime ) noexcept
 	{
 		UNUSED( deltaTime );
 
@@ -94,7 +94,7 @@ namespace Graphics
 		//Camera Controls
 	}
 
-	void CameraSystem::Update( double deltaTime )
+	void CameraSystem::Update( double deltaTime ) noexcept
 	{
 		UNUSED( deltaTime );
 	}

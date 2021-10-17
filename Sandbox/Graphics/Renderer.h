@@ -49,7 +49,7 @@ namespace Graphics
 
 		void Render();
 
-		bool DrawLine( glm::vec3 A, glm::vec3 b, glm::vec4 colour = glm::vec4( 1.f ), float thickness = 1.f );
+		bool DrawLine( glm::vec3 A, glm::vec3 b, glm::vec4 colour = glm::vec4( 1.f ), float thickness = 1.f ) noexcept;
 
 		void FramebufferSizeCallback( int width, int height );
 

@@ -354,7 +354,7 @@ namespace Graphics
 		}
 	}
 
-	bool Renderer::DrawLine( glm::vec3 A, glm::vec3 B, glm::vec4 colour, float thickness )
+	bool Renderer::DrawLine( glm::vec3 A, glm::vec3 B, glm::vec4 colour, float thickness ) noexcept
 	{
 		//Add two points into the buffer
 		if ( m_lineDrawCalls + 1 <= m_maxLinesPerRender )

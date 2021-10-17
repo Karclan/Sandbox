@@ -156,6 +156,9 @@
     <ClCompile Include="Editor\ArcballBehaviour.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
+    <ClCompile Include="Editor\InputActions.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\ShaderProgram.h">
@@ -294,6 +297,12 @@
       <Filter>Editor</Filter>
     </ClInclude>
     <ClInclude Include="Utils\UnusedMacro.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\InputActions.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\format.h">
       <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>

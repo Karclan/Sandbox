@@ -7,6 +7,7 @@
 #include <vector>
 #include <sstream>
 #include <fstream>
+#include "../Utils/Logger.h"
 
 namespace Graphics
 {
@@ -61,7 +62,9 @@ namespace Graphics
                 std::vector<GLchar> infoLogVec( infoLogSize );
                 glGetShaderInfoLog( m_Id, 512, NULL, &infoLogVec[ 0 ] );
                 std::string infoLog( infoLogVec.begin(), infoLogVec.end() );
-                std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+                std::string error = "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n";
+                error.append(infoLog);
+                Utils::Logger::LogMessage(Utils::LogType::Error, error);
             }
         }
 
@@ -105,7 +108,9 @@ namespace Graphics
             m_shaderSource = vShaderStream.str();// convert stream into string
         } catch( std::ifstream::failure e )
         {
-            std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ\n" << "File: " << filePath << std::endl;
+            std::string error = "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ\nFile: ";
+            error.append(filePath);
+            Utils::Logger::LogMessage(Utils::LogType::Error, error);
         }
     }
 }
