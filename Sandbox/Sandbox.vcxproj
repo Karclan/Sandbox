@@ -238,6 +238,7 @@
     <ClCompile Include="Imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Imgui\imgui_widgets.cpp" />
     <ClCompile Include="Imgui\misc\cpp\imgui_stdlib.cpp" />
+    <ClCompile Include="Input\DeviceBindings.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
     <ClCompile Include="Graphics\Shader.cpp" />
     <ClCompile Include="Graphics\ShaderProgram.cpp" />
@@ -287,7 +288,10 @@
     <ClInclude Include="Imgui\imstb_textedit.h" />
     <ClInclude Include="Imgui\imstb_truetype.h" />
     <ClInclude Include="Imgui\misc\cpp\imgui_stdlib.h" />
+    <ClInclude Include="Input\DeviceBindings.h" />
+    <ClInclude Include="Input\Device.h" />
     <ClInclude Include="Input\InputAction.h" />
+    <ClInclude Include="Input\InputState.h" />
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="magic_enum\magic_enum.hpp" />
     <ClInclude Include="stb\stb_image.h" />

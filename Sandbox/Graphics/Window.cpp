@@ -2,6 +2,7 @@
 
 #include "../Core/CoreRegistry.h"
 #include "../Input/InputSystem.h"
+#include "../Input/InputState.h"
 #include "../Utils/UnusedMacro.h"
 #include "../Utils/Logger.h"
 
@@ -169,6 +170,10 @@ namespace Graphics
 		}
 		glfwMakeContextCurrent(window);
 		glfwSetFramebufferSizeCallback(window, GLFWCallbackWrapper::FramebufferSizeCallback);
+		glfwSetKeyCallback( window, GLFWCallbackWrapper::KeyCallback );
+		glfwSetMouseButtonCallback( window, GLFWCallbackWrapper::MouseButtonCallback );
+		glfwSetScrollCallback( window, GLFWCallbackWrapper::ScrollCallback );
+		glfwSetCursorPosCallback( window, GLFWCallbackWrapper::CursorPositionCallback );
 
 		// tell GLFW to capture our mouse
 	   // glfwSetInputMode( window, GLFW_CURSOR, GLFW_CURSOR_DISABLED );
@@ -271,12 +276,12 @@ namespace Graphics
 
 	void Window::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
-		m_inputSystem.KeyAction(key, scancode, static_cast<Input::InputSystem::ActionState>(action), mods);
+		m_inputSystem.KeyAction(key, scancode, static_cast<Input::ActionState>(action), mods);
 	}
 
 	void Window::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 	{
-		m_inputSystem.MouseAction(button, static_cast<Input::InputSystem::ActionState>(action), mods);
+		m_inputSystem.MouseAction(button, static_cast<Input::ActionState>(action), mods);
 	}
 
 	void Window::CursorPositionCallback(GLFWwindow* window, double xPosition, double yPosition)
