@@ -17,9 +17,14 @@ namespace Input
 		{
 		};
 
-		bool operator==( DeviceId & inId ) const noexcept
+		bool operator==( DeviceId const & inId ) const noexcept
 		{
 			return m_deviceId == inId;
+		}
+
+		bool operator<( DeviceBindings const & other ) const noexcept
+		{
+			return m_deviceId < other.m_deviceId;
 		}
 
 		//Function to setup bindings for a given device

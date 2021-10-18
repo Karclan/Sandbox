@@ -8,29 +8,20 @@
 
 namespace Input
 {
-	InputSystem::InputSystem( Core::Registry & registry )
+	InputSystem::InputSystem( Core::Registry & registry ) noexcept
 		: Core::Subsystem( registry )
 	{
 
 	}
-
-	bool InputSystem::TestAction( ActionId const & action ) const
-	{
-		using namespace Literals;
-		switch ( action )
-		{
-			case "Test"_ActionId:
-			{
-
-			}
-		}
-
-		return false;
-	}
-
+	
 	void InputSystem::BuildWindow( double deltaTime )
 	{
 		UNUSED( deltaTime );
+		//We will build the input debug window here
+		//Go over every action ID we have in our map
+		//display out its status
+		//display out every binding mapping and the keycodes
+		//Also show out the key code status values
 	}
 
 	void InputSystem::FixedUpdate( double deltaTime ) noexcept
@@ -83,30 +74,39 @@ namespace Input
 
 	bool InputSystem::IsPressesd( ActionId const actionId ) const
 	{
-		return false;
+		assert( m_actionStates.find( actionId ) != m_actionStates.end() );
+		return m_actionStates.at( actionId ).m_state == ActionState::Pressed;
 	}
 
 	bool InputSystem::IsHeld( ActionId const actionId ) const
 	{
-		return false;
+		assert( m_actionStates.find( actionId ) != m_actionStates.end() );
+		return m_actionStates.at( actionId ).m_state == ActionState::Repeat;
 	}
 
 	bool InputSystem::IsReleased( ActionId const actionId ) const
 	{
-		return false;
+		assert( m_actionStates.find( actionId ) != m_actionStates.end() );
+		return m_actionStates.at( actionId ).m_state == ActionState::Released;
 	}
 
 	float InputSystem::GetValue( ActionId const actionId ) const
 	{
-		return 0.0f;
+		assert( m_actionStates.find( actionId ) != m_actionStates.end() );
+		return m_actionStates.at( actionId ).m_value;
 	}
 
-	DeviceBindings const & InputSystem::GetDeviceBinding( DeviceId const & deviceId )
+	void InputSystem::AddBinding( DeviceId inId, DeviceBindings && Mapping )
 	{
-		DeviceBindingsContainer::const_iterator it = m_deviceBindings.find( deviceId );
+		m_deviceBindings.emplace( inId, std::move( Mapping ) );
+	}
+
+	DeviceBindings const & InputSystem::GetDeviceBinding( DeviceId const & deviceId ) const
+	{
+		DeviceBindingsContainer::const_iterator const it = m_deviceBindings.find( deviceId );
 		if ( it != m_deviceBindings.end() )
 		{
-			return *it;
+			return it->second;
 		}
 		else
 		{
@@ -115,11 +115,11 @@ namespace Input
 		}
 	}
 
-	bool InputSystem::SetActionInternal( DeviceId const & deviceId, KeyCode key, InputState const & state ) noexcept
+	bool InputSystem::SetActionInternal( DeviceId const & deviceId, KeyCode key, InputState const & state )
 	{
 		DeviceBindings const & binding = GetDeviceBinding( deviceId );
 		KeyCodeActionIdMap const & keycodeMap = binding.GetKeyCodeActionIdBinding();
-		KeyCodeActionIdMap::const_iterator keyCodeIterator = keycodeMap.find( key );
+		KeyCodeActionIdMap::const_iterator const keyCodeIterator = keycodeMap.find( key );
 		if ( keyCodeIterator != keycodeMap.end() )
 		{
 			ActionId const & actionId = keyCodeIterator->second;

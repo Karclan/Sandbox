@@ -1,8 +1,10 @@
 #pragma once
 
+#include <type_traits>
+
 namespace Input
 {
-	enum class DeviceType : int
+	enum class DeviceType : int32_t
 	{
 		Invalid = -1,
 		Mouse = 0,
@@ -20,7 +22,19 @@ namespace Input
 			return bSame;
 		}
 
-		int m_id{ -1 };
+		bool operator<( DeviceId const & other ) const noexcept
+		{
+			if ( m_type == other.m_type )
+			{
+				return m_id < other.m_id;
+			}
+			else
+			{
+				return m_type < other.m_type;
+			}
+		}
+
+		int32_t m_id{ -1 };
 		DeviceType m_type;
 	};
 

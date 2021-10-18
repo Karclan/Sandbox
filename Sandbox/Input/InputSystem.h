@@ -7,18 +7,13 @@
 #include "InputState.h"
 #include "DeviceBindings.h"
 
-#include <vector>
-#include <map>
-
 namespace Input
 {
 	class InputSystem : public Core::Subsystem, public Core::ImGuiWindowBuilder
 	{
 	public:
-		InputSystem( Core::Registry & registry );
+		InputSystem( Core::Registry & registry ) noexcept;
 		~InputSystem() = default;
-
-		bool TestAction( ActionId const & action ) const;
 
 		void FixedUpdate( double deltaTime ) noexcept override;
 		void Update( double deltaTime ) noexcept override;
@@ -69,9 +64,9 @@ namespace Input
 		//Perhaps a virtual device which is an amalgamation of the different active devices?
 		//but then we have to figure out which ones of similar types take priority over others.
 
-		DeviceBindings const & GetDeviceBinding( DeviceId const & keyboardId );
+		DeviceBindings const & GetDeviceBinding( DeviceId const & keyboardId ) const;
 
-		bool SetActionInternal(DeviceId const & deviceId, KeyCode key, InputState const & state) noexcept;
+		bool SetActionInternal(DeviceId const & deviceId, KeyCode key, InputState const & state);
 
 		//struct DeviceTypeKeyCodePair
 		//{
@@ -96,7 +91,7 @@ namespace Input
 		MouseState m_lerpedMouseState {};
 		MouseState m_newMouseState {};
 
-		using DeviceBindingsContainer = std::unordered_set<DeviceBindings>;
+		using DeviceBindingsContainer = std::map<DeviceId, DeviceBindings>;
 		DeviceBindingsContainer m_deviceBindings;
 
 		//Dummy device bindings for when we fail to find bindings within our setup container
