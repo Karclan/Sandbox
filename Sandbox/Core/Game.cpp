@@ -3,6 +3,7 @@
 #include "Subsystem.h"
 
 #include "../Graphics/Window.h"
+#include "../Editor/EditorBindings.h"
 
 #include "imgui.h"
 
@@ -15,6 +16,14 @@ namespace Core
 		, m_logWindow( m_mainRegistry )
 		, m_cameraSystem( m_mainRegistry )
 	{
+		{
+			Editor::EditorMouseBindings MouseBindings {};
+			Editor::EditorKeyboardBindings KeyboardBindings {};
+
+			m_inputSystem.AddBinding( MouseBindings.GetDeviceId(), std::move( MouseBindings ) );
+			m_inputSystem.AddBinding( KeyboardBindings.GetDeviceId(), std::move( KeyboardBindings ) );
+		}
+
 		m_window = std::make_unique<Graphics::Window>( m_mainRegistry, m_inputSystem );
 		m_baseImguiWindowBuilder = std::make_unique<Core::BaseImGuiWindowBuilder>( m_mainRegistry, *m_window.get() );
 
@@ -30,9 +39,7 @@ namespace Core
 		RegisterImguiWindow( &m_window->GetRenderer() );
 	}
 
-	Game::~Game()
-	{
-	}
+	Game::~Game() = default;
 
 	void Game::Init()
 	{
@@ -50,7 +57,7 @@ namespace Core
 		m_imguiWindows.push_back( window );
 	}
 
-	void Game::DeregisterSubsystem( Subsystem* subsystem )
+	void Game::DeregisterSubsystem( Subsystem* subsystem ) noexcept
 	{
 		for ( auto it = m_subsystems.begin(); it != m_subsystems.end(); ++it )
 		{
@@ -62,7 +69,7 @@ namespace Core
 		}
 	}
 
-	void Game::DeregisterImguiWindow( ImGuiWindowBuilder* subsystem )
+	void Game::DeregisterImguiWindow( ImGuiWindowBuilder* subsystem ) noexcept
 	{
 		for ( auto it = m_imguiWindows.begin(); it != m_imguiWindows.end(); ++it )
 		{
@@ -74,7 +81,7 @@ namespace Core
 		}
 	}
 
-	bool Game::ShouldClose()
+	bool Game::ShouldClose() const noexcept
 	{
 		return m_window->ShouldClose();
 	}
@@ -118,7 +125,7 @@ namespace Core
 		m_window->Render();
 	}
 
-	void Game::sortSubsytems()
+	void Game::sortSubsytems() noexcept
 	{
 
 	}

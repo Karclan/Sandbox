@@ -29,27 +29,31 @@ namespace Core
 	{
 	public:
 		Game();
-		~Game();
+		virtual ~Game();
+		Game( Game const & other ) = delete;
+		Game( Game const && other ) = delete;
+		Game & operator=( Game const & other ) = delete;
+		Game & operator=( Game const && other ) = delete;
 
 		virtual void Init();
 
 		//Subsystem functions
 		virtual void RegisterSubsystem( Subsystem * subsystem );
 		virtual void RegisterImguiWindow( ImGuiWindowBuilder * subsystem );
-		virtual void DeregisterSubsystem( Subsystem * subsystem );
-		virtual void DeregisterImguiWindow( ImGuiWindowBuilder * subsystem );
+		virtual void DeregisterSubsystem( Subsystem * subsystem ) noexcept;
+		virtual void DeregisterImguiWindow( ImGuiWindowBuilder * subsystem ) noexcept;
 
-		virtual bool ShouldClose();
+		virtual bool ShouldClose() const noexcept;
 		virtual void Run();
 
 		Core::Registry const & GetRegistry() const noexcept { return m_mainRegistry; }
-		Core::Registry& GetRegistry() noexcept { return m_mainRegistry; }
+		Core::Registry & GetRegistry() noexcept { return m_mainRegistry; }
 		Graphics::Window const & GetWindow() const noexcept { return *m_window.get(); }
 		Graphics::Window & GetWindow() noexcept { return *m_window.get(); }
 
 	private:
 		//Sorts subsystem vector based on update order
-		virtual void sortSubsytems();
+		virtual void sortSubsytems() noexcept;
 
 		//Fixed update values
 		int m_framesToCatchUpOn { 0 };
@@ -70,7 +74,7 @@ namespace Core
 		std::unique_ptr<Graphics::Window> m_window { nullptr };
 		std::unique_ptr<Core::BaseImGuiWindowBuilder> m_baseImguiWindowBuilder { nullptr };
 
-		std::vector<Subsystem*> m_subsystems {};
-		std::vector<ImGuiWindowBuilder*> m_imguiWindows {};
+		std::vector<Subsystem *> m_subsystems {};
+		std::vector<ImGuiWindowBuilder *> m_imguiWindows {};
 	};
 }

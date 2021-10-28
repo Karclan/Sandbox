@@ -6,6 +6,8 @@
 #include "../Utils/Logger.h"
 #include "../Utils/format.h"
 
+#include "../magic_enum/magic_enum.hpp"
+
 namespace Input
 {
 	InputSystem::InputSystem( Core::Registry & registry ) noexcept
@@ -110,7 +112,7 @@ namespace Input
 		}
 		else
 		{
-			Utils::Logger::LogMessage( Utils::LogType::Error, fmt::format( "No bindings found for Device id {} of type {}", deviceId.m_id, deviceId.m_type ) );
+			Utils::Logger::LogMessage( Utils::LogType::Error, fmt::format( "No bindings found for Device id {} of type {}\n", deviceId.m_id, std::string(magic_enum::enum_name(deviceId.m_type)) ) );
 			return m_dummyDeviceBindings;
 		}
 	}

@@ -217,6 +217,7 @@
     <ClCompile Include="Core\ResourceManager.cpp" />
     <ClCompile Include="Core\Subsystem.cpp" />
     <ClCompile Include="Editor\ArcballBehaviour.cpp" />
+    <ClCompile Include="Editor\EditorBindings.cpp" />
     <ClCompile Include="Editor\InputActions.cpp" />
     <ClCompile Include="Editor\Utilities.cpp" />
     <ClCompile Include="glad.c" />
@@ -256,6 +257,7 @@
     <ClInclude Include="Core\ResourceManager.h" />
     <ClInclude Include="Core\Subsystem.h" />
     <ClInclude Include="Editor\ArcballBehaviour.h" />
+    <ClInclude Include="Editor\EditorBindings.h" />
     <ClInclude Include="Editor\InputActions.h" />
     <ClInclude Include="Editor\Utilities.h" />
     <ClInclude Include="Generic\NameComponent.h" />

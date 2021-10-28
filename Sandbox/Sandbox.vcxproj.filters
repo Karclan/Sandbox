@@ -162,6 +162,9 @@
     <ClCompile Include="Input\DeviceBindings.cpp">
       <Filter>Input</Filter>
     </ClCompile>
+    <ClCompile Include="Editor\EditorBindings.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\ShaderProgram.h">
@@ -316,6 +319,9 @@
     </ClInclude>
     <ClInclude Include="Input\InputState.h">
       <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorBindings.h">
+      <Filter>Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

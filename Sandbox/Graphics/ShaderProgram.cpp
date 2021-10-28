@@ -264,7 +264,7 @@ namespace Graphics
             uniformLocations[ name ] = loc;
             if( loc == -1 )
             {
-				std::string uniformBlockName = fmt::format("Unable to find Uniform Location: %s. Check the %s shader!\n", name, m_shaderName );
+				std::string uniformBlockName = fmt::format("Unable to find Uniform Location: {}. Check the {} shader!\n", name, m_shaderName );
 				Utils::Logger::LogMessage(Utils::LogType::Info, uniformBlockName);
             }
         }
