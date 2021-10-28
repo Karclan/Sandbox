@@ -133,8 +133,8 @@ namespace Core
 		{
 			ImGui::ShowDemoWindow( &m_showDemoWindow );
 		}
+		ImGui::End();
 	}
-	ImGui::End();
 
 
 }
