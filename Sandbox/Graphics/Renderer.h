@@ -12,6 +12,8 @@
 #include "Cube.h"
 #include "Triangle.h"
 
+#include "RenderStats.h"
+
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
@@ -118,5 +120,6 @@ namespace Graphics
 
 		std::vector<GLuint> m_boundTextures {};
 
+		RenderStats m_renderStats {};
 	};
 }

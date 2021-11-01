@@ -21,7 +21,7 @@
 
 namespace Graphics
 {
-	static constexpr float quadVertices [] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
+	static constexpr float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
 	   // positions   // texCoords
 	   -1.0f,  1.0f,  0.0f, 1.0f,
 	   -1.0f, -1.0f,  0.0f, 0.0f,
@@ -41,12 +41,12 @@ namespace Graphics
 		glBindBuffer( GL_ARRAY_BUFFER, quadVBO );
 		glBufferData( GL_ARRAY_BUFFER, sizeof( quadVertices ), &quadVertices, GL_STATIC_DRAW );
 		glEnableVertexAttribArray( 0 );
-		glVertexAttribPointer( 0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof( float ), ( void* ) 0 );
+		glVertexAttribPointer( 0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof( float ), ( void * ) 0 );
 		glEnableVertexAttribArray( 1 );
-		glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof( float ), ( void* ) ( 2 * sizeof( float ) ) );
+		glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof( float ), ( void * ) ( 2 * sizeof( float ) ) );
 	}
 
-	Renderer::Renderer( Core::Registry& Registry )
+	Renderer::Renderer( Core::Registry & Registry )
 		: m_registry( Registry )
 	{
 	}
@@ -56,7 +56,7 @@ namespace Graphics
 
 	}
 
-	unsigned int Renderer::CreateShader( const std::string& name, Utils::EnumBitmask<Shader::Type> flags )
+	unsigned int Renderer::CreateShader( const std::string & name, Utils::EnumBitmask<Shader::Type> flags )
 	{
 		unsigned int ReturnId = 0;
 		//duplicate and valid
@@ -68,7 +68,7 @@ namespace Graphics
 		return ReturnId;
 	}
 
-	unsigned int Renderer::CreateTexture( const std::string& textureName )
+	unsigned int Renderer::CreateTexture( const std::string & textureName )
 	{
 		unsigned int ReturnId = 0;
 		//duplicate and valid
@@ -108,7 +108,7 @@ namespace Graphics
 			glBufferData( GL_ARRAY_BUFFER, m_maxLinesPerRender * 3, 0, GL_DYNAMIC_DRAW );
 
 			//Vertex points
-			glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof( float ), ( void* ) 0 );
+			glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof( float ), ( void * ) 0 );
 			glEnableVertexAttribArray( 0 );
 
 			//finishBinding();
@@ -146,12 +146,12 @@ namespace Graphics
 					float HeightToUse = static_cast< float >( m_useFrameBufferObject ? m_sceneSize.y : m_height );
 					float WidthToUse = static_cast< float >( m_useFrameBufferObject ? m_sceneSize.x : m_width );
 
-					m_registry.ForView<CameraComponent, ActiveCameraTag>( [&HeightToUse, &WidthToUse] ( CameraComponent& cameraComponent )
-																		  {
-																			  cameraComponent.m_viewPortHeight = static_cast< float >( HeightToUse );
-																			  cameraComponent.m_viewPortWidth = static_cast< float >( WidthToUse );
-																			  cameraComponent.m_dirtyProjectionMatrix = true;
-																		  } );
+					m_registry.ForView<CameraComponent, ActiveCameraTag>( [&HeightToUse, &WidthToUse] ( CameraComponent & cameraComponent )
+						{
+							cameraComponent.m_viewPortHeight = static_cast< float >( HeightToUse );
+							cameraComponent.m_viewPortWidth = static_cast< float >( WidthToUse );
+							cameraComponent.m_dirtyProjectionMatrix = true;
+						} );
 
 					//Resize the render texture buffer
 					glBindTexture( GL_TEXTURE_2D, m_renderedTexture );
@@ -184,17 +184,24 @@ namespace Graphics
 				{
 					m_sceneSize = wsize;
 				}
+				ImVec2 const gameRenderPosition = ImGui::GetWindowPos();
+				m_renderStats.ViewPortStartX = static_cast< unsigned int >( gameRenderPosition.x );
+				m_renderStats.ViewPortStartY = static_cast< unsigned int >( gameRenderPosition.y );
+				m_renderStats.ViewPortHeight = static_cast< unsigned int >( m_sceneSize.x );
+				m_renderStats.ViewPortWidth = static_cast< unsigned int >( m_sceneSize.y);
+				m_registry.get_base_registry().set<RenderStats>( m_renderStats );
 				// Because I use the texture from OpenGL, I need to invert the V from the UV.
 				ImGui::Image( reinterpret_cast< ImTextureID >( m_renderedTexture ), m_sceneSize, ImVec2( 0, 1 ), ImVec2( 1, 0 ) );
 				ImGui::EndChild();
 
 				if ( windowSizeChanged )
 				{
-					m_registry.ForView<CameraComponent, ActiveCameraTag>( [this] ( CameraComponent& cameraComponent ) {
-						cameraComponent.m_viewPortHeight = static_cast< float >( m_sceneSize.y );
-						cameraComponent.m_viewPortWidth = static_cast< float >( m_sceneSize.x );
-						cameraComponent.m_dirtyProjectionMatrix = true;
-																		  } );
+					m_registry.ForView<CameraComponent, ActiveCameraTag>( [this] ( CameraComponent & cameraComponent )
+						{
+							cameraComponent.m_viewPortHeight = static_cast< float >( m_sceneSize.y );
+							cameraComponent.m_viewPortWidth = static_cast< float >( m_sceneSize.x );
+							cameraComponent.m_dirtyProjectionMatrix = true;
+						} );
 
 					//Resize the render texture buffer
 					glBindTexture( GL_TEXTURE_2D, m_renderedTexture );
@@ -207,12 +214,19 @@ namespace Graphics
 			}
 			ImGui::End();
 		}
-
+		else
+		{
+			m_renderStats.ViewPortStartX = 0u;
+			m_renderStats.ViewPortStartY = 0u;
+			m_renderStats.ViewPortHeight = static_cast< unsigned int >( m_sceneSize.x );
+			m_renderStats.ViewPortWidth = static_cast< unsigned int >( m_sceneSize.y );
+			m_registry.get_base_registry().set<RenderStats>( m_renderStats );
+		}
 		if ( m_showTextureWindow )
 		{
 			if ( ImGui::Begin( "Graphics" ) )
 			{
-				Graphics::TextureLoader::TextureMap const& textures = m_textureLoader.getLoadedTextures();
+				Graphics::TextureLoader::TextureMap const & textures = m_textureLoader.getLoadedTextures();
 
 				//static ImGuiComboFlags flags = 0;
 				//ImGui::CheckboxFlags( "ImGuiComboFlags_PopupAlignLeft", ( unsigned int * ) &flags, ImGuiComboFlags_PopupAlignLeft );
@@ -254,7 +268,7 @@ namespace Graphics
 					//glBindTexture(GL_TEXTURE_2D, tex.GetTextureID());
 					ImGui::Text( "pointer = %p", tex.GetTextureID() );
 					ImGui::Text( "size = %d x %d", tex.GetWidth(), tex.GetHeight() );
-					ImGui::Image( ( void* ) tex.GetTextureID(), ImVec2( 64, 64 ) );
+					ImGui::Image( ( void * ) tex.GetTextureID(), ImVec2( 64, 64 ) );
 				}
 			}
 			ImGui::End();
@@ -274,13 +288,13 @@ namespace Graphics
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
 		//Grab the components from the registry here!
-		auto const& view = m_registry.View<TransformComponent, MeshComponent, ShaderComponent, TextureComponent>();
-		for ( auto const& entity : view )
+		auto const & view = m_registry.View<TransformComponent, MeshComponent, ShaderComponent, TextureComponent>();
+		for ( auto const & entity : view )
 		{
-			TransformComponent& transform = view.get<TransformComponent>( entity );
-			MeshComponent& meshComponent = view.get<MeshComponent>( entity );
-			ShaderComponent& shaderComponent = view.get<ShaderComponent>( entity );
-			TextureComponent& textureComponent = view.get<TextureComponent>( entity );
+			TransformComponent & transform = view.get<TransformComponent>( entity );
+			MeshComponent & meshComponent = view.get<MeshComponent>( entity );
+			ShaderComponent & shaderComponent = view.get<ShaderComponent>( entity );
+			TextureComponent & textureComponent = view.get<TextureComponent>( entity );
 
 			UpdateShader( shaderComponent );
 
@@ -317,7 +331,7 @@ namespace Graphics
 
 			m_lineShader->setUniform( "model", glm::mat4( 1.f ) );
 			m_registry.ForConstView<CameraComponent const, ActiveCameraTag const>(
-				[this] ( CameraComponent const& cameraComponent )
+				[this] ( CameraComponent const & cameraComponent )
 				{
 					m_lineShader->setUniform( "projection", cameraComponent.m_projectionMatrix );
 					m_lineShader->setUniform( "view", cameraComponent.m_viewMatrix );
@@ -325,7 +339,7 @@ namespace Graphics
 			glBindVertexArray( m_lineVao );
 			for ( unsigned int i = 0; i <= m_lineDrawCalls; ++i )
 			{
-				auto& call = m_lineDrawCallList[ i ];
+				auto & call = m_lineDrawCallList[ i ];
 				call.m_colour;
 				m_lineShader->setUniform( "colour", call.m_colour );
 				glLineWidth( call.m_lineThickness );
@@ -369,7 +383,7 @@ namespace Graphics
 			glBufferSubData( GL_ARRAY_BUFFER, offset2, vecSize, &B );
 			glBindBuffer( GL_ARRAY_BUFFER, 0 );
 			glBindVertexArray( 0 );
-			auto& call = m_lineDrawCallList[ m_lineDrawCalls ];
+			auto & call = m_lineDrawCallList[ m_lineDrawCalls ];
 			call.PointA = A;
 			call.PointB = B;
 			call.m_colour = colour;
@@ -384,38 +398,38 @@ namespace Graphics
 		m_width = width;
 		m_height = height;
 
-		m_registry.ForView<CameraComponent, ActiveCameraTag>( [this] ( CameraComponent& cameraComponent ) 
-		{
-			if ( !m_useFrameBufferObject )
+		m_registry.ForView<CameraComponent, ActiveCameraTag>( [this] ( CameraComponent & cameraComponent )
 			{
-				cameraComponent.m_viewPortHeight = static_cast< float >( m_height );
-				cameraComponent.m_viewPortWidth = static_cast< float >( m_width );
-			}
+				if ( !m_useFrameBufferObject )
+				{
+					cameraComponent.m_viewPortHeight = static_cast< float >( m_height );
+					cameraComponent.m_viewPortWidth = static_cast< float >( m_width );
+				}
 
-			cameraComponent.m_dirtyProjectionMatrix = true;													 
-		});
+				cameraComponent.m_dirtyProjectionMatrix = true;
+			} );
 
 	}
 
 	void Renderer::UpdateCamera()
 	{
 		//Camera
-		m_registry.ForView<CameraComponent, ActiveCameraTag>( [this] ( CameraComponent & cameraComponent)
-		{
-			if ( cameraComponent.m_dirtyProjectionMatrix )
+		m_registry.ForView<CameraComponent, ActiveCameraTag>( [this] ( CameraComponent & cameraComponent )
 			{
-				cameraComponent.m_dirtyProjectionMatrix = false;
-				m_activeShader->setUniform( "projection", cameraComponent.m_projectionMatrix );
-			}
-			if ( cameraComponent.m_dirtyViewMatrix )
-			{
-				cameraComponent.m_dirtyViewMatrix = false;
-				m_activeShader->setUniform( "view", cameraComponent.m_viewMatrix );
-			}
-		} );
+				if ( cameraComponent.m_dirtyProjectionMatrix )
+				{
+					cameraComponent.m_dirtyProjectionMatrix = false;
+					m_activeShader->setUniform( "projection", cameraComponent.m_projectionMatrix );
+				}
+				if ( cameraComponent.m_dirtyViewMatrix )
+				{
+					cameraComponent.m_dirtyViewMatrix = false;
+					m_activeShader->setUniform( "view", cameraComponent.m_viewMatrix );
+				}
+			} );
 	}
 
-	void Renderer::UpdateTransform( TransformComponent& transform )
+	void Renderer::UpdateTransform( TransformComponent & transform )
 	{
 		//Build matrices
 
@@ -431,11 +445,11 @@ namespace Graphics
 		glm::mat4 transformation = translation * rotationMatrix * scale;
 		m_activeShader->setUniform( "model", transformation );
 	}
-	
-	void Renderer::UpdateTextures( TextureComponent& textureComponent )
+
+	void Renderer::UpdateTextures( TextureComponent & textureComponent )
 	{
 		bool rebindTextures = false;
-		std::vector<GLuint> const& textures = textureComponent.TextureList;
+		std::vector<GLuint> const & textures = textureComponent.TextureList;
 		size_t const newTexturesSize = textures.size();
 		if ( newTexturesSize == m_boundTexturesSize )
 		{
@@ -481,7 +495,7 @@ namespace Graphics
 		}
 	}
 
-	void Renderer::UpdateShader( ShaderComponent& shaderComponent )
+	void Renderer::UpdateShader( ShaderComponent & shaderComponent )
 	{
 		//Getting active shader
 		bool lookForShader = true;
@@ -492,7 +506,7 @@ namespace Graphics
 
 		if ( lookForShader )
 		{
-			for ( auto& shaderPtr : m_shaderList )
+			for ( auto & shaderPtr : m_shaderList )
 			{
 				if ( shaderComponent.ShaderId == shaderPtr->getId() )
 				{
@@ -512,7 +526,7 @@ namespace Graphics
 
 	}
 
-	void Renderer::UpdateMesh( MeshComponent& meshComponent )
+	void Renderer::UpdateMesh( MeshComponent & meshComponent )
 	{
 		//Mesh
 		//if( meshComponent.type != m_activeMeshType )

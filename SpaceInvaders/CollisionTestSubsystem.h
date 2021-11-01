@@ -23,14 +23,16 @@ namespace Game
 		void BuildWindow( double deltaTime ) override;
 
 	private:
-		bool m_showDebugWindow { false };
+		bool m_showDebugWindow { true };
 		Core::Entity m_firstEntity { Core::NullEntity };
 		Core::Entity m_secondEntity { Core::NullEntity };
 
 		Input::InputSystem const & m_inputSystem;
 
 		glm::dvec2 cachedMouseCoords { 0.f };
+		glm::dvec2 cachedMouseCoordsOffset { 0.f };
 		glm::dvec2 cachedMappedMouseCoords { 0.f };
+		glm::ivec2 cachedViewPortStart { 0 };
 	};
 }
 

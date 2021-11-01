@@ -12,6 +12,7 @@
 #include "Graphics/CameraComponent.h"
 
 #include "glm/glm.hpp"
+#include "Graphics/RenderStats.h"
 
 namespace Game
 {
@@ -37,17 +38,25 @@ namespace Game
 	void CollisionTestSubsystem::FixedUpdate( double deltaTime )
 	{
 		UNUSED( deltaTime );
+		Graphics::RenderStats const renderStats = m_registry.get_base_registry().ctx<Graphics::RenderStats>();
+		cachedViewPortStart = { renderStats.ViewPortStartX, renderStats.ViewPortStartY };
 		glm::dvec2 mousePosition = m_inputSystem.GetMousePosition();
 		cachedMouseCoords = mousePosition;
+		mousePosition.x += renderStats.ViewPortStartX;
+		mousePosition.y += renderStats.ViewPortStartY;
+		cachedMouseCoordsOffset = mousePosition;
 		m_registry.ForConstView<Graphics::CameraComponent const, Graphics::ActiveCameraTag const>(
-			[&mousePosition] ( Graphics::CameraComponent const & camera )
+			[&mousePosition, &renderStats] ( Graphics::CameraComponent const & camera )
 			{
-				//glm::inverse( camera.m_viewMatrix * camera.m_projectionMatrix );
-
+				//Mouse positions to center of screen
+				mousePosition.x -= camera.m_viewPortWidth / 2.f;
+				mousePosition.y -= camera.m_viewPortHeight / 2.f;
+				//Mouse position to mapped range from -1 to 1
 				mousePosition.x /= camera.m_viewPortWidth / 2.f;
 				mousePosition.y /= camera.m_viewPortHeight / 2.f;
-				/*camera.m_viewPortHeight;
-				camera.m_viewPortWidth;*/
+				 
+				//glm::inverse( camera.m_viewMatrix * camera.m_projectionMatrix );
+	
 			} );
 		cachedMappedMouseCoords = mousePosition;
 		Graphics::TransformComponent & transform = m_registry.GetComponent<Graphics::TransformComponent>( m_firstEntity );
@@ -73,11 +82,17 @@ namespace Game
 			ImGui::EndMainMenuBar();
 		}
 
-		if( ImGui::Begin( "Debug Collision", &m_showDebugWindow ) )
+		if ( m_showDebugWindow )
 		{
-			ImGui::Text( fmt::format( "MouseCoords - Screenspace| x:{} y:{}", cachedMouseCoords.x, cachedMouseCoords.y ).c_str() );
-			ImGui::Text( fmt::format( "MouseCoords - \"Mapped\"| x:{} y:{}", cachedMappedMouseCoords.x, cachedMappedMouseCoords.y ).c_str() );
-			ImGui::End();
+			if ( ImGui::Begin( "Debug Collision" ) )
+			{
+				ImGui::Text( fmt::format( "Viewport| x:{} y:{}", cachedViewPortStart.x, cachedViewPortStart.y ).c_str() );
+				ImGui::Separator();
+				ImGui::Text( fmt::format( "Mapped| x:{} y:{}", cachedMappedMouseCoords.x, cachedMappedMouseCoords.y ).c_str() );
+				ImGui::Text( fmt::format( "Offset| x:{} y:{}", cachedMouseCoordsOffset.x, cachedMouseCoordsOffset.y ).c_str() );
+				ImGui::Text( fmt::format( "Screenspace| x:{} y:{}", cachedMouseCoords.x, cachedMouseCoords.y ).c_str() );
+				ImGui::End();
+			}
 		}
 	}
 }
