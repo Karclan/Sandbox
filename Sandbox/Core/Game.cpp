@@ -15,6 +15,8 @@ namespace Core
 		: m_inputSystem( m_mainRegistry )
 		, m_logWindow( m_mainRegistry )
 		, m_cameraSystem( m_mainRegistry )
+		, m_window(m_mainRegistry, m_inputSystem)
+		, m_collisionDetectionSystem( m_mainRegistry, m_window )
 	{
 		{
 			Editor::EditorMouseBindings MouseBindings {};
@@ -24,19 +26,20 @@ namespace Core
 			m_inputSystem.AddBinding( KeyboardBindings.GetDeviceId(), std::move( KeyboardBindings ) );
 		}
 
-		m_window = std::make_unique<Graphics::Window>( m_mainRegistry, m_inputSystem );
-		m_baseImguiWindowBuilder = std::make_unique<Core::BaseImGuiWindowBuilder>( m_mainRegistry, *m_window.get() );
+		//m_window = std::make_unique<Graphics::Window>( m_mainRegistry, m_inputSystem );
+		m_baseImguiWindowBuilder = std::make_unique<Core::BaseImGuiWindowBuilder>( m_mainRegistry,m_window );
 
 		EditorUtilities.CreateEditorCamera( m_mainRegistry );
 
 		RegisterSubsystem( &m_inputSystem );
 		RegisterSubsystem( &m_cameraSystem );
+		RegisterSubsystem( &m_collisionDetectionSystem );
 
 		RegisterImguiWindow( &m_inputSystem );
 		RegisterImguiWindow( &m_cameraSystem );
 
 		RegisterImguiWindow( &m_logWindow );
-		RegisterImguiWindow( &m_window->GetRenderer() );
+		RegisterImguiWindow( &m_window.GetRenderer() );
 	}
 
 	Game::~Game() = default;
@@ -83,17 +86,17 @@ namespace Core
 
 	bool Game::ShouldClose() const noexcept
 	{
-		return m_window->ShouldClose();
+		return m_window.ShouldClose();
 	}
 
 	void Game::Run()
 	{
 		//update input
-		m_window->PollInput();
+		m_window.PollInput();
 
-		m_window->PreRender();
+		m_window.PreRender();
 
-		double const frameTime = m_window->GetDeltaTime();
+		double const frameTime = m_window.GetDeltaTime();
 
 		m_baseImguiWindowBuilder->BuildWindow( frameTime );
 		for ( auto& imguiWindow : m_imguiWindows )
@@ -122,7 +125,7 @@ namespace Core
 			subSystem->Update( frameTime );
 		}
 
-		m_window->Render();
+		m_window.Render();
 	}
 
 	void Game::sortSubsytems() noexcept

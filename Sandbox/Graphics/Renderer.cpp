@@ -394,6 +394,7 @@ namespace Graphics
 
 			cameraComponent.m_dirtyProjectionMatrix = true;													 
 		});
+
 	}
 
 	void Renderer::UpdateCamera()

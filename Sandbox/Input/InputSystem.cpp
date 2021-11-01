@@ -98,6 +98,11 @@ namespace Input
 		return m_actionStates.at( actionId ).m_value;
 	}
 
+	glm::dvec2 InputSystem::GetMousePosition() const
+	{
+		return m_newMouseState.m_position;
+	}
+
 	void InputSystem::AddBinding( DeviceId inId, DeviceBindings && Mapping )
 	{
 		m_deviceBindings.emplace( inId, std::move( Mapping ) );

@@ -226,7 +226,6 @@
     <ClCompile Include="Graphics\CameraSystem.cpp" />
     <ClCompile Include="Graphics\Cube.cpp" />
     <ClCompile Include="Graphics\Mesh.cpp" />
-    <ClCompile Include="Graphics\Renderable.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
     <ClCompile Include="Graphics\Texture.cpp" />
     <ClCompile Include="Graphics\TextureLoader.cpp" />
@@ -245,6 +244,7 @@
     <ClCompile Include="Graphics\ShaderProgram.cpp" />
     <ClCompile Include="Graphics\Square.cpp" />
     <ClCompile Include="Graphics\Triangle.cpp" />
+    <ClCompile Include="Physics\CollisionDetectionSystem.cpp" />
     <ClCompile Include="Utils\Delegate.cpp" />
     <ClCompile Include="Utils\EnumBitmask.cpp" />
     <ClCompile Include="Utils\Logger.cpp" />
@@ -269,8 +269,8 @@
     <ClInclude Include="Graphics\Mesh.h" />
     <ClInclude Include="Graphics\MeshComponent.h" />
     <ClInclude Include="Graphics\MeshLoader.h" />
-    <ClInclude Include="Graphics\Renderable.h" />
     <ClInclude Include="Graphics\Renderer.h" />
+    <ClInclude Include="Graphics\RenderStats.h" />
     <ClInclude Include="Graphics\Shader.h" />
     <ClInclude Include="Graphics\ShaderComponent.h" />
     <ClInclude Include="Graphics\ShaderProgram.h" />
@@ -296,6 +296,8 @@
     <ClInclude Include="Input\InputState.h" />
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="magic_enum\magic_enum.hpp" />
+    <ClInclude Include="Physics\CollisionComponent.h" />
+    <ClInclude Include="Physics\CollisionDetectionSystem.h" />
     <ClInclude Include="stb\stb_image.h" />
     <ClInclude Include="Utils\Delegate.h" />
     <ClInclude Include="Utils\EnumBitmask.h" />

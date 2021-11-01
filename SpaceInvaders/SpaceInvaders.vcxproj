@@ -179,6 +179,7 @@
   <ItemGroup>
     <ClCompile Include="BasicMovementSubsystem.cpp" />
     <ClCompile Include="BasicSpriteTestSubsystem.cpp" />
+    <ClCompile Include="CollisionTestSubsystem.cpp" />
     <ClCompile Include="GameImplementation.cpp" />
     <ClCompile Include="ImguiWindow.cpp" />
     <ClCompile Include="SpaceInvaders.cpp" />
@@ -187,6 +188,7 @@
   <ItemGroup>
     <ClInclude Include="BasicMovementSubsystem.h" />
     <ClInclude Include="BasicSpriteTestSubsystem.h" />
+    <ClInclude Include="CollisionTestSubsystem.h" />
     <ClInclude Include="GameImplementation.h" />
     <ClInclude Include="ImguiWindow.h" />
     <ClInclude Include="VectorMathExampleSubsystem.h" />

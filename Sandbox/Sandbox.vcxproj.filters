@@ -102,9 +102,6 @@
     <ClCompile Include="Graphics\Renderer.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Renderable.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\Cube.cpp">
       <Filter>Graphics\Primatives</Filter>
     </ClCompile>
@@ -165,6 +162,9 @@
     <ClCompile Include="Editor\EditorBindings.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
+    <ClCompile Include="Physics\CollisionDetectionSystem.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\ShaderProgram.h">
@@ -204,9 +204,6 @@
       <Filter>Imgui\misc\cpp</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Renderer.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Renderable.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\TextureLoader.h">
@@ -322,6 +319,15 @@
     </ClInclude>
     <ClInclude Include="Editor\EditorBindings.h">
       <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\CollisionDetectionSystem.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\CollisionComponent.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\RenderStats.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

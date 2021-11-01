@@ -26,8 +26,8 @@ namespace Core
 		Subsystem operator=( Subsystem && other ) = delete;
 		virtual ~Subsystem() = default;
 
-		virtual void FixedUpdate( [[maybe_unused]] double deltaTime ) noexcept {};
-		virtual void Update( [[maybe_unused]] double deltaTime ) noexcept {};
+		virtual void FixedUpdate( [[maybe_unused]] double deltaTime ) {};
+		virtual void Update( [[maybe_unused]] double deltaTime ) {};
 
 	protected:
 		Core::Registry & m_registry;

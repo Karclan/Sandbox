@@ -6,6 +6,8 @@
 #include "../Input/InputSystem.h"
 #include "../Utils/LoggingWindow.h"
 #include "../Graphics/CameraSystem.h"
+#include "../Graphics/Window.h"
+#include "../Physics/CollisionDetectionSystem.h"
 
 #include <memory>
 #include <vector>
@@ -48,9 +50,10 @@ namespace Core
 
 		Core::Registry const & GetRegistry() const noexcept { return m_mainRegistry; }
 		Core::Registry & GetRegistry() noexcept { return m_mainRegistry; }
-		Graphics::Window const & GetWindow() const noexcept { return *m_window.get(); }
-		Graphics::Window & GetWindow() noexcept { return *m_window.get(); }
-
+		Graphics::Window const & GetWindow() const noexcept { return m_window; }
+		Graphics::Window & GetWindow() noexcept { return m_window; }
+		Input::InputSystem & GetInputSystem() noexcept { return m_inputSystem; }
+		Input::InputSystem const & GetInputSystem() const noexcept { return m_inputSystem; }
 	private:
 		//Sorts subsystem vector based on update order
 		virtual void sortSubsytems() noexcept;
@@ -70,8 +73,12 @@ namespace Core
 		Input::InputSystem m_inputSystem;
 		Utils::LoggingWindow m_logWindow;
 		Graphics::CameraSystem m_cameraSystem;
+		
+		Graphics::Window m_window;
 
-		std::unique_ptr<Graphics::Window> m_window { nullptr };
+		Physics::CollisionDetectionSystem m_collisionDetectionSystem;
+
+		//std::unique_ptr<Graphics::Window> m_window { nullptr };
 		std::unique_ptr<Core::BaseImGuiWindowBuilder> m_baseImguiWindowBuilder { nullptr };
 
 		std::vector<Subsystem *> m_subsystems {};

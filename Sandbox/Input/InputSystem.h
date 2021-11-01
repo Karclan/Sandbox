@@ -30,6 +30,9 @@ namespace Input
 		bool IsHeld( ActionId const actionId ) const;
 		bool IsReleased( ActionId const actionId ) const;
 		float GetValue( ActionId const actionId ) const;
+		//Ugly but I want to change this to something like axis value or w.e
+		glm::dvec2 GetMousePosition() const;
+
 
 		void AddBinding( DeviceId inId, DeviceBindings && Mapping );
 

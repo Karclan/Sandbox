@@ -204,6 +204,11 @@ namespace Core
 		}
 
 
+		entt::registry & get_base_registry()
+		{
+			return m_registry;
+		}
+
 	private:
 		entt::registry m_registry;
 
