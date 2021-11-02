@@ -38,9 +38,10 @@ namespace Game
 	void CollisionTestSubsystem::FixedUpdate( double deltaTime )
 	{
 		UNUSED( deltaTime );
+
 		Graphics::RenderStats const renderStats = m_registry.get_base_registry().ctx<Graphics::RenderStats>();
 		cachedViewPortStart = { renderStats.ViewPortStartX, renderStats.ViewPortStartY };
-		glm::dvec2 mousePosition = m_inputSystem.GetMousePosition();
+		glm::dvec2 mousePosition = -(glm::dvec2{ renderStats.ViewPortCursorX, renderStats.ViewPortCursorY });//m_inputSystem.GetMousePosition();
 		cachedMouseCoords = mousePosition;
 		mousePosition.x += renderStats.ViewPortStartX;
 		mousePosition.y += renderStats.ViewPortStartY;
@@ -49,8 +50,8 @@ namespace Game
 			[&mousePosition, &renderStats] ( Graphics::CameraComponent const & camera )
 			{
 				//Mouse positions to center of screen
-				mousePosition.x -= camera.m_viewPortWidth / 2.f;
-				mousePosition.y -= camera.m_viewPortHeight / 2.f;
+				//mousePosition.x -= camera.m_viewPortWidth / 2.f;
+				//mousePosition.y -= camera.m_viewPortHeight / 2.f;
 				//Mouse position to mapped range from -1 to 1
 				mousePosition.x /= camera.m_viewPortWidth / 2.f;
 				mousePosition.y /= camera.m_viewPortHeight / 2.f;

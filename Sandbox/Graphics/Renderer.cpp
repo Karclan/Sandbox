@@ -184,14 +184,20 @@ namespace Graphics
 				{
 					m_sceneSize = wsize;
 				}
-				ImVec2 const gameRenderPosition = ImGui::GetWindowPos();
+				// Because I use the texture from OpenGL, I need to invert the V from the UV.
+				ImGui::Image( reinterpret_cast< ImTextureID >( m_renderedTexture ), m_sceneSize, ImVec2( 0, 1 ), ImVec2( 1, 0 ) );
+				ImVec2 const gameRenderPosition = ImGui::GetCursorScreenPos();
 				m_renderStats.ViewPortStartX = static_cast< unsigned int >( gameRenderPosition.x );
 				m_renderStats.ViewPortStartY = static_cast< unsigned int >( gameRenderPosition.y );
 				m_renderStats.ViewPortHeight = static_cast< unsigned int >( m_sceneSize.x );
 				m_renderStats.ViewPortWidth = static_cast< unsigned int >( m_sceneSize.y);
 				m_registry.get_base_registry().set<RenderStats>( m_renderStats );
-				// Because I use the texture from OpenGL, I need to invert the V from the UV.
-				ImGui::Image( reinterpret_cast< ImTextureID >( m_renderedTexture ), m_sceneSize, ImVec2( 0, 1 ), ImVec2( 1, 0 ) );
+				if ( ImGui::IsItemHovered() )
+				{
+					m_renderStats.ViewPortCursorX = ImGui::GetMousePos().x;
+					m_renderStats.ViewPortCursorY = ImGui::GetMousePos().y;
+				}
+				
 				ImGui::EndChild();
 
 				if ( windowSizeChanged )

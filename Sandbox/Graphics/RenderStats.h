@@ -12,5 +12,7 @@ namespace Graphics
 		unsigned int ViewPortWidth { 0u };
 		unsigned int ViewPortStartX { 0u };
 		unsigned int ViewPortStartY { 0u };
+		float ViewPortCursorX { 0.f };
+		float ViewPortCursorY { 0.f };
 	};
 }
