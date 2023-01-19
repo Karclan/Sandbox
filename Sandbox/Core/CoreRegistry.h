@@ -153,7 +153,7 @@ namespace Core
 		//Get Components
 		//////////////////////////////////////////////////////////////////////////
 		template<typename... Component>
-		[[nodiscard]] decltype( auto ) GetComponent( [[maybe_unused]] Entity const entity ) const {
+		[[nodiscard]] decltype( auto ) GetConstComponent( [[maybe_unused]] Entity const entity ) const {
 			return m_registry.get<Component ...>( entity );
 		}
 
@@ -163,7 +163,7 @@ namespace Core
 		}
 
 		template<typename... Component>
-		[[nodiscard]] auto TryGetComponent( [[maybe_unused]] Entity const entity ) const {
+		[[nodiscard]] auto TryGetConstComponent( [[maybe_unused]] Entity const entity ) const {
 			return m_registry.try_get<Component ...>( entity );
 		}
 
@@ -203,11 +203,64 @@ namespace Core
 			view.each( func );
 		}
 
-
-		entt::registry & get_base_registry()
+		//////////////////////////////////////////////////////////////////////////
+		//Event listening
+		//////////////////////////////////////////////////////////////////////////
+		template<typename Component>
+		[[nodiscard]] auto on_construct()
 		{
-			return m_registry;
+			return m_registry.on_construct<Component>();
 		}
+
+		//////////////////////////////////////////////////////////////////////////
+		//Context components
+		//////////////////////////////////////////////////////////////////////////
+		template<typename Type>
+		[[nodiscard]] std::add_const_t<Type> & GetConstContextComponent() const
+		{
+			return m_registry.ctx<Type>();
+		}
+
+		template<typename Type>
+		[[nodiscard]] Type & GetContextComponent()
+		{
+			return m_registry.ctx<Type>();
+		}
+
+		template<typename Type, typename... Args>
+		Type & SetContextComponent( Args &&... args )
+		{
+			return m_registry.set<Type>(std::forward<Args>(args)...);
+		}
+
+		template<typename Type>
+		void UnsetContextComponent()
+		{
+			m_registry.unset<Type>();
+		}
+
+		template<typename Type, typename... Args>
+		[[nodiscard]] Type & GetContextComponentOrSet( Args &&... args )
+		{
+			return m_registry.ctx_or_set<Type>( std::forward<Args>( args )... );
+		}
+
+		template<typename Type>
+		[[nodiscard]] std::add_const_t<Type> * TryGetConstContextComponent() const
+		{
+			return m_registry.try_ctx<Type>();
+		}
+
+		template<typename Type>
+		[[nodiscard]] Type * TryGetContextComponent()
+		{
+			return m_registry.try_ctx<Type>();
+		}
+
+		//entt::registry & get_base_registry()
+		//{
+		//	return m_registry;
+		//}
 
 	private:
 		entt::registry m_registry;

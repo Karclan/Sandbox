@@ -10,108 +10,114 @@ struct GLFWwindow;
 
 namespace Core
 {
-    class Registry;
+	class Registry;
 }
 
 namespace Input
 {
-    class InputSystem;
+	class InputSystem;
 }
 
 namespace Graphics
 {
 
-    class Window
-    {
-    public:
-        Window( Core::Registry & registry, Input::InputSystem & inInputSystem );
-        Window( unsigned int width, unsigned int height, Core::Registry & registry, Input::InputSystem& inInputSystem );
-        ~Window();
+	class Window
+	{
+	public:
+		Window( Core::Registry & registry, Input::InputSystem & inInputSystem );
+		Window( unsigned int width, unsigned int height, Core::Registry & registry, Input::InputSystem & inInputSystem );
+		~Window();
 
-		Renderer& GetRenderer() noexcept
+		Renderer & GetRenderer() noexcept
 		{
 			return *m_renderer.get();
 		}
 
-        void PollInput();
-        void PreRender();
+		void PollInput();
+		void PreRender();
 
-        double GetCurrentFrameTime() const;
-        double GetDeltaTime() const;
+		double GetCurrentFrameTime() const;
+		double GetDeltaTime() const;
 
-        void Render();
+		void Render();
 
-        void ImguiPreRender();
-        void ImguiRender();
+		void ImguiPreRender();
+		void ImguiRender();
 
-        bool ShouldClose() const noexcept;
+		bool ShouldClose() const noexcept;
 
-        operator bool() const noexcept
-        {
-            return m_glfwWindow != nullptr;
-        }
+		operator bool() const noexcept
+		{
+			return m_glfwWindow != nullptr;
+		}
 
-        int GetRenderedFrames() const noexcept
-        {
-            return m_fps;
-        }
+		int GetRenderedFrames() const noexcept
+		{
+			return m_fps;
+		}
 
-        static constexpr glm::vec4 Red   { glm::vec4( 1.f, 0.f, 0.f, 1.f ) };
-        static constexpr glm::vec4 Green { glm::vec4( 0.f, 1.f, 0.f, 1.f ) };
-        static constexpr glm::vec4 Blue  { glm::vec4( 0.f, 0.f, 1.f, 1.f ) };
-        static constexpr glm::vec4 Black { glm::vec4( 0.f, 0.f, 0.f, 1.f ) };
-        static constexpr glm::vec4 White { glm::vec4( 1.f, 1.f, 1.f, 1.f ) };
+		static constexpr glm::vec4 Red { 1.f, 0.f, 0.f, 1.f };
+		static constexpr glm::vec4 Green { 0.f, 1.f, 0.f, 1.f };
+		static constexpr glm::vec4 Blue { 0.f, 0.f, 1.f, 1.f };
+		static constexpr glm::vec4 Black { 0.f, 0.f, 0.f, 1.f };
+		static constexpr glm::vec4 White { 1.f, 1.f, 1.f, 1.f };
 
-        bool DrawLine( glm::vec3 A, glm::vec3 B, glm::vec4 colour = White, float thickness = 1.f ) noexcept;
+		bool DrawLine( glm::vec3 A, glm::vec3 B, glm::vec4 colour = White, float thickness = 1.f ) noexcept;
 
-    private:
+	private:
 
-        class GLFWCallbackWrapper
-        {
-        public:
-            GLFWCallbackWrapper() = delete;
-            GLFWCallbackWrapper( const GLFWCallbackWrapper & ) = delete;
-            GLFWCallbackWrapper( GLFWCallbackWrapper && ) = delete;
-            ~GLFWCallbackWrapper() = delete;
+		class GLFWCallbackWrapper
+		{
+		public:
+			GLFWCallbackWrapper() = delete;
+			GLFWCallbackWrapper( const GLFWCallbackWrapper & ) = delete;
+			GLFWCallbackWrapper( GLFWCallbackWrapper && ) = delete;
+			~GLFWCallbackWrapper() = delete;
 
-            static void FramebufferSizeCallback( GLFWwindow * window, int width, int height );
-			static void KeyCallback( GLFWwindow* window, int key, int scancode, int action, int mods );
-			static void MouseButtonCallback( GLFWwindow* window, int button, int action, int mods );
-			static void CursorPositionCallback( GLFWwindow* window, double xPosition, double yPosition );
-			static void ScrollCallback( GLFWwindow* window, double xOffset, double yOffset );
-            static void SetApplication( Window * application );
-        private:
-            static Window * s_window;
-        };
+			static void FramebufferSizeCallback( GLFWwindow * window, int width, int height );
+			static void KeyCallback( GLFWwindow * window, int key, int scancode, int action, int mods );
+			static void MouseButtonCallback( GLFWwindow * window, int button, int action, int mods );
+			static void CursorPositionCallback( GLFWwindow * window, double xPosition, double yPosition );
+			static void ScrollCallback( GLFWwindow * window, double xOffset, double yOffset );
 
-        void CreateWindow();
+			static void WindowPositionCallback( GLFWwindow * window, int xPosition, int yPosition );
 
-        void FramebufferSizeCallback( GLFWwindow * window, int width, int height );
-		void KeyCallback( GLFWwindow* window, int key, int scancode, int action, int mods );
-		void MouseButtonCallback( GLFWwindow* window, int button, int action, int mods );
-		void CursorPositionCallback( GLFWwindow* window, double xPosition, double yPosition );
-		void ScrollCallback( GLFWwindow* window, double xOffset, double yOffset );
+			static void SetApplication( Window * application );
+		private:
+			static Window * s_window;
+		};
 
-        void ProcessInput();
-        void InitImgui();
+		void CreateWindow();
 
-        Core::Registry & m_registry;
-        Input::InputSystem & m_inputSystem;
+		void FramebufferSizeCallback( GLFWwindow * window, int width, int height );
+		void KeyCallback( GLFWwindow * window, int key, int scancode, int action, int mods );
+		void MouseButtonCallback( GLFWwindow * window, int button, int action, int mods );
+		void CursorPositionCallback( GLFWwindow * window, double xPosition, double yPosition );
+		void ScrollCallback( GLFWwindow * window, double xOffset, double yOffset );
+		void WindowPositionCallback( GLFWwindow * window, int xPosition, int yPosition );
 
+		void ProcessInput();
+		void InitImgui();
 
-        GLFWwindow * m_glfwWindow;
-        std::unique_ptr<Renderer> m_renderer;
+		Core::Registry & m_registry;
+		Input::InputSystem & m_inputSystem;
 
-        unsigned int m_screenWidth { 800 };
-        unsigned int m_screenHeight { 600 };
+		GLFWwindow * m_glfwWindow;
+		std::unique_ptr<Renderer> m_renderer;
 
-        double m_lastFrameTime { 0.f };
-        double m_deltaFrameTime { 0.f };
-        double m_currentFrameTime { 0.f };
+		glm::ivec2 m_windowPosition { 0 };
+		bool m_windowPositionChanged { false };
 
-        double m_frameTimer { 0.f };
-        int m_renderedFrames { 0 };
-        int m_fps { 0 };
+		unsigned int m_screenWidth { 800 };
+		unsigned int m_screenHeight { 600 };
 
-    };
+		double m_lastFrameTime { 0.f };
+		double m_deltaFrameTime { 0.f };
+		double m_currentFrameTime { 0.f };
+
+		double m_frameTimer { 0.f };
+		int m_renderedFrames { 0 };
+		int m_fps { 0 };
+
+	};
 }

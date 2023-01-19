@@ -214,6 +214,7 @@ namespace Graphics
 
 	void Window::PreRender()
 	{
+		m_windowPositionChanged = false;
 		//glFlush();
 		ImguiPreRender();
 
@@ -292,6 +293,13 @@ namespace Graphics
 	void Window::ScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
 	{
 		m_inputSystem.ScrollAction(xOffset, yOffset);
+	}
+
+	void Window::WindowPositionCallback( GLFWwindow * window, int xPosition, int yPosition )
+	{
+		m_windowPosition = { xPosition, yPosition };
+		m_windowPositionChanged = true;
+		
 	}
 
 	void Window::ProcessInput()
@@ -379,7 +387,12 @@ namespace Graphics
 		s_window->ScrollCallback(window, xOffset, yOffset);
 	}
 
-	void Window::GLFWCallbackWrapper::SetApplication(Window* window)
+	void Window::GLFWCallbackWrapper::WindowPositionCallback( GLFWwindow * window, int xPosition, int yPosition )
+	{
+		s_window->WindowPositionCallback( window, xPosition, yPosition );
+	}
+
+	void Window::GLFWCallbackWrapper::SetApplication( Window * window )
 	{
 		s_window = window;
 	}

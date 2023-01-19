@@ -170,6 +170,9 @@ namespace Graphics
 
 		if ( m_useFrameBufferObject )
 		{
+			ImGui::PushStyleVar( ImGuiStyleVar_WindowPadding, ImVec2( 0.0f, 0.0f ) );
+			ImGui::PushStyleVar( ImGuiStyleVar_WindowRounding, 0.0f );
+			ImGui::PushStyleVar( ImGuiStyleVar_WindowBorderSize, 0.0f );
 			if ( ImGui::Begin( "Game" ) )
 			{
 				// Using a Child allow to fill all the space of the window.
@@ -185,13 +188,14 @@ namespace Graphics
 					m_sceneSize = wsize;
 				}
 				// Because I use the texture from OpenGL, I need to invert the V from the UV.
-				ImGui::Image( reinterpret_cast< ImTextureID >( m_renderedTexture ), m_sceneSize, ImVec2( 0, 1 ), ImVec2( 1, 0 ) );
 				ImVec2 const gameRenderPosition = ImGui::GetCursorScreenPos();
+				ImGui::Image( reinterpret_cast< ImTextureID >( m_renderedTexture ), m_sceneSize, ImVec2( 0, 1 ), ImVec2( 1, 0 ) );
+				ImVec2 const itemRectSize = ImGui::GetItemRectSize();
 				m_renderStats.ViewPortStartX = static_cast< unsigned int >( gameRenderPosition.x );
 				m_renderStats.ViewPortStartY = static_cast< unsigned int >( gameRenderPosition.y );
-				m_renderStats.ViewPortHeight = static_cast< unsigned int >( m_sceneSize.x );
-				m_renderStats.ViewPortWidth = static_cast< unsigned int >( m_sceneSize.y);
-				m_registry.get_base_registry().set<RenderStats>( m_renderStats );
+				m_renderStats.ViewPortWidth = static_cast< unsigned int >( itemRectSize.x );
+				m_renderStats.ViewPortHeight = static_cast< unsigned int >( itemRectSize.y );
+				m_registry.SetContextComponent<RenderStats>( m_renderStats );
 				if ( ImGui::IsItemHovered() )
 				{
 					m_renderStats.ViewPortCursorX = ImGui::GetMousePos().x;
@@ -219,6 +223,7 @@ namespace Graphics
 				}
 			}
 			ImGui::End();
+			ImGui::PopStyleVar(3);
 		}
 		else
 		{
@@ -226,7 +231,7 @@ namespace Graphics
 			m_renderStats.ViewPortStartY = 0u;
 			m_renderStats.ViewPortHeight = static_cast< unsigned int >( m_sceneSize.x );
 			m_renderStats.ViewPortWidth = static_cast< unsigned int >( m_sceneSize.y );
-			m_registry.get_base_registry().set<RenderStats>( m_renderStats );
+			m_registry.SetContextComponent<RenderStats>( m_renderStats );
 		}
 		if ( m_showTextureWindow )
 		{

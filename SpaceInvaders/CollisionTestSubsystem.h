@@ -29,10 +29,17 @@ namespace Game
 
 		Input::InputSystem const & m_inputSystem;
 
-		glm::dvec2 cachedMouseCoords { 0.f };
+		glm::dvec2 glfwMousePos {0.f};
+		glm::dvec2 imGuiMousePos { 0.f };
+
 		glm::dvec2 cachedMouseCoordsOffset { 0.f };
 		glm::dvec2 cachedMappedMouseCoords { 0.f };
+
 		glm::ivec2 cachedViewPortStart { 0 };
+		glm::ivec2 cachedViewPortSize { 0 };
+
+		bool xAxis { false };
+		bool yAxis { false };
 	};
 }
 

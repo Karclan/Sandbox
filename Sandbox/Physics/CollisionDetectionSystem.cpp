@@ -14,14 +14,12 @@ namespace Physics
 		: Core::Subsystem( registry )
 		, m_window( window )
 	{
-		entt::registry & reg = m_registry.get_base_registry();
-		reg.on_construct<SquareExtents>().connect<&CollisionDetectionSystem::OnSquareExtentsConstruct>( this );
+		m_registry.on_construct<SquareExtents>().connect<&CollisionDetectionSystem::OnSquareExtentsConstruct>( this );
 	}
 
 	CollisionDetectionSystem::~CollisionDetectionSystem()
 	{
-		entt::registry & reg = m_registry.get_base_registry();
-		reg.on_construct<SquareExtents>().disconnect<&CollisionDetectionSystem::OnSquareExtentsConstruct>( this );
+		m_registry.on_construct<SquareExtents>().disconnect<&CollisionDetectionSystem::OnSquareExtentsConstruct>( this );
 	}
 
 	void CollisionDetectionSystem::FixedUpdate( double deltaTime )
