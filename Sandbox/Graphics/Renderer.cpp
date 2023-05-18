@@ -189,7 +189,8 @@ namespace Graphics
 				}
 				// Because I use the texture from OpenGL, I need to invert the V from the UV.
 				ImVec2 const gameRenderPosition = ImGui::GetCursorScreenPos();
-				ImGui::Image( reinterpret_cast< ImTextureID >( m_renderedTexture ), m_sceneSize, ImVec2( 0, 1 ), ImVec2( 1, 0 ) );
+				ImGui::Image( static_cast< ImTextureID >( m_renderedTexture ), m_sceneSize, ImVec2( 0, 1 ), ImVec2( 1, 0 ) );
+				
 				ImVec2 const itemRectSize = ImGui::GetItemRectSize();
 				m_renderStats.ViewPortStartX = static_cast< unsigned int >( gameRenderPosition.x );
 				m_renderStats.ViewPortStartY = static_cast< unsigned int >( gameRenderPosition.y );
@@ -251,9 +252,11 @@ namespace Graphics
 				{
 					names.push_back( tex.first );
 				}
+				const size_t textureCount = names.size();
 
 				static unsigned int item_current_idx = 0; // Here our selection data is an index.
-				if ( ImGui::BeginCombo( "Textures", names[ item_current_idx ].c_str()/*, flags*/ ) )
+				std::string SelectedTexture = "no_texture_loaded";
+				if ( ImGui::BeginCombo( "Textures", SelectedTexture.c_str()/*, flags*/ ) )
 				{
 					for ( unsigned int n = 0; n < names.size(); n++ )
 					{
@@ -261,6 +264,7 @@ namespace Graphics
 						if ( ImGui::Selectable( names[ n ].c_str(), is_selected ) )
 						{
 							item_current_idx = n;
+							SelectedTexture = names[ item_current_idx ];
 						}
 
 						if ( is_selected )  // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
@@ -271,15 +275,18 @@ namespace Graphics
 					ImGui::EndCombo();
 				}
 
-				auto texIt = textures.find( names[ item_current_idx ] );
-				if ( texIt != textures.end() )
+				if ( textureCount > 0 )
 				{
-					Texture tex = texIt->second;
-					//glActiveTexture(GL_TEXTURE0);
-					//glBindTexture(GL_TEXTURE_2D, tex.GetTextureID());
-					ImGui::Text( "pointer = %p", tex.GetTextureID() );
-					ImGui::Text( "size = %d x %d", tex.GetWidth(), tex.GetHeight() );
-					ImGui::Image( ( void * ) tex.GetTextureID(), ImVec2( 64, 64 ) );
+					auto texIt = textures.find( names[ item_current_idx ] );
+					if ( texIt != textures.end() )
+					{
+						Texture tex = texIt->second;
+						//glActiveTexture(GL_TEXTURE0);
+						//glBindTexture(GL_TEXTURE_2D, tex.GetTextureID());
+						ImGui::Text( "pointer = %p", tex.GetTextureID() );
+						ImGui::Text( "size = %d x %d", tex.GetWidth(), tex.GetHeight() );
+						ImGui::Image( static_cast< ImTextureID >( tex.GetTextureID() ), ImVec2( 64, 64 ) );
+					}
 				}
 			}
 			ImGui::End();
@@ -475,13 +482,13 @@ namespace Graphics
 		}
 		else
 		{
-			int const diff = m_boundTexturesSize - newTexturesSize;
+			size_t const diff = m_boundTexturesSize - newTexturesSize;
 			if ( diff > 0 ) //We have less textures than last
 			{
 				for ( size_t i = m_boundTexturesSize; i > -1; --i ) //Go down the list and unbind textures
 				{
 					//unbind
-					glActiveTexture( GL_TEXTURE0 + i );
+					glActiveTexture( GL_TEXTURE0 + static_cast<GLenum>(i) );
 					glBindTexture( GL_TEXTURE_2D, 0 );
 				}
 			}
@@ -493,13 +500,13 @@ namespace Graphics
 		{
 			for ( size_t i = 0; i <= m_boundTexturesSize; ++i )
 			{
-				glActiveTexture( GL_TEXTURE0 + i );
+				glActiveTexture( GL_TEXTURE0 + static_cast< GLenum >( i ) );
 				glBindTexture( GL_TEXTURE_2D, 0 );
 			}
 			for ( size_t i = 0; i < textures.size(); ++i )
 			{
 				//bind textures
-				glActiveTexture( GL_TEXTURE0 + i );
+				glActiveTexture( GL_TEXTURE0 + static_cast< GLenum >( i ) );
 				glBindTexture( GL_TEXTURE_2D, textures[ i ] );
 			}
 			m_boundTextures = textures;

@@ -50,13 +50,19 @@ namespace Core
 
 		Core::Registry const & GetRegistry() const noexcept { return m_mainRegistry; }
 		Core::Registry & GetRegistry() noexcept { return m_mainRegistry; }
+
 		Graphics::Window const & GetWindow() const noexcept { return m_window; }
 		Graphics::Window & GetWindow() noexcept { return m_window; }
+
 		Input::InputSystem & GetInputSystem() noexcept { return m_inputSystem; }
 		Input::InputSystem const & GetInputSystem() const noexcept { return m_inputSystem; }
+		
+		Graphics::CameraSystem & GetCameraSystem() noexcept { return m_cameraSystem; }
+		Graphics::CameraSystem const & GetCameraSystem() const noexcept { return m_cameraSystem; }
+
 	private:
 		//Sorts subsystem vector based on update order
-		virtual void sortSubsytems() noexcept;
+		virtual void SortSubsytems() noexcept;
 
 		//Fixed update values
 		int m_framesToCatchUpOn { 0 };

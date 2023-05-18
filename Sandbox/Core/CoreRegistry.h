@@ -1,12 +1,20 @@
 #pragma once
 
 #include "entt/entt.hpp"
+#include "entt/entity/storage.hpp"
 
 #include <bitset>
 #include <type_traits>
 
 
 using namespace entt::literals;
+
+#if WITH_EDITOR
+
+#include "../Editor/ComponentManifestComponent.h"
+
+#endif
+
 
 namespace Core
 {
@@ -29,13 +37,13 @@ namespace Core
 
 		[[nodiscard]] Entity CreateEntity( Entity const hint )
 		{
-			return m_registry.create( hint );
+			return m_registry.create( hint );	
 		}
 
 		template<typename It>
 		[[nodiscard]] Entity CreateEntity( It first, It last )
 		{
-			return m_registry.create( first, last );
+			return m_registry.create( first, last );		
 		}
 
 		bool IsValidEntity( Entity const entity ) const
@@ -172,34 +180,42 @@ namespace Core
 			return m_registry.try_get<Component ...>( entity );
 		}
 
+
 		//////////////////////////////////////////////////////////////////////////
 		//Views
 		//////////////////////////////////////////////////////////////////////////
-		template<typename... Component, typename... Exclude>
-		[[nodiscard]] entt::basic_view<Entity, entt::exclude_t<Exclude...>, Component...> View( entt::exclude_t<Exclude...> = {} ) {
-			return m_registry.view<Component ...>( entt::exclude<Exclude>... );
-		}
+
+		//template<typename Type, typename... Other, typename... Exclude>
+		//[[nodiscard]] basic_view<get_t<storage_for_type<Type>, storage_for_type<Other>...>, exclude_t<storage_for_type<Exclude>...>>
 
 		/*! @copydoc view */
-		template<typename... Component, typename... Exclude>
-		[[nodiscard]] entt::basic_view<Entity, entt::exclude_t<Exclude...>, Component...> View( entt::exclude_t<Exclude...> = {} ) const {
-			return m_registry.view<Component ...>( entt::exclude<Exclude>... );
+		template<typename Component, typename... Other, typename... Exclude>
+		[[nodiscard]] entt::basic_view<entt::get_t<entt::basic_registry<>::storage_for_type<Component>, entt::basic_registry<>::storage_for_type<Other>...>, entt::exclude_t<entt::basic_registry<>::storage_for_type<Exclude>...>> 
+			View( entt::exclude_t<Exclude...> = entt::exclude_t{} ) {
+			return m_registry.view<Component, Other...>( entt::exclude<Exclude>... );
+		}
+
+		
+		template<typename Component, typename... Other, typename... Exclude>
+		[[nodiscard]] entt::basic_view<entt::get_t<entt::basic_registry<>::storage_for_type<const Component>, entt::basic_registry<>::storage_for_type<const Other>...>, entt::exclude_t<entt::basic_registry<>::storage_for_type<const Exclude>...>>
+			View( entt::exclude_t<Exclude...> = entt::exclude_t {} ) const {
+			return m_registry.view<Component, Other...>( entt::exclude<Exclude>... );
 		}
 
 		//////////////////////////////////////////////////////////////////////////
 		//For Each
 		//////////////////////////////////////////////////////////////////////////
-		template<typename... Component, typename... Exclude, typename Func>
+		template<typename Component, typename... Other, typename... Exclude, typename Func>
 		void ForView( Func func, entt::exclude_t<Exclude>... )
 		{
-			auto view = View<Component ...>( entt::exclude<Exclude>... );
+			auto view = View<Component, Other...>( entt::exclude<Exclude>... );
 			view.each( func );
 		}
 
-		template<typename... Component, typename... Exclude, typename Func>
+		template<typename Component, typename... Other, typename... Exclude, typename Func>
 		void ForConstView( Func func, entt::exclude_t<Exclude>... ) const
 		{
-			auto const view = View<Component ...>( entt::exclude<Exclude>... );
+			auto const view = View<Component, Other...>( entt::exclude<Exclude>... );
 			view.each( func );
 		}
 
@@ -218,49 +234,54 @@ namespace Core
 		template<typename Type>
 		[[nodiscard]] std::add_const_t<Type> & GetConstContextComponent() const
 		{
-			return m_registry.ctx<Type>();
+			return m_registry.ctx().get<Type>();
 		}
 
 		template<typename Type>
 		[[nodiscard]] Type & GetContextComponent()
 		{
-			return m_registry.ctx<Type>();
+			return m_registry.ctx().get<Type>();
 		}
 
 		template<typename Type, typename... Args>
-		Type & SetContextComponent( Args &&... args )
+		Type & SetContextComponent( Args &... args )
 		{
-			return m_registry.set<Type>(std::forward<Args>(args)...);
+			return m_registry.ctx().insert_or_assign<Type>(std::forward<Args>(args)...);
 		}
 
-		template<typename Type>
-		void UnsetContextComponent()
-		{
-			m_registry.unset<Type>();
-		}
+		//template<typename Type>
+		//void UnsetContextComponent()
+		//{
+		//	m_registry.unset<Type>();
+		//}
 
-		template<typename Type, typename... Args>
+		/*template<typename Type, typename... Args>
 		[[nodiscard]] Type & GetContextComponentOrSet( Args &&... args )
 		{
 			return m_registry.ctx_or_set<Type>( std::forward<Args>( args )... );
-		}
+		}*/
 
-		template<typename Type>
-		[[nodiscard]] std::add_const_t<Type> * TryGetConstContextComponent() const
-		{
-			return m_registry.try_ctx<Type>();
-		}
+		//template<typename Type>
+		//[[nodiscard]] std::add_const_t<Type> * TryGetConstContextComponent() const
+		//{
+		//	return m_registry.try_ctx<Type>();
+		//}
 
-		template<typename Type>
+	/*	template<typename Type>
 		[[nodiscard]] Type * TryGetContextComponent()
 		{
 			return m_registry.try_ctx<Type>();
-		}
+		}*/
 
 		//entt::registry & get_base_registry()
 		//{
 		//	return m_registry;
 		//}
+
+	/*	auto & Storage()
+		{
+			return m_registry.storage();
+		}*/
 
 	private:
 		entt::registry m_registry;

@@ -8,9 +8,11 @@
 #include "VectorMathExampleSubsystem.h"
 #include "CollisionTestSubsystem.h"
 
+#include "Basic2DGameTestSubsystem.h"
+
 int main( [[maybe_unused]] int argc, [[maybe_unused]] char * argv[] )
 {
-	Core::Game Game;
+	Core::Game Game = Core::Game();
 
 	std::unique_ptr<Game::VectorMathExampleSubsystem> VecSub = std::move( std::make_unique<Game::VectorMathExampleSubsystem>( Game.GetRegistry() ) );
 	VecSub->CreateComponents( Game.GetWindow() );
@@ -18,10 +20,13 @@ int main( [[maybe_unused]] int argc, [[maybe_unused]] char * argv[] )
 	BasicSpriteSubsystem->CreateComponents( Game.GetWindow() );
 
 	std::unique_ptr<Game::CollisionTestSubsystem> collisionTest = std::move( std::make_unique<Game::CollisionTestSubsystem>( Game.GetRegistry(), Game.GetInputSystem() ) );
-	//auto BasicMovementSubsystem = std::make_shared<Game::BasicMovementSubsystem>(Game.getRegistry());
-	//BasicMovementSubsystem->createComponents(*Game.getWindow());
+	std::unique_ptr <Game::BasicMovementSubsystem> BasicMovementSubsystem = std::make_unique<Game::BasicMovementSubsystem>( Game.GetRegistry() );
+	BasicMovementSubsystem->CreateComponents( Game.GetWindow() );
+
+	std::unique_ptr<Game::Basic2DGameTestSubsystem> Basic2DSubSystem = std::move( std::make_unique< Game::Basic2DGameTestSubsystem>( Game.GetRegistry(), Game.GetWindow() , Game.GetCameraSystem()) );
 
 	Game.Init();
+	Game.RegisterSubsystem( Basic2DSubSystem.get() );
 	Game.RegisterSubsystem( VecSub.get() );
 	Game.RegisterImguiWindow( VecSub.get() );
 	Game.RegisterSubsystem( BasicSpriteSubsystem.get() );
@@ -29,13 +34,15 @@ int main( [[maybe_unused]] int argc, [[maybe_unused]] char * argv[] )
 	Game.RegisterSubsystem( collisionTest.get() );
 	Game.RegisterImguiWindow( collisionTest.get() );
 
-	//Game.registerSubsystem(BasicMovementSubsystem);
-	//Game.registerImguiWindow(BasicMovementSubsystem);
+	Game.RegisterSubsystem( BasicMovementSubsystem.get() );
+	//Game.RegisterImguiWindow( BasicMovementSubsystem.get() );
 
 	while ( !Game.ShouldClose() )
 	{
 		Game.Run();
 	}
+
+	Game.DeregisterSubsystem( Basic2DSubSystem.get() );
 
 	Game.DeregisterImguiWindow( BasicSpriteSubsystem.get() );
 	Game.DeregisterSubsystem( BasicSpriteSubsystem.get() );

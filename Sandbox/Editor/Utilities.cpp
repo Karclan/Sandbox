@@ -30,7 +30,7 @@ namespace Editor
 		//Create components for editor camera
 		//Transform
 		//Camera component
-		//Custom arcball component to be picked up by the system
+		//Custom arcball camera behaviour component to be picked up by the system
 	}
 
 	void Utilities::CreateGridFloor( Core::Registry& Registry, Graphics::Renderer & Renderer )

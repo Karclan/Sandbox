@@ -11,6 +11,13 @@ namespace Graphics
 	using namespace entt::literals;
 	using ActiveCameraTag = entt::tag<"ActiveCamera"_hs>;
 
+
+	enum class ProjectionType : uint8_t
+	{
+		Orthographic,
+		Perspective,
+	};
+
 	struct CameraComponent
 	{
 	public:
@@ -24,8 +31,6 @@ namespace Graphics
 		glm::vec3 m_up { 0.f, 1.f, 0.f };
 		glm::vec3 m_target { 0.f, 0.f, -1.f };
 
-
-
 		bool m_orbit { true };
 
 		bool m_dirtyViewMatrix { true };
@@ -38,5 +43,7 @@ namespace Graphics
 		float m_fov { 45.f };
 
 		double m_cameraSpeed { 1.f };
+
+		ProjectionType m_projectionType = {ProjectionType::Perspective};
 	};
 }

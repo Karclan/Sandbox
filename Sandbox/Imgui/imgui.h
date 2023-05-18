@@ -46,6 +46,10 @@ Index of this file:
 #include <stddef.h>                 // ptrdiff_t, NULL
 #include <string.h>                 // memset, memmove, memcpy, strlen, strchr, strcpy, strcmp
 
+//BEGIN-IMGUI-CHANGES: Adding glad to modify ImTextureID to GLuint
+#include "glad/glad.h"
+//END-IMGUI-CHANGES: Adding glad to modify ImTextureID to GLuint
+
 // Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals. Work in progress versions typically starts at XYY99 then bounce up to XYY00, XYY01 etc. when release tagging happens)
 #define IMGUI_VERSION               "1.75 WIP"
@@ -135,7 +139,9 @@ struct ImGuiWindowClass;            // Window class (rare/advanced uses: provide
 // Typedefs and Enums/Flags (declared as int for compatibility with old C++, to allow using as flags and to not pollute the top of this file)
 // Use your programming IDE "Go to definition" facility on the names in the central column below to find the actual flags/enum lists.
 #ifndef ImTextureID
-typedef void* ImTextureID;          // User data to identify a texture (this is whatever to you want it to be! read the FAQ about ImTextureID in imgui.cpp)
+//BEGIN-IMGUI-CHANGES: Adding glad to modify ImTextureID to GLuint
+typedef unsigned int ImTextureID;          // User data to identify a texture (this is whatever to you want it to be! read the FAQ about ImTextureID in imgui.cpp)
+//END-IMGUI-CHANGES: Adding glad to modify ImTextureID to GLuint
 #endif
 typedef unsigned int ImGuiID;       // Unique ID used by widgets (typically hashed from a stack of string)
 typedef unsigned short ImWchar;     // A single U16 character for keyboard input/display. We encode them as multi bytes UTF-8 when used in strings.

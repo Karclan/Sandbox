@@ -12,7 +12,8 @@ namespace Graphics
 		CameraSystem( Core::Registry& registry );
 		~CameraSystem() = default;
 
-		void CreateCamera( std::string&& CameraName );
+		Core::Entity CreateOrthographicCamera( std::string&& CameraName );
+		Core::Entity CreatePerspectiveCamera( std::string && CameraName );
 		void SetActiveCamera( const std::string& CameraName );
 
 		void FixedUpdate( double deltaTime ) noexcept override;

@@ -29,7 +29,7 @@ namespace Core
 		//m_window = std::make_unique<Graphics::Window>( m_mainRegistry, m_inputSystem );
 		m_baseImguiWindowBuilder = std::make_unique<Core::BaseImGuiWindowBuilder>( m_mainRegistry,m_window );
 
-		EditorUtilities.CreateEditorCamera( m_mainRegistry );
+		//EditorUtilities.CreateEditorCamera( m_mainRegistry );
 
 		RegisterSubsystem( &m_inputSystem );
 		RegisterSubsystem( &m_cameraSystem );
@@ -128,7 +128,7 @@ namespace Core
 		m_window.Render();
 	}
 
-	void Game::sortSubsytems() noexcept
+	void Game::SortSubsytems() noexcept
 	{
 
 	}

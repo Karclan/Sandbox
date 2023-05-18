@@ -10,29 +10,42 @@
 
 namespace Graphics
 {
-	CameraSystem::CameraSystem( Core::Registry& registry )
+	CameraSystem::CameraSystem( Core::Registry & registry )
 		: Core::Subsystem( registry )
 		, m_cameraInspector( registry )
 	{
 
 	}
 
-	void CameraSystem::CreateCamera( std::string&& CameraName )
+	Core::Entity CreateCamera( std::string && CameraName, ProjectionType ProjType, Core::Registry & Registry )
 	{
-		auto entity = m_registry.CreateEntity();
+		auto entity = Registry.CreateEntity();
 
 		Graphics::CameraComponent cameraComponent;
+		cameraComponent.m_projectionType = ProjType;
 		cameraComponent.m_name = std::move( CameraName );
-		m_registry.AddComponent<Graphics::CameraComponent>( entity, cameraComponent );
-		m_registry.AddComponent<Graphics::TransformComponent>( entity, Graphics::TransformComponent {} );
+		Registry.AddComponent<Graphics::CameraComponent>( entity, cameraComponent );
+		Registry.AddComponent<Graphics::TransformComponent>( entity, Graphics::TransformComponent {} );
+
+		return entity;
 	}
 
-	void CameraSystem::SetActiveCamera( const std::string& CameraName )
+	Core::Entity CameraSystem::CreateOrthographicCamera( std::string && CameraName )
+	{
+		return CreateCamera( std::move( CameraName ), ProjectionType::Orthographic, m_registry );
+	}
+
+	Core::Entity CameraSystem::CreatePerspectiveCamera( std::string && CameraName )
+	{
+		return CreateCamera( std::move( CameraName ), ProjectionType::Perspective, m_registry );
+	}
+
+	void CameraSystem::SetActiveCamera( const std::string & CameraName )
 	{
 		Utils::Logger::LogMessage( Utils::LogType::Info, "Changed Camera\n" );
 
 		m_registry.ForView<Graphics::CameraComponent>(
-			[this, &CameraName] ( Core::Entity entity, CameraComponent& cameraComponent )
+			[this, &CameraName] ( Core::Entity entity, CameraComponent & cameraComponent )
 			{
 				if ( m_registry.HasComponent<ActiveCameraTag>( entity ) )
 				{
@@ -52,13 +65,31 @@ namespace Graphics
 		UNUSED( deltaTime );
 
 		m_registry.ForView<CameraComponent, TransformComponent>(
-			[] ( CameraComponent& cameraComponent, TransformComponent& transformComponent )
+			[] ( CameraComponent & cameraComponent, TransformComponent & transformComponent )
 			{
 				if ( cameraComponent.m_dirtyProjectionMatrix )
 				{
 					float aspect = static_cast< float >( ( cameraComponent.m_viewPortWidth ) / ( cameraComponent.m_viewPortHeight > 0 ? cameraComponent.m_viewPortHeight : 1.f ) );
 
-					cameraComponent.m_projectionMatrix = glm::perspective( glm::radians( cameraComponent.m_fov ), aspect, cameraComponent.m_nearPlane, cameraComponent.m_farPlane );
+					switch ( cameraComponent.m_projectionType )
+					{
+						case ProjectionType::Orthographic:
+						{
+							cameraComponent.m_projectionMatrix = glm::ortho( 0.f, cameraComponent.m_viewPortWidth, 0.f, cameraComponent.m_viewPortHeight, cameraComponent.m_nearPlane, cameraComponent.m_farPlane );
+							break;
+						}
+						case ProjectionType::Perspective:
+						{
+							cameraComponent.m_projectionMatrix = glm::perspective( glm::radians( cameraComponent.m_fov ), aspect, cameraComponent.m_nearPlane, cameraComponent.m_farPlane );
+							break;
+						}
+						default:
+						{
+							Utils::Logger::LogMessage( Utils::LogType::Warning, "Unhandled Camera Perspective type!\n" );
+							break;
+						}
+					}
+					
 				}
 
 				if ( cameraComponent.m_dirtyViewMatrix )
@@ -111,6 +142,8 @@ namespace Graphics
 		}
 
 		m_cameraInspector.BuildWindow( deltaTime );
+
+
 
 	}
 

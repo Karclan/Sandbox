@@ -165,6 +165,12 @@
     <ClCompile Include="Physics\CollisionDetectionSystem.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Editor\EditorInspector.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\SceneHierarchyWindow.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\ShaderProgram.h">
@@ -328,6 +334,15 @@
     </ClInclude>
     <ClInclude Include="Graphics\RenderStats.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorInspector.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\SceneHierarchyWindow.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\ComponentManifestComponent.h">
+      <Filter>Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
