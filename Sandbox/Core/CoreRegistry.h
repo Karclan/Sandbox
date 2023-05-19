@@ -219,6 +219,12 @@ namespace Core
 			view.each( func );
 		}
 
+		template<typename Func>
+		void Each( Func func ) const
+		{
+			m_registry.each( func );
+		}
+
 		//////////////////////////////////////////////////////////////////////////
 		//Event listening
 		//////////////////////////////////////////////////////////////////////////
@@ -278,10 +284,29 @@ namespace Core
 		//	return m_registry;
 		//}
 
-	/*	auto & Storage()
+		[[nodiscard]] auto GetStorage() noexcept
 		{
 			return m_registry.storage();
-		}*/
+		}
+
+		[[nodiscard]] auto GetStorage() const noexcept
+		{
+			return m_registry.storage();
+		}
+
+		
+		template<typename Type>
+		decltype( auto ) GetStorage( const entt::id_type id = entt::type_hash<Type>::value() )
+		{
+			return m_registry.storage<Type>( id );
+		}
+
+		
+		template<typename Type>
+		decltype( auto ) GetStorage( const entt::id_type id = entt::type_hash<Type>::value() ) const
+		{
+			return m_registry.storage<Type>( id );
+		}
 
 	private:
 		entt::registry m_registry;
