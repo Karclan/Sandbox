@@ -3,6 +3,7 @@
 #include "CoreRegistry.h"
 
 #include "../Editor/Utilities.h"
+#include "../Editor/EditorInspector.h"
 #include "../Input/InputSystem.h"
 #include "../Utils/LoggingWindow.h"
 #include "../Graphics/CameraSystem.h"
@@ -73,7 +74,8 @@ namespace Core
 		Core::Registry m_mainRegistry {};
 
 		//Editor
-		Editor::Utilities EditorUtilities {};
+		Editor::Utilities m_editorUtilities {};
+		Editor::EditorInspector m_editorInspector;
 
 		//Core Systems
 		Input::InputSystem m_inputSystem;

@@ -6,6 +6,7 @@
 
 #include <map>
 #include <functional>
+#include <utility>
 
 namespace Editor
 {
@@ -18,7 +19,7 @@ namespace Editor
 		template<typename Component>
 		void RegisterComponentDetailsView( std::function<void()> && Delegate )
 		{
-			RegisterComponentDetailsInternal( entt::type_info<Component>, std::forward( Delegate ) );
+			RegisterComponentDetailsInternal( std::in_place_type_t<Component>, std::forward( Delegate ) );
 		}
 
 		void BuildWindow( double deltaTime ) override;
@@ -29,7 +30,14 @@ namespace Editor
 
 		Core::Entity m_InspectedEntity = Core::NullEntity;
 
-		std::map<entt::type_info, std::function<void()>> m_DetailsViewDelegates;
+		struct InfoDelegatePair
+		{
+			entt::type_info Info;
+			std::function<void()> Delegate;
+		};
+
+		using DelegateMap = std::map<entt::id_type, InfoDelegatePair>;
+		DelegateMap m_DetailsViewDelegates;
 	};
 }
 

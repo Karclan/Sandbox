@@ -141,8 +141,8 @@ namespace Game
 				ImGui::Text( "Modified Mouse Coords" );
 				ImGui::Text( fmt::format( "Mapped| x:{} y:{}", cachedMappedMouseCoords.x, cachedMappedMouseCoords.y ).c_str() );
 				//ImGui::Text( fmt::format( "Offset| x:{} y:{}", cachedMouseCoordsOffset.x, cachedMouseCoordsOffset.y ).c_str() );
-				ImGui::End();
 			}
+			ImGui::End();
 		}
 	}
 }

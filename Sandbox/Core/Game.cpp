@@ -12,10 +12,11 @@ namespace Core
 	static constexpr double fixedUpdateRate = 1.f / 60.f;
 
 	Game::Game()
-		: m_inputSystem( m_mainRegistry )
+		: m_editorInspector( m_mainRegistry )
+		, m_inputSystem( m_mainRegistry )
 		, m_logWindow( m_mainRegistry )
 		, m_cameraSystem( m_mainRegistry )
-		, m_window(m_mainRegistry, m_inputSystem)
+		, m_window( m_mainRegistry, m_inputSystem )
 		, m_collisionDetectionSystem( m_mainRegistry, m_window )
 	{
 		{
@@ -27,13 +28,15 @@ namespace Core
 		}
 
 		//m_window = std::make_unique<Graphics::Window>( m_mainRegistry, m_inputSystem );
-		m_baseImguiWindowBuilder = std::make_unique<Core::BaseImGuiWindowBuilder>( m_mainRegistry,m_window );
+		m_baseImguiWindowBuilder = std::make_unique<Core::BaseImGuiWindowBuilder>( m_mainRegistry, m_window );
 
 		//EditorUtilities.CreateEditorCamera( m_mainRegistry );
 
 		RegisterSubsystem( &m_inputSystem );
 		RegisterSubsystem( &m_cameraSystem );
 		RegisterSubsystem( &m_collisionDetectionSystem );
+
+		RegisterImguiWindow( &m_editorInspector );
 
 		RegisterImguiWindow( &m_inputSystem );
 		RegisterImguiWindow( &m_cameraSystem );
@@ -49,18 +52,18 @@ namespace Core
 		m_baseImguiWindowBuilder->GetInfo();
 	}
 
-	void Game::RegisterSubsystem( Subsystem* subsystem )
+	void Game::RegisterSubsystem( Subsystem * subsystem )
 	{
 		//TODO: Sort based on update order
 		m_subsystems.push_back( subsystem );
 	}
 
-	void Game::RegisterImguiWindow( ImGuiWindowBuilder* window )
+	void Game::RegisterImguiWindow( ImGuiWindowBuilder * window )
 	{
 		m_imguiWindows.push_back( window );
 	}
 
-	void Game::DeregisterSubsystem( Subsystem* subsystem ) noexcept
+	void Game::DeregisterSubsystem( Subsystem * subsystem ) noexcept
 	{
 		for ( auto it = m_subsystems.begin(); it != m_subsystems.end(); ++it )
 		{
@@ -72,7 +75,7 @@ namespace Core
 		}
 	}
 
-	void Game::DeregisterImguiWindow( ImGuiWindowBuilder* subsystem ) noexcept
+	void Game::DeregisterImguiWindow( ImGuiWindowBuilder * subsystem ) noexcept
 	{
 		for ( auto it = m_imguiWindows.begin(); it != m_imguiWindows.end(); ++it )
 		{
@@ -99,7 +102,7 @@ namespace Core
 		double const frameTime = m_window.GetDeltaTime();
 
 		m_baseImguiWindowBuilder->BuildWindow( frameTime );
-		for ( auto& imguiWindow : m_imguiWindows )
+		for ( auto & imguiWindow : m_imguiWindows )
 		{
 			imguiWindow->BuildWindow( frameTime );
 		}
@@ -113,14 +116,14 @@ namespace Core
 
 		while ( m_accumulator >= fixedUpdateRate )
 		{
-			for ( auto& subSystem : m_subsystems )
+			for ( auto & subSystem : m_subsystems )
 			{
 				subSystem->FixedUpdate( fixedUpdateRate );
 			}
 			m_accumulator -= fixedUpdateRate;
 		}
 
-		for ( auto& subSystem : m_subsystems )
+		for ( auto & subSystem : m_subsystems )
 		{
 			subSystem->Update( frameTime );
 		}

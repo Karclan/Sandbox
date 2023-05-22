@@ -20,6 +20,7 @@ namespace Editor
 
 		//For a selected entity in the editor
 		//Display all it's components
+		
 		if ( ImGui::Begin( "Inspector" ) )
 		{
 			//Can change this later to instead have an inspector view that lists entities
@@ -46,7 +47,7 @@ namespace Editor
 				for ( size_t i = 0; i < entityListSize; i++ )
 				{
 					bool const is_selected = ( entityListIndex == i );
-					if ( ImGui::Selectable( fmt::format( "{}", entityList[ entityListIndex ] ).c_str(), is_selected ) )
+					if ( ImGui::Selectable( fmt::format( "{}", entityList[ i ] ).c_str(), is_selected ) )
 					{
 						entityListIndex = i;
 						m_InspectedEntity = entityList[ entityListIndex ];
@@ -67,18 +68,29 @@ namespace Editor
 
 				if ( auto & storage = curr.second; storage.contains( m_InspectedEntity ) )
 				{
+					DelegateMap::iterator detailDelegate = m_DetailsViewDelegates.find( id );
+
+					if ( detailDelegate != m_DetailsViewDelegates.end() )
+					{
+
+					}
+					else
+					{
+						ImGui::Text( fmt::format( "Component Id Type: {}", id ).c_str() );
+						ImGui::Text( fmt::format( "Component Id Name: Unhandled Type" ).c_str() );
+					}
+					
 					//std::cout << "Entity has component id = " << id << std::endl;
 					// Or do whatever you will with the component ID
 				}
 			}
-
-			ImGui::End();
 		}
+		ImGui::End();
 	}
 
 	void EditorInspector::RegisterComponentDetailsInternal( entt::type_info componentTypeInfo, std::function<void()> && delegate )
 	{
-		m_DetailsViewDelegates.emplace( componentTypeInfo, delegate );
+		m_DetailsViewDelegates.emplace( componentTypeInfo.hash(), InfoDelegatePair { componentTypeInfo , delegate } );
 	}
 
 }
