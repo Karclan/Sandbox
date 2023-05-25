@@ -9,6 +9,8 @@
 
 using namespace entt::literals;
 
+#include "../Generic/NameComponent.h"
+
 #if WITH_EDITOR
 
 #include "../Editor/ComponentManifestComponent.h"
@@ -33,6 +35,20 @@ namespace Core
 		[[nodiscard]] Entity CreateEntity()
 		{
 			return m_registry.create();
+		}
+
+		[[nodiscard]] Entity CreateEntity( const char * name )
+		{
+			auto entity = m_registry.create();
+			AddComponent<Generic::NameComponent>( entity, name );
+			return entity;
+		}
+
+		[[nodiscard]] Entity CreateEntity( std::string && name )
+		{
+			auto entity = m_registry.create();
+			AddComponent<Generic::NameComponent>( entity, name );
+			return entity;
 		}
 
 		[[nodiscard]] Entity CreateEntity( Entity const hint )

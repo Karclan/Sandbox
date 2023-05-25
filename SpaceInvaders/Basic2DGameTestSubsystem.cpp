@@ -18,7 +18,6 @@ namespace Game
 		, m_windowRef( window )
 		, m_cameraSystemRef( cameraSystem )
 	{
-		Init();
 	}
 
 	void Basic2DGameTestSubsystem::Init()
@@ -27,8 +26,8 @@ namespace Game
 
 		/*auto basicShaderId = renderer.CreateShader( "basic", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );*/
 		//Create camera
-		Core::Entity CameraEntity = m_cameraSystemRef.CreatePerspectiveCamera( "MainCamera" );
-		m_cameraSystemRef.SetActiveCamera( "MainCamera" );
+		//Core::Entity CameraEntity = m_cameraSystemRef.CreatePerspectiveCamera( "MainCamera" );
+		//m_cameraSystemRef.SetActiveCamera( "MainCamera" );
 
 
 		//auto containerTextureId = renderer.CreateTexture( "container.jpg" );

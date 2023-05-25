@@ -19,11 +19,11 @@ namespace Graphics
 
 	Core::Entity CreateCamera( std::string && CameraName, ProjectionType ProjType, Core::Registry & Registry )
 	{
-		auto entity = Registry.CreateEntity();
+		auto entity = Registry.CreateEntity( std::move(CameraName) );
 
 		Graphics::CameraComponent cameraComponent;
 		cameraComponent.m_projectionType = ProjType;
-		cameraComponent.m_name = std::move( CameraName );
+		//cameraComponent.m_name = std::move( CameraName );
 		Registry.AddComponent<Graphics::CameraComponent>( entity, cameraComponent );
 		Registry.AddComponent<Graphics::TransformComponent>( entity, Graphics::TransformComponent {} );
 
@@ -44,15 +44,15 @@ namespace Graphics
 	{
 		Utils::Logger::LogMessage( Utils::LogType::Info, "Changed Camera\n" );
 
-		m_registry.ForView<Graphics::CameraComponent>(
-			[this, &CameraName] ( Core::Entity entity, CameraComponent & cameraComponent )
+		m_registry.ForView<Graphics::CameraComponent const, Generic::NameComponent const>(
+			[this, &CameraName] ( Core::Entity entity, CameraComponent const & cameraComponent, Generic::NameComponent const & nameComponent )
 			{
 				if ( m_registry.HasComponent<ActiveCameraTag>( entity ) )
 				{
 					m_registry.RemoveComponent<ActiveCameraTag>( entity );
 				}
 
-				if ( cameraComponent.m_name == CameraName )
+				if ( nameComponent.Name == CameraName )
 				{
 					m_registry.AddComponent<ActiveCameraTag>( entity );
 				}

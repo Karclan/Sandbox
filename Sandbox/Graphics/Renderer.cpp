@@ -306,42 +306,37 @@ namespace Graphics
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
 		//Grab the components from the registry here!
-		auto const & view = m_registry.View<TransformComponent, MeshComponent, ShaderComponent, TextureComponent>();
-		for ( auto const & entity : view )
+		m_registry.ForView<TransformComponent, MeshComponent, ShaderComponent, TextureComponent>( 
+			[this] ( TransformComponent & transform , MeshComponent & meshComponent, ShaderComponent & shaderComponent , TextureComponent & textureComponent )
 		{
-			TransformComponent & transform = view.get<TransformComponent>( entity );
-			MeshComponent & meshComponent = view.get<MeshComponent>( entity );
-			ShaderComponent & shaderComponent = view.get<ShaderComponent>( entity );
-			TextureComponent & textureComponent = view.get<TextureComponent>( entity );
+				UpdateShader( shaderComponent );
 
-			UpdateShader( shaderComponent );
+				UpdateCamera();
 
-			UpdateCamera();
+				UpdateTextures( textureComponent );
 
-			UpdateTextures( textureComponent );
+				UpdateTransform( transform );
 
-			UpdateTransform( transform );
+				//m_activeShader->setUniform( "colourMod", glm::vec4( 1.f ) );
 
-			//m_activeShader->setUniform( "colourMod", glm::vec4( 1.f ) );
+				UpdateMesh( meshComponent );
 
-			UpdateMesh( meshComponent );
-
-			//Render
-			switch ( m_activeMeshType )
-			{
-				case Graphics::PrimativeType::Square:
-					glDrawElements( GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0 );
-					break;
-				case Graphics::PrimativeType::Triangle:
-					glDrawElements( GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0 );
-					break;
-				case Graphics::PrimativeType::Cube:
-					glDrawArrays( GL_TRIANGLES, 0, 36 );
-					break;
-				default:
-					break;
-			}
-		}
+				//Render
+				switch ( m_activeMeshType )
+				{
+					case Graphics::PrimativeType::Square:
+						glDrawElements( GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0 );
+						break;
+					case Graphics::PrimativeType::Triangle:
+						glDrawElements( GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0 );
+						break;
+					case Graphics::PrimativeType::Cube:
+						glDrawArrays( GL_TRIANGLES, 0, 36 );
+						break;
+					default:
+						break;
+				}
+		} );
 
 		if ( m_lineDrawCalls > 0 )
 		{

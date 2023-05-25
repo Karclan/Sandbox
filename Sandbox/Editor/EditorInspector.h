@@ -2,6 +2,8 @@
 
 #include "../Core/Subsystem.h"
 
+#include "ComponentDetails/ComponentDetailsBase.h"
+
 #include "entt/core/type_info.hpp"
 
 #include <map>
@@ -10,30 +12,31 @@
 
 namespace Editor
 {
+
 	class EditorInspector : public Core::ImGuiWindowBuilder, public Core::Subsystem
 	{
 	public:
 		EditorInspector( Core::Registry & registry );
 
 		//Add a delegate for viewing a given component's data
-		template<typename Component>
-		void RegisterComponentDetailsView( std::function<void()> && Delegate )
+		template<typename ComponentDetails>
+		void RegisterComponentDetailsView( std::unique_ptr<ComponentDetails> && detailsClass )
 		{
-			RegisterComponentDetailsInternal( std::in_place_type_t<Component>, std::forward( Delegate ) );
+			RegisterComponentDetailsInternal( std::in_place_type_t<ComponentDetails::HandledType>(), std::move( detailsClass ) );
 		}
 
 		void BuildWindow( double deltaTime ) override;
 
 	private:
 
-		void RegisterComponentDetailsInternal(entt::type_info, std::function<void()> && Delegate);
+		void RegisterComponentDetailsInternal(entt::type_info, std::unique_ptr<ComponentDetails> && detailsClass );
 
 		Core::Entity m_InspectedEntity = Core::NullEntity;
 
 		struct InfoDelegatePair
 		{
 			entt::type_info Info;
-			std::function<void()> Delegate;
+			std::unique_ptr<ComponentDetails> DetailsClass;
 		};
 
 		using DelegateMap = std::map<entt::id_type, InfoDelegatePair>;

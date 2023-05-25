@@ -32,5 +32,7 @@ namespace Game
 
         MovementStruct m_movementStruct;
         Core::Entity m_entity;
+
+        using EntityTag = entt::tag<"MovementTest"_hs>;
     };
 }

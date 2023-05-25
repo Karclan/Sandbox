@@ -4,6 +4,10 @@
 
 #include "../Utils/UnusedMacro.h"
 #include "../Utils/format.h"
+#include "../Generic/NameComponent.h"
+
+
+//Notes - need to register up the details windows now
 
 namespace Editor
 {
@@ -38,16 +42,36 @@ namespace Editor
 			static size_t entityListIndex = 0;
 			const size_t entityListSize = entityList.size();
 			std::string comboLabel ("no-entities");
+
+			auto generateNameLabel = [this] ( Core::Entity entity, std::string & outLabel )
+			{
+				Generic::NameComponent const * NameComponent = m_registry.TryGetComponent<Generic::NameComponent const>( entity );
+				if ( NameComponent )
+				{
+					outLabel = fmt::format( "Id: {} Name: {} ", entity, NameComponent->Name );
+				}
+				else
+				{
+					outLabel = fmt::format( "Id: {} ", entity );
+				}
+			};
+
 			if ( entityListSize > 0 )
 			{
-				comboLabel = fmt::format( "{}", entityList[ entityListIndex ] );
+				Core::Entity entity = entityList[entityListIndex];
+				generateNameLabel( entity, comboLabel );				
 			}
+
 			if(ImGui::BeginCombo( "Entities" , comboLabel.c_str() ) )
 			{
 				for ( size_t i = 0; i < entityListSize; i++ )
 				{
+					std::string label = "";
+					Core::Entity entity = entityList[ i ];
+					generateNameLabel( entity, label );
+
 					bool const is_selected = ( entityListIndex == i );
-					if ( ImGui::Selectable( fmt::format( "{}", entityList[ i ] ).c_str(), is_selected ) )
+					if ( ImGui::Selectable( label.c_str(), is_selected ) )
 					{
 						entityListIndex = i;
 						m_InspectedEntity = entityList[ entityListIndex ];
@@ -61,36 +85,40 @@ namespace Editor
 				ImGui::EndCombo();
 			}
 
+			//for all component storage containers
 			auto const storage = m_registry.GetStorage();
 			for ( auto && curr : storage )
 			{
-				entt::id_type id = curr.first;
-
+				//if this storage contains our selected entity
 				if ( auto & storage = curr.second; storage.contains( m_InspectedEntity ) )
 				{
+					entt::id_type id = curr.first;
+					//Generic::NameComponent const * NameComponent = m_registry.TryGetComponent<Generic::NameComponent const>( m_InspectedEntity );
+					//Get the details view for the given component type
 					DelegateMap::iterator detailDelegate = m_DetailsViewDelegates.find( id );
-
 					if ( detailDelegate != m_DetailsViewDelegates.end() )
 					{
-
+						InfoDelegatePair const & Pair = detailDelegate->second;
+						
+						//Possibly very dangerous - storage.value(m_InspectedEntity) 
+						Pair.DetailsClass->BuildDetailsWindow( storage.value(m_InspectedEntity) );
 					}
 					else
 					{
-						ImGui::Text( fmt::format( "Component Id Type: {}", id ).c_str() );
-						ImGui::Text( fmt::format( "Component Id Name: Unhandled Type" ).c_str() );
+						if ( ImGui::CollapsingHeader( fmt::format( "Component Id Name: Unhandled Type Id: {}", id ).c_str() ) )
+						{
+							ImGui::Text("Add a component details for this" );
+						}
 					}
-					
-					//std::cout << "Entity has component id = " << id << std::endl;
-					// Or do whatever you will with the component ID
 				}
 			}
 		}
 		ImGui::End();
 	}
 
-	void EditorInspector::RegisterComponentDetailsInternal( entt::type_info componentTypeInfo, std::function<void()> && delegate )
+	void EditorInspector::RegisterComponentDetailsInternal( entt::type_info componentTypeInfo, std::unique_ptr<ComponentDetails> && detailsClass )
 	{
-		m_DetailsViewDelegates.emplace( componentTypeInfo.hash(), InfoDelegatePair { componentTypeInfo , delegate } );
+		m_DetailsViewDelegates.emplace( componentTypeInfo.hash(), InfoDelegatePair { componentTypeInfo , std::move(detailsClass) } );
 	}
 
 }

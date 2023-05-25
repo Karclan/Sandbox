@@ -19,7 +19,7 @@ namespace Editor
 	public:
 		//Need to create the editor camera
 		//Need to create the editor floor shader
-		void CreateEditorCamera( Core::Registry & Registry );
+		void CreateEditorCamera( Core::Entity entity, Core::Registry & Registry );
 		void CreateGridFloor( Core::Registry& Registry, Graphics::Renderer & Renderer );
 
 	private:

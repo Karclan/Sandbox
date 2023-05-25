@@ -45,7 +45,7 @@ namespace Input
 		InputActionValueType const m_hash;
 		std::string_view const m_debugName;
 	};
-
+	
 	inline namespace Literals
 	{
 		constexpr ActionIdLiteral operator"" _ActionId( char const* string, size_t count )

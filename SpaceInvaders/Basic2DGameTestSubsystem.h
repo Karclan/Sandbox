@@ -17,14 +17,12 @@ namespace Game
 	public:
 
 		Basic2DGameTestSubsystem( Core::Registry & registryRef, Graphics::Window & window, Graphics::CameraSystem & cameraSystem );
-
+		void Init();
 		void FixedUpdate( double deltaTime ) override;
 
 		void Update( double deltaTime ) override;
-
+		
 	private:
-
-		void Init();
 
 		Graphics::Window & m_windowRef;
 		Graphics::CameraSystem & m_cameraSystemRef;

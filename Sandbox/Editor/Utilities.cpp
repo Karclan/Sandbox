@@ -11,26 +11,29 @@
 namespace Editor
 {
 
-	void Utilities::CreateEditorCamera( Core::Registry& Registry )
+	void Utilities::CreateEditorCamera( Core::Entity entity, Core::Registry& Registry)
 	{
 		if ( Registry.IsValidEntity( m_editorCameraEntity ) )
 		{
 			Registry.DestroyEntity( m_editorCameraEntity );
 		}
 
-		m_editorCameraEntity = Registry.CreateEntity();
-		Graphics::TransformComponent transformComponent;
+		m_editorCameraEntity = entity;
+		
+		Graphics::TransformComponent & transformComponent = Registry.GetComponent<Graphics::TransformComponent>( m_editorCameraEntity );
 		transformComponent.Position.z = -10.f;
-		Registry.AddComponent<Graphics::TransformComponent>( m_editorCameraEntity, transformComponent );
-		Graphics::CameraComponent cameraComponent;
-		cameraComponent.m_name = "Default";
-		Registry.AddComponent<Graphics::CameraComponent>( m_editorCameraEntity, cameraComponent );
-		Registry.AddComponent<Graphics::ActiveCameraTag>( m_editorCameraEntity );
+
+		auto ActiveCameraTagView = Registry.View<Graphics::ActiveCameraTag>();
+		if ( ActiveCameraTagView.size() == 0 )
+		{
+			Registry.AddComponent<Graphics::ActiveCameraTag>( m_editorCameraEntity );
+		}
+		
 		//Registry.AddComponent<ArcballComponent>( m_editorCameraEntity );
 		//Create components for editor camera
 		//Transform
 		//Camera component
-		//Custom arcball camera behaviour component to be picked up by the system
+		//Custom arcball camera behavior component to be picked up by the system
 	}
 
 	void Utilities::CreateGridFloor( Core::Registry& Registry, Graphics::Renderer & Renderer )
@@ -46,7 +49,7 @@ namespace Editor
 		
 		Registry.AddComponent<Graphics::ShaderComponent>( m_gridFloorEntity );
 		//Registry.AddComponent<Editor::GridFloorComponent>( m_gridFloorEntity );
-		//Create compoents for grid floor
+		//Create components for grid floor
 		//Shader
 		//Custom component needed for any parameters to pass in
 	}

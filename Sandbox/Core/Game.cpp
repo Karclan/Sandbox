@@ -4,8 +4,12 @@
 
 #include "../Graphics/Window.h"
 #include "../Editor/EditorBindings.h"
+#include "../Graphics/ComponentDetails/GraphicsComponentsDetails.h"
+
 
 #include "imgui.h"
+#include "../Physics/ComponentDetails/PhysicsComponentsDetails.h"
+#include "../Generic/ComponentDetails/GenericComponentsDetails.h"
 
 namespace Core
 {
@@ -30,7 +34,11 @@ namespace Core
 		//m_window = std::make_unique<Graphics::Window>( m_mainRegistry, m_inputSystem );
 		m_baseImguiWindowBuilder = std::make_unique<Core::BaseImGuiWindowBuilder>( m_mainRegistry, m_window );
 
-		//EditorUtilities.CreateEditorCamera( m_mainRegistry );
+		/*Core::Entity CameraEntity = EditorUtilities.CreatePerspectiveCamera( "MainCamera" );
+		m_cameraSystemRef.SetActiveCamera( "MainCamera" );*/
+		auto CameraEntity = m_cameraSystem.CreatePerspectiveCamera( "EditorCamera" );
+		m_cameraSystem.SetActiveCamera( "EditorCamera" );
+		//m_editorUtilities.CreateEditorCamera( CameraEntity, m_mainRegistry );
 
 		RegisterSubsystem( &m_inputSystem );
 		RegisterSubsystem( &m_cameraSystem );
@@ -50,6 +58,11 @@ namespace Core
 	void Game::Init()
 	{
 		m_baseImguiWindowBuilder->GetInfo();
+	}
+
+	void Game::EditorInit()
+	{
+		RegisterComponentDetails();
 	}
 
 	void Game::RegisterSubsystem( Subsystem * subsystem )
@@ -129,6 +142,22 @@ namespace Core
 		}
 
 		m_window.Render();
+	}
+
+	void Game::RegisterComponentDetails()
+	{
+		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::CameraComponentDetails>() ) );
+		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::TransformComponentDetails>() ) );
+		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::MeshComponentDetails>() ) );
+		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::ShaderComponentDetails>() ) );
+		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::TextureComponentDetails>() ) );
+
+		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::CollisionComponentDetails>() ) );
+		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::SquareExtentsDetails>() ) );
+		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::CircleExtentsDetails>() ) );
+		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::SquareExtentsDebugRenderComponentDetails>() ) );
+
+		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::NameComponentDetails>() ) );
 	}
 
 	void Game::SortSubsytems() noexcept

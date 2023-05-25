@@ -39,6 +39,7 @@ namespace Core
 		Game & operator=( Game const && other ) = delete;
 
 		virtual void Init();
+		virtual void EditorInit();
 
 		//Subsystem functions
 		virtual void RegisterSubsystem( Subsystem * subsystem );
@@ -48,6 +49,8 @@ namespace Core
 
 		virtual bool ShouldClose() const noexcept;
 		virtual void Run();
+
+		
 
 		Core::Registry const & GetRegistry() const noexcept { return m_mainRegistry; }
 		Core::Registry & GetRegistry() noexcept { return m_mainRegistry; }
@@ -60,6 +63,9 @@ namespace Core
 		
 		Graphics::CameraSystem & GetCameraSystem() noexcept { return m_cameraSystem; }
 		Graphics::CameraSystem const & GetCameraSystem() const noexcept { return m_cameraSystem; }
+
+	protected:
+		virtual void RegisterComponentDetails();
 
 	private:
 		//Sorts subsystem vector based on update order

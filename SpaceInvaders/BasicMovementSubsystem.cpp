@@ -9,135 +9,171 @@
 #include "Graphics/TextureComponent.h"
 #include "Graphics/ShaderComponent.h"
 
-#include <corecrt_math_defines.h>
+#include "Generic/NameComponent.h"
+
+#include "Utils/format.h"
 
 #include "magic_enum/magic_enum.hpp"
+
+#include <corecrt_math_defines.h>
 
 #define TAU (M_PI * 2.0f)
 
 namespace Game
 {
-    BasicMovementSubsystem::BasicMovementSubsystem( Core::Registry & m_registry )
-        : Subsystem( m_registry )
-    {
-        m_entity = m_registry.CreateEntity();
-        m_registry.AddComponent<MovementStruct>( m_entity, MovementStruct{});
-    }
+	BasicMovementSubsystem::BasicMovementSubsystem( Core::Registry & m_registry )
+		: Subsystem( m_registry )
+	{
+		m_entity = m_registry.CreateEntity( "Movement Structure Entity" );
+		m_registry.AddComponent<MovementStruct>( m_entity, MovementStruct {} );
+	}
 
-    void BasicMovementSubsystem::CreateComponents(Graphics::Window & window)
-    {
-        //Component and entity creation/registration
-        {
-            Graphics::Renderer & renderer = window.GetRenderer();
+	void BasicMovementSubsystem::CreateComponents( Graphics::Window & window )
+	{
+		//Component and entity creation/registration
+		{
+			Graphics::Renderer & renderer = window.GetRenderer();
 
-            using namespace magic_enum::bitwise_operators;
-            //Move into system or at least out of here
-            auto basicShaderId = renderer.CreateShader( "basic", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment }  );
-            auto colourShiftShaderId = renderer.CreateShader( "colourShift", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
-            auto textureEnabledShaderId = renderer.CreateShader( "textureEnabled", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
-            auto containerTextureId = renderer.CreateTexture( "container.jpg" );
-            auto awesomefaceTextureId = renderer.CreateTexture( "awesomeface.png" );
 
-            Graphics::TextureComponent containerTextureComp { { containerTextureId } };
-            Graphics::TextureComponent awesomeFaceTextureComp { { awesomefaceTextureId } };
-            Graphics::TextureComponent multiTextureComp { { containerTextureId, awesomefaceTextureId } };
+			using namespace magic_enum::bitwise_operators;
+			//Move into system or at least out of here
+			auto basicShaderId = renderer.CreateShader( "basic", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
+			auto colourShiftShaderId = renderer.CreateShader( "colourShift", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
+			auto textureEnabledShaderId = renderer.CreateShader( "textureEnabled", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
+			auto containerTextureId = renderer.CreateTexture( "container.jpg" );
+			auto awesomefaceTextureId = renderer.CreateTexture( "awesomeface.png" );
 
-            Graphics::ShaderComponent basicShaderComp { basicShaderId };
-            Graphics::ShaderComponent colourShiftShaderComp { colourShiftShaderId };
-            Graphics::ShaderComponent textureEnabledShaderComp { textureEnabledShaderId };
+			Graphics::TextureComponent containerTextureComp { { containerTextureId } };
+			Graphics::TextureComponent awesomeFaceTextureComp { { awesomefaceTextureId } };
+			Graphics::TextureComponent multiTextureComp { { containerTextureId, awesomefaceTextureId } };
 
-            //Triangle
-            {
-                Graphics::TransformComponent triangleTransform;
-                triangleTransform.Position = { -2.f,-2.f,-1.f };
-                triangleTransform.Scale = { .5f, .5f, .5f };
+			Graphics::ShaderComponent basicShaderComp { basicShaderId };
+			Graphics::ShaderComponent colourShiftShaderComp { colourShiftShaderId };
+			Graphics::ShaderComponent textureEnabledShaderComp { textureEnabledShaderId };
 
-                auto entity = m_registry.CreateEntity();
-                m_registry.AddComponent<Graphics::TransformComponent>( entity, triangleTransform );
-                m_registry.AddComponent<Graphics::MeshComponent>( entity, renderer.GetMesh( Graphics::PrimativeType::Triangle ) );
-                m_registry.AddComponent<Graphics::TextureComponent>( entity, containerTextureComp );
-                m_registry.AddComponent<Graphics::ShaderComponent>( entity, textureEnabledShaderComp );
-            }
+			//Triangle
+			{
+				Graphics::TransformComponent triangleTransform;
+				triangleTransform.Position = { -2.f,-2.f,-1.f };
+				triangleTransform.Scale = { .5f, .5f, .5f };
 
-            //Square
-            {
-                Graphics::TransformComponent squareTransform;
-                squareTransform.Position = { 1.f, 1.f, 0.f };
+				auto entity = m_registry.CreateEntity( "Triangle" );
+				m_registry.AddComponent<Graphics::TransformComponent>( entity, triangleTransform );
+				m_registry.AddComponent<Graphics::MeshComponent>( entity, renderer.GetMesh( Graphics::PrimativeType::Triangle ) );
+				m_registry.AddComponent<Graphics::TextureComponent>( entity, containerTextureComp );
+				m_registry.AddComponent<Graphics::ShaderComponent>( entity, textureEnabledShaderComp );
+				m_registry.AddComponent<EntityTag>( entity );
+			}
 
-                auto entity = m_registry.CreateEntity();
-                m_registry.AddComponent<Graphics::TransformComponent>( entity, squareTransform );
-                m_registry.AddComponent<Graphics::MeshComponent>( entity, renderer.GetMesh( Graphics::PrimativeType::Square ) );
-                m_registry.AddComponent<Graphics::TextureComponent>( entity, awesomeFaceTextureComp );
-                m_registry.AddComponent<Graphics::ShaderComponent>( entity, textureEnabledShaderComp );
-            }
+			//Square
+			{
+				Graphics::TransformComponent squareTransform;
+				squareTransform.Position = { 1.f, 1.f, 0.f };
 
-            //Cube
-            {
-                Graphics::TransformComponent cubeTransform;
+				auto entity = m_registry.CreateEntity( "Square" );
+				m_registry.AddComponent<Graphics::TransformComponent>( entity, squareTransform );
+				m_registry.AddComponent<Graphics::MeshComponent>( entity, renderer.GetMesh( Graphics::PrimativeType::Square ) );
+				m_registry.AddComponent<Graphics::TextureComponent>( entity, awesomeFaceTextureComp );
+				m_registry.AddComponent<Graphics::ShaderComponent>( entity, textureEnabledShaderComp );
+				m_registry.AddComponent<EntityTag>( entity );
+			}
 
-                auto entity = m_registry.CreateEntity();
-                m_registry.AddComponent<Graphics::TransformComponent>( entity, cubeTransform );
-                m_registry.AddComponent<Graphics::MeshComponent>( entity, renderer.GetMesh( Graphics::PrimativeType::Cube ) );
-                m_registry.AddComponent<Graphics::TextureComponent>( entity, multiTextureComp );
-                m_registry.AddComponent<Graphics::ShaderComponent>( entity, textureEnabledShaderComp );
-            }
+			//Cube
+			{
+				Graphics::TransformComponent cubeTransform;
 
-            for( int i = 0; i < 10; ++i )
-            {
-                {
-                    Graphics::TransformComponent randomTransform;
-                    randomTransform.Position = { i, i, i / 2.f };
+				auto entity = m_registry.CreateEntity(  "Cube" );
+				m_registry.AddComponent<Graphics::TransformComponent>( entity, cubeTransform );
+				m_registry.AddComponent<Graphics::MeshComponent>( entity, renderer.GetMesh( Graphics::PrimativeType::Cube ) );
+				m_registry.AddComponent<Graphics::TextureComponent>( entity, multiTextureComp );
+				m_registry.AddComponent<Graphics::ShaderComponent>( entity, textureEnabledShaderComp );
+				m_registry.AddComponent<EntityTag>( entity );
+			}
 
-                    auto entity = m_registry.CreateEntity();
+			for ( int i = 0; i < 10; ++i )
+			{
+				{
+					Graphics::TransformComponent randomTransform;
+					randomTransform.Position = { i, i, i / 2.f };
+
+					auto entity = m_registry.CreateEntity( fmt::format( "Cube-{}", i ) );
 					m_registry.AddComponent<Graphics::TransformComponent>( entity, randomTransform );
 					m_registry.AddComponent<Graphics::MeshComponent>( entity, renderer.GetMesh( Graphics::PrimativeType::Cube ) );
 					m_registry.AddComponent<Graphics::TextureComponent>( entity, multiTextureComp );
 					m_registry.AddComponent<Graphics::ShaderComponent>( entity, textureEnabledShaderComp );
-                }
-            }
-        }
-    }
+					m_registry.AddComponent<EntityTag>( entity );
+				}
+			}
+		}
+	}
 
-    void BasicMovementSubsystem::Integrate( double deltaTime )
-    {
-        MovementStruct & movementStruct = m_registry.GetComponent<MovementStruct>(m_entity);
-             
-        //Test movement code
-        movementStruct.m_angle += movementStruct.speed * static_cast<float>( deltaTime );
-        if( movementStruct.m_angle > static_cast< float >( TAU ) ) movementStruct.m_angle -= static_cast<float>( TAU );
+	void BasicMovementSubsystem::Integrate( double deltaTime )
+	{
+		MovementStruct & movementStruct = m_registry.GetComponent<MovementStruct>( m_entity );
+
+		//Test movement code
+		movementStruct.m_angle += movementStruct.speed * static_cast< float >( deltaTime );
+		if ( movementStruct.m_angle > static_cast< float >( TAU ) ) movementStruct.m_angle -= static_cast< float >( TAU );
 		movementStruct.m_xy.x = glm::sin( movementStruct.m_angle );
 		movementStruct.m_xy.y = glm::cos( movementStruct.m_angle );
 
-        auto view = m_registry.View<Graphics::TransformComponent, Graphics::MeshComponent>();
-        for( auto const & entity : view )
-        {
-            Graphics::TransformComponent & transform = view.get<Graphics::TransformComponent>( entity );
-            Graphics::MeshComponent & mesh = view.get<Graphics::MeshComponent>( entity );
+		m_registry.ForView<Graphics::TransformComponent, Graphics::MeshComponent>(
+			[&movementStruct, this] ( Core::Entity entity, Graphics::TransformComponent & transform, Graphics::MeshComponent & mesh )
+			{
+				bool hasTag = m_registry.HasComponent<EntityTag>( entity );
+				if ( hasTag )
+				{
+					switch ( mesh.type )
+					{
+						case Graphics::PrimativeType::Cube:
+							transform.Position.x = movementStruct.m_xy.x;
+							transform.RotationQuat = glm::angleAxis( movementStruct.m_xy.x, Graphics::Constants::Right );
+							transform.RotationQuat *= glm::angleAxis( movementStruct.m_xy.y, Graphics::Constants::Up );
+							transform.RotationQuat *= glm::angleAxis( movementStruct.m_xy.x * movementStruct.m_xy.y, Graphics::Constants::Forward );
+							break;
+						case Graphics::PrimativeType::Triangle:
+							transform.RotationQuat = glm::angleAxis( movementStruct.m_xy.x, Graphics::Constants::Right );
+							transform.RotationQuat *= glm::angleAxis( movementStruct.m_xy.y, Graphics::Constants::Up );
+							break;
+						case Graphics::PrimativeType::Square:
+							transform.Position = { movementStruct.m_xy.x ,movementStruct.m_xy.y, 1.f };
+							break;
+						default:
+							break;
+					}
+				}
+			} );
 
-            switch( mesh.type )
-            {
-            case Graphics::PrimativeType::Cube:
-                transform.Position.x = movementStruct.m_xy.x;
-                transform.RotationQuat = glm::angleAxis(movementStruct.m_xy.x, Graphics::Constants::Right);
-				transform.RotationQuat *= glm::angleAxis(movementStruct.m_xy.y, Graphics::Constants::Up);
-                transform.RotationQuat *= glm::angleAxis(movementStruct.m_xy.x * movementStruct.m_xy.y, Graphics::Constants::Forward);
-                break;
-            case Graphics::PrimativeType::Triangle:
-				transform.RotationQuat = glm::angleAxis(movementStruct.m_xy.x, Graphics::Constants::Right);
-				transform.RotationQuat *= glm::angleAxis(movementStruct.m_xy.y, Graphics::Constants::Up);
-                break;
-            case Graphics::PrimativeType::Square:
-                transform.Position = { movementStruct.m_xy.x ,movementStruct.m_xy.y, 1.f };
-                break;
-            default:
-                break;
-            }
-        }
-    }
+		/*   auto view = m_registry.View<Graphics::TransformComponent, Graphics::MeshComponent>();
+		   for( auto const & entity : view )
+		   {
+			   Graphics::TransformComponent & transform = view.get<Graphics::TransformComponent>( entity );
+			   Graphics::MeshComponent & mesh = view.get<Graphics::MeshComponent>( entity );
 
-    void BasicMovementSubsystem::FixedUpdate( double deltaTime )noexcept
-    {
-        Integrate( deltaTime );
-    }
+			   switch( mesh.type )
+			   {
+			   case Graphics::PrimativeType::Cube:
+				   transform.Position.x = movementStruct.m_xy.x;
+				   transform.RotationQuat = glm::angleAxis(movementStruct.m_xy.x, Graphics::Constants::Right);
+				   transform.RotationQuat *= glm::angleAxis(movementStruct.m_xy.y, Graphics::Constants::Up);
+				   transform.RotationQuat *= glm::angleAxis(movementStruct.m_xy.x * movementStruct.m_xy.y, Graphics::Constants::Forward);
+				   break;
+			   case Graphics::PrimativeType::Triangle:
+				   transform.RotationQuat = glm::angleAxis(movementStruct.m_xy.x, Graphics::Constants::Right);
+				   transform.RotationQuat *= glm::angleAxis(movementStruct.m_xy.y, Graphics::Constants::Up);
+				   break;
+			   case Graphics::PrimativeType::Square:
+				   transform.Position = { movementStruct.m_xy.x ,movementStruct.m_xy.y, 1.f };
+				   break;
+			   default:
+				   break;
+			   }
+		   }*/
+	}
+
+	void BasicMovementSubsystem::FixedUpdate( double deltaTime )noexcept
+	{
+		Integrate( deltaTime );
+	}
 }
 

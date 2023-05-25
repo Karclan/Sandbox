@@ -52,6 +52,18 @@
     <Filter Include="Editor">
       <UniqueIdentifier>{7a436337-da9f-417a-bdf6-00aa6a657423}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Editor\ComponentDetails">
+      <UniqueIdentifier>{adc96a5d-9ee2-4bfe-bcdf-47bf80080657}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\ComponentDetails">
+      <UniqueIdentifier>{ac642662-a095-49f8-8141-c3bff5b08817}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\ComponentDetails">
+      <UniqueIdentifier>{7898227f-0c9e-4653-94a9-2d508ddfdfbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generic\ComponentDetails">
+      <UniqueIdentifier>{a154ff4a-7b2f-41f5-9941-8c6289fd326d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Graphics\Shader.cpp">
@@ -170,6 +182,18 @@
     </ClCompile>
     <ClCompile Include="Editor\SceneHierarchyWindow.cpp">
       <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\ComponentDetails\ComponentDetailsBase.cpp">
+      <Filter>Editor\ComponentDetails</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\ComponentDetails\GraphicsComponentsDetails.cpp">
+      <Filter>Graphics\ComponentDetails</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\ComponentDetails\PhysicsComponentsDetails.cpp">
+      <Filter>Physics\ComponentDetails</Filter>
+    </ClCompile>
+    <ClCompile Include="Generic\ComponentDetails\GenericComponentsDetails.cpp">
+      <Filter>Generic\ComponentDetails</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -343,6 +367,18 @@
     </ClInclude>
     <ClInclude Include="Editor\ComponentManifestComponent.h">
       <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\ComponentDetails\ComponentDetailsBase.h">
+      <Filter>Editor\ComponentDetails</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ComponentDetails\GraphicsComponentsDetails.h">
+      <Filter>Graphics\ComponentDetails</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\ComponentDetails\PhysicsComponentsDetails.h">
+      <Filter>Physics\ComponentDetails</Filter>
+    </ClInclude>
+    <ClInclude Include="Generic\ComponentDetails\GenericComponentsDetails.h">
+      <Filter>Generic\ComponentDetails</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

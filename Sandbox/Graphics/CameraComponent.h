@@ -22,8 +22,6 @@ namespace Graphics
 	{
 	public:
 
-		std::string m_name { "Unnamed Camera" };
-
 		glm::mat4 m_viewMatrix { 0.f };
 		glm::mat4 m_projectionMatrix { 0.f };
 
