@@ -23,8 +23,6 @@ namespace Editor
 	{
 		if ( ImGui::CollapsingHeader( "Camera" ) )
 		{
-			//ImGui::Text( fmt::format( "{} - Name", inComponent.m_name ).c_str() );
-
 			//Dropdown
 			{
 				static size_t index = 0;
@@ -80,6 +78,8 @@ namespace Editor
 
 			ImGui::DragFloat( "View Port Height", &inComponent.m_viewPortHeight );
 			ImGui::DragFloat( "View Port Width", &inComponent.m_viewPortWidth );
+			//#TODO make the ortho bo/to/le/ri values be -+ aspect ratios
+			ImGui::DragFloat( "Ortho Aspect Zoom", &inComponent.m_orthoAspectScale );
 
 			ImGui::DragFloat( "Ortho Bottom", &inComponent.m_orthoBottom );
 			ImGui::DragFloat( "Ortho Top", &inComponent.m_orthoTop );
@@ -95,11 +95,11 @@ namespace Editor
 			ImGui::DragFloat3( "Position", &inComponent.Position.x );
 			ImGui::DragFloat3( "Scale", &inComponent.Scale.x );
 
-			glm::vec3 eulerRotation = glm::eulerAngles( inComponent.RotationQuat );
+			glm::vec3 eulerRotation = glm::degrees(glm::eulerAngles( inComponent.RotationQuat ));
 
 			ImGui::DragFloat3( "Rotation", &eulerRotation.x );
 
-			inComponent.RotationQuat = glm::quat( eulerRotation );
+			inComponent.RotationQuat = glm::quat( glm::radians(eulerRotation) );
 		}
 	}
 

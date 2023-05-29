@@ -70,12 +70,16 @@ namespace Graphics
 				if ( cameraComponent.m_dirtyProjectionMatrix )
 				{
 					float aspect = static_cast< float >( ( cameraComponent.m_viewPortWidth ) / ( cameraComponent.m_viewPortHeight > 0 ? cameraComponent.m_viewPortHeight : 1.f ) );
-
 					switch ( cameraComponent.m_projectionType )
 					{
 						case ProjectionType::Orthographic:
 						{
-							cameraComponent.m_projectionMatrix = glm::ortho( cameraComponent.m_orthoLeft, cameraComponent.m_orthoRight, cameraComponent.m_orthoBottom, cameraComponent.m_orthoTop, cameraComponent.m_nearPlane, cameraComponent.m_farPlane );
+							cameraComponent.m_projectionMatrix = glm::ortho( cameraComponent.m_orthoLeft * cameraComponent.m_orthoAspectScale,
+																			cameraComponent.m_orthoRight * cameraComponent.m_orthoAspectScale, 
+																			cameraComponent.m_orthoBottom * cameraComponent.m_orthoAspectScale,
+																			cameraComponent.m_orthoTop * cameraComponent.m_orthoAspectScale,
+																			cameraComponent.m_nearPlane, cameraComponent.m_farPlane );
+
 							//cameraComponent.m_projectionMatrix = glm::ortho( 0.f, 800.f, 0.f, 600.f, -1.f, 1.f );
 							break;
 						}

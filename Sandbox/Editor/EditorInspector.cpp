@@ -6,9 +6,6 @@
 #include "../Utils/format.h"
 #include "../Generic/NameComponent.h"
 
-
-//Notes - need to register up the details windows now
-
 namespace Editor
 {
 

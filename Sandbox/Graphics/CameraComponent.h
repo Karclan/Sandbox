@@ -37,7 +37,9 @@ namespace Graphics
 		float m_viewPortWidth { 800 };
 		float m_viewPortHeight { 600 };
 
+		float m_aspectRatio = m_viewPortHeight / m_viewPortWidth;
 		
+		float m_orthoAspectScale = 1.f;
 		float m_orthoLeft{ 0 };
 		float m_orthoRight { 600 };
 		float m_orthoBottom { 800 };

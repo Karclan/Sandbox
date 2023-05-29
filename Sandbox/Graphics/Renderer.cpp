@@ -151,7 +151,9 @@ namespace Graphics
 						{
 							cameraComponent.m_viewPortHeight = static_cast< float >( HeightToUse );
 							cameraComponent.m_viewPortWidth = static_cast< float >( WidthToUse );
+							cameraComponent.m_aspectRatio = static_cast< float >( ( cameraComponent.m_viewPortWidth ) / ( cameraComponent.m_viewPortHeight > 0 ? cameraComponent.m_viewPortHeight : 1.f ) );
 							cameraComponent.m_dirtyProjectionMatrix = true;
+							cameraComponent.m_dirtyViewMatrix = true;
 						} );
 
 					//Resize the render texture buffer
@@ -212,7 +214,9 @@ namespace Graphics
 						{
 							cameraComponent.m_viewPortHeight = static_cast< float >( m_sceneSize.y );
 							cameraComponent.m_viewPortWidth = static_cast< float >( m_sceneSize.x );
+							cameraComponent.m_aspectRatio = static_cast< float >( ( cameraComponent.m_viewPortWidth ) / ( cameraComponent.m_viewPortHeight > 0 ? cameraComponent.m_viewPortHeight : 1.f ) );
 							cameraComponent.m_dirtyProjectionMatrix = true;
+							cameraComponent.m_dirtyViewMatrix = true;
 						} );
 
 					//Resize the render texture buffer
@@ -418,8 +422,10 @@ namespace Graphics
 				{
 					cameraComponent.m_viewPortHeight = static_cast< float >( m_height );
 					cameraComponent.m_viewPortWidth = static_cast< float >( m_width );
+					cameraComponent.m_aspectRatio = static_cast< float >( ( cameraComponent.m_viewPortWidth ) / ( cameraComponent.m_viewPortHeight > 0 ? cameraComponent.m_viewPortHeight : 1.f ) );
 				}
 
+				cameraComponent.m_dirtyViewMatrix = true;
 				cameraComponent.m_dirtyProjectionMatrix = true;
 			} );
 
