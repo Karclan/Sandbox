@@ -49,6 +49,10 @@ namespace Editor
 				if ( NameComponent )
 				{
 					outLabel = fmt::format( "Id: {} Name: {} ", entity, NameComponent->Name );
+					if ( m_InspectedEntity== Core::NullEntity )
+					{
+						m_InspectedEntity = entity;
+					}
 				}
 				else
 				{

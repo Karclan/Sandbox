@@ -17,6 +17,8 @@
 
 namespace Editor
 {
+	//work on getting tags viewable in editor
+	//work on getting camera types switchable
 	void CameraComponentDetails::BuildDetailsInternal( Graphics::CameraComponent & inComponent ) const
 	{
 		if ( ImGui::CollapsingHeader( "Camera" ) )
@@ -28,7 +30,7 @@ namespace Editor
 				static size_t index = 0;
 				static std::string previewString = "Unknown type";
 
-				auto constexpr & projectionTypeNames = magic_enum::enum_names<Graphics::ProjectionType>();
+				auto constexpr projectionTypeNames = magic_enum::enum_names<Graphics::ProjectionType>();
 				auto constexpr projectionTypeCount = magic_enum::enum_count<Graphics::ProjectionType>();
 
 				auto possibleIndex = magic_enum::enum_index<Graphics::ProjectionType>( inComponent.m_projectionType );
@@ -46,6 +48,7 @@ namespace Editor
 						if ( ImGui::Selectable( std::string( projectionTypeNames[ i ] ).c_str(), is_selected ) )
 						{
 							index = i;
+							inComponent.m_projectionType = magic_enum::enum_value< Graphics::ProjectionType >( static_cast< int >( i ) );
 						}
 
 						if ( is_selected )  // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
@@ -58,16 +61,16 @@ namespace Editor
 			}
 
 			ImGui::InputDouble( "Camera Speed", &inComponent.m_cameraSpeed );
-			ImGui::InputFloat3( "Direction", &inComponent.m_direction.x );
-			ImGui::InputFloat3( "Target", &inComponent.m_target.x );
-			ImGui::InputFloat3( "Up", &inComponent.m_up.x );
+			ImGui::DragFloat3( "Direction", &inComponent.m_direction.x );
+			ImGui::DragFloat3( "Target", &inComponent.m_target.x );
+			ImGui::DragFloat3( "Up", &inComponent.m_up.x );
 
 			ImGui::Checkbox( "Dirty Projection Matrix", &inComponent.m_dirtyProjectionMatrix );
 			ImGui::Checkbox( "Dirty View Matrix", &inComponent.m_dirtyViewMatrix );
 
-			ImGui::InputFloat( "Far Plane", &inComponent.m_farPlane );
-			ImGui::InputFloat( "Near Plane", &inComponent.m_nearPlane );
-			ImGui::InputFloat( "FOV", &inComponent.m_fov );
+			ImGui::DragFloat( "Far Plane", &inComponent.m_farPlane );
+			ImGui::DragFloat( "Near Plane", &inComponent.m_nearPlane );
+			ImGui::DragFloat( "FOV", &inComponent.m_fov );
 
 			ImGui::Checkbox( "Orbit", &inComponent.m_orbit );
 
@@ -75,8 +78,13 @@ namespace Editor
 			//inComponent.m_projectionMatrix;
 			//inComponent.m_viewMatrix;
 
-			ImGui::InputFloat( "View Port Height", &inComponent.m_viewPortHeight );
-			ImGui::InputFloat( "View Port Width", &inComponent.m_viewPortWidth );
+			ImGui::DragFloat( "View Port Height", &inComponent.m_viewPortHeight );
+			ImGui::DragFloat( "View Port Width", &inComponent.m_viewPortWidth );
+
+			ImGui::DragFloat( "Ortho Bottom", &inComponent.m_orthoBottom );
+			ImGui::DragFloat( "Ortho Top", &inComponent.m_orthoTop );
+			ImGui::DragFloat( "Ortho Left", &inComponent.m_orthoLeft );
+			ImGui::DragFloat( "Ortho Right", &inComponent.m_orthoRight );
 		}
 	}
 
@@ -84,12 +92,12 @@ namespace Editor
 	{
 		if ( ImGui::CollapsingHeader( "Transform" ) )
 		{
-			ImGui::InputFloat3( "Position", &inComponent.Position.x );
-			ImGui::InputFloat3( "Scale", &inComponent.Scale.x );
+			ImGui::DragFloat3( "Position", &inComponent.Position.x );
+			ImGui::DragFloat3( "Scale", &inComponent.Scale.x );
 
 			glm::vec3 eulerRotation = glm::eulerAngles( inComponent.RotationQuat );
 
-			ImGui::InputFloat3( "Rotation", &eulerRotation.x );
+			ImGui::DragFloat3( "Rotation", &eulerRotation.x );
 
 			inComponent.RotationQuat = glm::quat( eulerRotation );
 		}
@@ -119,7 +127,7 @@ namespace Editor
 			size_t textureCount = inComponent.TextureList.size();
 			for ( size_t i = 0; i < textureCount; ++i )
 			{
-				ImGui::PushID( static_cast<int>(i) );
+				ImGui::PushID( static_cast< int >( i ) );
 				ImGui::Text( fmt::format( "{} TextureId", inComponent.TextureList[ i ] ).c_str() );
 				ImGui::PopID();
 			}

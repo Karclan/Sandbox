@@ -32,7 +32,8 @@ namespace Graphics
 		1.0f,  1.0f,  1.0f, 1.0f
 	};
 
-	unsigned int quadVAO, quadVBO;
+	unsigned int quadVAO = 0;
+	unsigned int quadVBO = 0;
 	void CreateScreenQuad()
 	{
 		glGenVertexArrays( 1, &quadVAO );
@@ -533,6 +534,7 @@ namespace Graphics
 			//Bind Shader
 			m_activeShader->useProgram();
 
+			//TODO, Bind uniforms based on what is within the shader, we can get a list of the shader uniforms from functions defined in the shader program.
 			m_activeShader->setUniform( "texture1", 0 );
 			m_activeShader->setUniform( "texture2", 1 );
 		}

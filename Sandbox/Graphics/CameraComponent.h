@@ -36,6 +36,13 @@ namespace Graphics
 
 		float m_viewPortWidth { 800 };
 		float m_viewPortHeight { 600 };
+
+		
+		float m_orthoLeft{ 0 };
+		float m_orthoRight { 600 };
+		float m_orthoBottom { 800 };
+		float m_orthoTop { 0 };
+
 		float m_nearPlane { 0.1f };
 		float m_farPlane { 100.f };
 		float m_fov { 45.f };

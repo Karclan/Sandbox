@@ -55,8 +55,8 @@ namespace Editor
 	{
 		if ( ImGui::CollapsingHeader( "Square Extents" ) )
 		{
-			ImGui::InputFloat2( "Bottom Right", &inComponent.bottomRight.x );
-			ImGui::InputFloat2( "Top Left", &inComponent.topLeft.x );
+			ImGui::DragFloat2( "Bottom Right", &inComponent.bottomRight.x );
+			ImGui::DragFloat2( "Top Left", &inComponent.topLeft.x );
 			ImGui::InputDouble( "Height", &inComponent.height );
 			ImGui::InputDouble( "Width", &inComponent.width );
 			ImGui::Checkbox( "Recalculate Extents", &inComponent.recalculateExtents );
@@ -75,8 +75,8 @@ namespace Editor
 	{
 		if ( ImGui::CollapsingHeader( "Circle Extents" ) )
 		{
-			ImGui::InputFloat2( "Bottom Right", &inComponent.cachedBottomRight.x );
-			ImGui::InputFloat2( "Top Left", &inComponent.cachedTopLeft.x );
+			ImGui::DragFloat2( "Bottom Right", &inComponent.cachedBottomRight.x );
+			ImGui::DragFloat2( "Top Left", &inComponent.cachedTopLeft.x );
 			ImGui::InputDouble( "Height", &inComponent.cachedHeight );
 			ImGui::InputDouble( "Width", &inComponent.cachedWidth );
 			ImGui::Checkbox( "Recalculate Mesh", &inComponent.recalculateDebugMesh );

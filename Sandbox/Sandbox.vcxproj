@@ -505,6 +505,11 @@
     <ClInclude Include="Input\InputState.h" />
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="magic_enum\magic_enum.hpp" />
+    <ClInclude Include="magic_enum\magic_enum_containers.hpp" />
+    <ClInclude Include="magic_enum\magic_enum_format.hpp" />
+    <ClInclude Include="magic_enum\magic_enum_fuse.hpp" />
+    <ClInclude Include="magic_enum\magic_enum_iostream.hpp" />
+    <ClInclude Include="magic_enum\magic_enum_switch.hpp" />
     <ClInclude Include="Physics\CollisionComponent.h" />
     <ClInclude Include="Physics\CollisionDetectionSystem.h" />
     <ClInclude Include="Physics\ComponentDetails\PhysicsComponentsDetails.h" />

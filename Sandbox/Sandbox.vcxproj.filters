@@ -380,6 +380,21 @@
     <ClInclude Include="Generic\ComponentDetails\GenericComponentsDetails.h">
       <Filter>Generic\ComponentDetails</Filter>
     </ClInclude>
+    <ClInclude Include="magic_enum\magic_enum_containers.hpp">
+      <Filter>magic_enum</Filter>
+    </ClInclude>
+    <ClInclude Include="magic_enum\magic_enum_format.hpp">
+      <Filter>magic_enum</Filter>
+    </ClInclude>
+    <ClInclude Include="magic_enum\magic_enum_fuse.hpp">
+      <Filter>magic_enum</Filter>
+    </ClInclude>
+    <ClInclude Include="magic_enum\magic_enum_iostream.hpp">
+      <Filter>magic_enum</Filter>
+    </ClInclude>
+    <ClInclude Include="magic_enum\magic_enum_switch.hpp">
+      <Filter>magic_enum</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Imgui\misc\natvis\imgui.natvis">

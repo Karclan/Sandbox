@@ -54,7 +54,7 @@ namespace Game
 			//Triangle
 			{
 				Graphics::TransformComponent triangleTransform;
-				triangleTransform.Position = { -2.f,-2.f,-1.f };
+				triangleTransform.Position = { -2.f,-2.f,0.f };
 				triangleTransform.Scale = { .5f, .5f, .5f };
 
 				auto entity = m_registry.CreateEntity( "Triangle" );
@@ -82,7 +82,7 @@ namespace Game
 			{
 				Graphics::TransformComponent cubeTransform;
 
-				auto entity = m_registry.CreateEntity(  "Cube" );
+				auto entity = m_registry.CreateEntity( "Cube" );
 				m_registry.AddComponent<Graphics::TransformComponent>( entity, cubeTransform );
 				m_registry.AddComponent<Graphics::MeshComponent>( entity, renderer.GetMesh( Graphics::PrimativeType::Cube ) );
 				m_registry.AddComponent<Graphics::TextureComponent>( entity, multiTextureComp );
@@ -94,7 +94,7 @@ namespace Game
 			{
 				{
 					Graphics::TransformComponent randomTransform;
-					randomTransform.Position = { i, i, i / 2.f };
+					randomTransform.Position = { i, i/2, 0.f };
 
 					auto entity = m_registry.CreateEntity( fmt::format( "Cube-{}", i ) );
 					m_registry.AddComponent<Graphics::TransformComponent>( entity, randomTransform );
@@ -113,11 +113,14 @@ namespace Game
 
 		//Test movement code
 		movementStruct.m_angle += movementStruct.speed * static_cast< float >( deltaTime );
-		if ( movementStruct.m_angle > static_cast< float >( TAU ) ) movementStruct.m_angle -= static_cast< float >( TAU );
+		if ( movementStruct.m_angle > static_cast< float >( TAU ) ) 
+		{ 
+			movementStruct.m_angle -= static_cast< float >( TAU );
+		}
 		movementStruct.m_xy.x = glm::sin( movementStruct.m_angle );
 		movementStruct.m_xy.y = glm::cos( movementStruct.m_angle );
 
-		m_registry.ForView<Graphics::TransformComponent, Graphics::MeshComponent>(
+		/*m_registry.ForView<Graphics::TransformComponent, Graphics::MeshComponent>(
 			[&movementStruct, this] ( Core::Entity entity, Graphics::TransformComponent & transform, Graphics::MeshComponent & mesh )
 			{
 				bool hasTag = m_registry.HasComponent<EntityTag>( entity );
@@ -142,33 +145,33 @@ namespace Game
 							break;
 					}
 				}
-			} );
+			} );*/
 
-		/*   auto view = m_registry.View<Graphics::TransformComponent, Graphics::MeshComponent>();
-		   for( auto const & entity : view )
-		   {
-			   Graphics::TransformComponent & transform = view.get<Graphics::TransformComponent>( entity );
-			   Graphics::MeshComponent & mesh = view.get<Graphics::MeshComponent>( entity );
-
-			   switch( mesh.type )
+			/*   auto view = m_registry.View<Graphics::TransformComponent, Graphics::MeshComponent>();
+			   for( auto const & entity : view )
 			   {
-			   case Graphics::PrimativeType::Cube:
-				   transform.Position.x = movementStruct.m_xy.x;
-				   transform.RotationQuat = glm::angleAxis(movementStruct.m_xy.x, Graphics::Constants::Right);
-				   transform.RotationQuat *= glm::angleAxis(movementStruct.m_xy.y, Graphics::Constants::Up);
-				   transform.RotationQuat *= glm::angleAxis(movementStruct.m_xy.x * movementStruct.m_xy.y, Graphics::Constants::Forward);
-				   break;
-			   case Graphics::PrimativeType::Triangle:
-				   transform.RotationQuat = glm::angleAxis(movementStruct.m_xy.x, Graphics::Constants::Right);
-				   transform.RotationQuat *= glm::angleAxis(movementStruct.m_xy.y, Graphics::Constants::Up);
-				   break;
-			   case Graphics::PrimativeType::Square:
-				   transform.Position = { movementStruct.m_xy.x ,movementStruct.m_xy.y, 1.f };
-				   break;
-			   default:
-				   break;
-			   }
-		   }*/
+				   Graphics::TransformComponent & transform = view.get<Graphics::TransformComponent>( entity );
+				   Graphics::MeshComponent & mesh = view.get<Graphics::MeshComponent>( entity );
+
+				   switch( mesh.type )
+				   {
+				   case Graphics::PrimativeType::Cube:
+					   transform.Position.x = movementStruct.m_xy.x;
+					   transform.RotationQuat = glm::angleAxis(movementStruct.m_xy.x, Graphics::Constants::Right);
+					   transform.RotationQuat *= glm::angleAxis(movementStruct.m_xy.y, Graphics::Constants::Up);
+					   transform.RotationQuat *= glm::angleAxis(movementStruct.m_xy.x * movementStruct.m_xy.y, Graphics::Constants::Forward);
+					   break;
+				   case Graphics::PrimativeType::Triangle:
+					   transform.RotationQuat = glm::angleAxis(movementStruct.m_xy.x, Graphics::Constants::Right);
+					   transform.RotationQuat *= glm::angleAxis(movementStruct.m_xy.y, Graphics::Constants::Up);
+					   break;
+				   case Graphics::PrimativeType::Square:
+					   transform.Position = { movementStruct.m_xy.x ,movementStruct.m_xy.y, 1.f };
+					   break;
+				   default:
+					   break;
+				   }
+			   }*/
 	}
 
 	void BasicMovementSubsystem::FixedUpdate( double deltaTime )noexcept
