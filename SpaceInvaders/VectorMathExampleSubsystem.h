@@ -34,9 +34,9 @@ namespace Game
 			Unknown
 		};
 
-		entt::entity PointAEntity{ entt::null };
-		entt::entity PointBEntity{ entt::null };
-		entt::entity PointCEntity{ entt::null };
+		entt::entity PointAEntity{ Core::NullEntity };
+		entt::entity PointBEntity{ Core::NullEntity };
+		entt::entity PointCEntity{ Core::NullEntity };
 		glm::vec3 PointA{  0.f,  0.f,  0.f };
 		glm::vec3 PointB{  2.f,  2.f,  0.f };
 		glm::vec3 PointC{ -2.f, -2.f,  0.f };

@@ -5,7 +5,7 @@
 
 #include "Graphics/Window.h"
 
-#include "Core/Game.h"
+#include "Core/GameClass.h"
 
 #include "BasicMovementSubsystem.h"
 

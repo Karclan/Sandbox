@@ -410,7 +410,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Core\CoreRegistry.cpp" />
-    <ClCompile Include="Core\Game.cpp" />
+    <ClCompile Include="Core\GameClass.cpp" />
     <ClCompile Include="Core\ResourceManager.cpp" />
     <ClCompile Include="Core\Subsystem.cpp" />
     <ClCompile Include="Editor\ArcballBehaviour.cpp" />
@@ -456,7 +456,7 @@
   <ItemGroup>
     <ClInclude Include="Core\CoreRegistry.h" />
     <ClInclude Include="Core\Entity.h" />
-    <ClInclude Include="Core\Game.h" />
+    <ClInclude Include="Core\GameClass.h" />
     <ClInclude Include="Core\ResourceManager.h" />
     <ClInclude Include="Core\Subsystem.h" />
     <ClInclude Include="Editor\ArcballBehaviour.h" />

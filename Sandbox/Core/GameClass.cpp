@@ -1,21 +1,20 @@
-#include "Game.h"
+#include "GameClass.h"
 
 #include "Subsystem.h"
 
 #include "../Graphics/Window.h"
 #include "../Editor/EditorBindings.h"
 #include "../Graphics/ComponentDetails/GraphicsComponentsDetails.h"
-
-
-#include "imgui.h"
 #include "../Physics/ComponentDetails/PhysicsComponentsDetails.h"
 #include "../Generic/ComponentDetails/GenericComponentsDetails.h"
+
+#include "imgui.h"
 
 namespace Core
 {
 	static constexpr double fixedUpdateRate = 1.f / 60.f;
 
-	Game::Game()
+	GameClass::GameClass()
 		: m_editorInspector( m_mainRegistry )
 		, m_inputSystem( m_mainRegistry )
 		, m_logWindow( m_mainRegistry )
@@ -44,39 +43,49 @@ namespace Core
 		RegisterSubsystem( &m_cameraSystem );
 		RegisterSubsystem( &m_collisionDetectionSystem );
 
-		RegisterImguiWindow( &m_editorInspector );
+		RegisterSubsystem( &m_editorInspector );
 
-		RegisterImguiWindow( &m_inputSystem );
-		RegisterImguiWindow( &m_cameraSystem );
+		RegisterSubsystem( &m_inputSystem );
+		RegisterSubsystem( &m_cameraSystem );
 
-		RegisterImguiWindow( &m_logWindow );
-		RegisterImguiWindow( &m_window.GetRenderer() );
+		RegisterSubsystem( &m_logWindow );
+		RegisterSubsystem( &m_window.GetRenderer() );
 	}
 
-	Game::~Game() = default;
+	GameClass::~GameClass() = default;
 
-	void Game::Init()
+	void GameClass::Init()
 	{
 		m_baseImguiWindowBuilder->GetInfo();
 	}
 
-	void Game::EditorInit()
+	void GameClass::EditorInit()
 	{
 		RegisterComponentDetails();
 	}
 
-	void Game::RegisterSubsystem( Subsystem * subsystem )
+	void GameClass::DeInit()
+	{
+
+	}
+
+	void GameClass::DeEditorInit()
+	{
+
+	}
+
+	void GameClass::RegisterSubsystemInternal( Subsystem * subsystem )
 	{
 		//TODO: Sort based on update order
 		m_subsystems.push_back( subsystem );
 	}
 
-	void Game::RegisterImguiWindow( ImGuiWindowBuilder * window )
+	void GameClass::RegisterImguiWindowInternal( ImGuiWindowBuilder * window )
 	{
 		m_imguiWindows.push_back( window );
 	}
 
-	void Game::DeregisterSubsystem( Subsystem * subsystem ) noexcept
+	void GameClass::DeregisterSubsystemInternal( Subsystem * subsystem ) noexcept
 	{
 		for ( auto it = m_subsystems.begin(); it != m_subsystems.end(); ++it )
 		{
@@ -88,7 +97,7 @@ namespace Core
 		}
 	}
 
-	void Game::DeregisterImguiWindow( ImGuiWindowBuilder * subsystem ) noexcept
+	void GameClass::DeregisterImguiWindowInternal( ImGuiWindowBuilder * subsystem ) noexcept
 	{
 		for ( auto it = m_imguiWindows.begin(); it != m_imguiWindows.end(); ++it )
 		{
@@ -100,12 +109,12 @@ namespace Core
 		}
 	}
 
-	bool Game::ShouldClose() const noexcept
+	bool GameClass::ShouldClose() const noexcept
 	{
 		return m_window.ShouldClose();
 	}
 
-	void Game::Run()
+	void GameClass::Run()
 	{
 		//update input
 		m_window.PollInput();
@@ -144,7 +153,7 @@ namespace Core
 		m_window.Render();
 	}
 
-	void Game::RegisterComponentDetails()
+	void GameClass::RegisterComponentDetails()
 	{
 		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::CameraComponentDetails>() ) );
 		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::TransformComponentDetails>() ) );
@@ -160,7 +169,7 @@ namespace Core
 		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::NameComponentDetails>() ) );
 	}
 
-	void Game::SortSubsytems() noexcept
+	void GameClass::SortSubsytems() noexcept
 	{
 
 	}
