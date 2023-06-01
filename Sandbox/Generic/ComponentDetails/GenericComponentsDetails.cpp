@@ -1,6 +1,7 @@
 #include "GenericComponentsDetails.h"
 
 #include "../Graphics/CameraComponent.h"
+#include "../NameComponent.h"
 
 #include "imgui.h"
 #include "../Imgui/misc/cpp/imgui_stdlib.h"

@@ -19,26 +19,16 @@ namespace Core
 		, m_inputSystem( m_mainRegistry )
 		, m_logWindow( m_mainRegistry )
 		, m_cameraSystem( m_mainRegistry )
-		, m_window( m_mainRegistry, m_inputSystem )
+		, m_window(m_mainRegistry, m_inputSystem )
 		, m_collisionDetectionSystem( m_mainRegistry, m_window )
 	{
-		{
-			Editor::EditorMouseBindings MouseBindings {};
-			Editor::EditorKeyboardBindings KeyboardBindings {};
-
-			m_inputSystem.AddBinding( MouseBindings.GetDeviceId(), std::move( MouseBindings ) );
-			m_inputSystem.AddBinding( KeyboardBindings.GetDeviceId(), std::move( KeyboardBindings ) );
-		}
-
-		//m_window = std::make_unique<Graphics::Window>( m_mainRegistry, m_inputSystem );
 		m_baseImguiWindowBuilder = std::make_unique<Core::BaseImGuiWindowBuilder>( m_mainRegistry, m_window );
+	}
 
-		/*Core::Entity CameraEntity = EditorUtilities.CreatePerspectiveCamera( "MainCamera" );
-		m_cameraSystemRef.SetActiveCamera( "MainCamera" );*/
-		auto CameraEntity = m_cameraSystem.CreatePerspectiveCamera( "EditorCamera" );
-		m_cameraSystem.SetActiveCamera( "EditorCamera" );
-		//m_editorUtilities.CreateEditorCamera( CameraEntity, m_mainRegistry );
+	GameClass::~GameClass() = default;
 
+	void GameClass::Init()
+	{
 		RegisterSubsystem( &m_inputSystem );
 		RegisterSubsystem( &m_cameraSystem );
 		RegisterSubsystem( &m_collisionDetectionSystem );
@@ -50,17 +40,24 @@ namespace Core
 
 		RegisterSubsystem( &m_logWindow );
 		RegisterSubsystem( &m_window.GetRenderer() );
-	}
 
-	GameClass::~GameClass() = default;
-
-	void GameClass::Init()
-	{
 		m_baseImguiWindowBuilder->GetInfo();
 	}
 
 	void GameClass::EditorInit()
 	{
+		/*Core::Entity CameraEntity = EditorUtilities.CreatePerspectiveCamera( "MainCamera" );
+		m_cameraSystemRef.SetActiveCamera( "MainCamera" );*/
+		//m_editorUtilities.CreateEditorCamera( CameraEntity, m_mainRegistry );
+		/*auto CameraEntity = m_cameraSystem.CreatePerspectiveCamera( "EditorCamera" );
+		m_cameraSystem.SetActiveCamera( "EditorCamera" );*/
+
+		Editor::EditorMouseBindings MouseBindings {};
+		Editor::EditorKeyboardBindings KeyboardBindings {};
+
+		m_inputSystem.AddBinding( MouseBindings.GetDeviceId(), std::move( MouseBindings ) );
+		m_inputSystem.AddBinding( KeyboardBindings.GetDeviceId(), std::move( KeyboardBindings ) );
+
 		RegisterComponentDetails();
 	}
 

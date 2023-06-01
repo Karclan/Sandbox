@@ -345,23 +345,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Basic2DGameTestSubsystem.cpp" />
-    <ClCompile Include="BasicMovementSubsystem.cpp" />
-    <ClCompile Include="BasicSpriteTestSubsystem.cpp" />
-    <ClCompile Include="CollisionTestSubsystem.cpp" />
-    <ClCompile Include="GameImplementation.cpp" />
-    <ClCompile Include="ImguiWindow.cpp" />
+    <ClCompile Include="ComponentDetails\GameComponentDetails.cpp" />
+    <ClCompile Include="GameImpl.cpp" />
+    <ClCompile Include="PlayerControllerSubsystem.cpp" />
     <ClCompile Include="SpaceInvaders.cpp" />
-    <ClCompile Include="VectorMathExampleSubsystem.cpp" />
+    <ClCompile Include="TestingPrototypeSystems\Basic2DGameTestSubsystem.cpp" />
+    <ClCompile Include="TestingPrototypeSystems\BasicMovementSubsystem.cpp" />
+    <ClCompile Include="TestingPrototypeSystems\BasicSpriteTestSubsystem.cpp" />
+    <ClCompile Include="TestingPrototypeSystems\CollisionTestSubsystem.cpp" />
+    <ClCompile Include="TestingPrototypeSystems\ImguiWindow.cpp" />
+    <ClCompile Include="TestingPrototypeSystems\VectorMathExampleSubsystem.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Basic2DGameTestSubsystem.h" />
-    <ClInclude Include="BasicMovementSubsystem.h" />
-    <ClInclude Include="BasicSpriteTestSubsystem.h" />
-    <ClInclude Include="CollisionTestSubsystem.h" />
-    <ClInclude Include="GameImplementation.h" />
-    <ClInclude Include="ImguiWindow.h" />
-    <ClInclude Include="VectorMathExampleSubsystem.h" />
+    <ClInclude Include="ComponentDetails\GameComponentDetails.h" />
+    <ClInclude Include="GameImpl.h" />
+    <ClInclude Include="GameTags.h" />
+    <ClInclude Include="PlayerComponent.h" />
+    <ClInclude Include="PlayerControllerSubsystem.h" />
+    <ClInclude Include="TestingPrototypeSystems\Basic2DGameTestSubsystem.h" />
+    <ClInclude Include="TestingPrototypeSystems\BasicMovementSubsystem.h" />
+    <ClInclude Include="TestingPrototypeSystems\BasicSpriteTestSubsystem.h" />
+    <ClInclude Include="TestingPrototypeSystems\CollisionTestSubsystem.h" />
+    <ClInclude Include="TestingPrototypeSystems\ImguiWindow.h" />
+    <ClInclude Include="TestingPrototypeSystems\VectorMathExampleSubsystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

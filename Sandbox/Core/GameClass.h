@@ -44,11 +44,8 @@ namespace Core
 		virtual void DeInit();
 		virtual void DeEditorInit();
 
-		
-
 		//Subsystem functions
-
-
+		//Possibly rename these functions when they're referring to an imgui window as well. It's a little odd to call it a subsystem when it's not one
 		template<typename TemplatedSubsystem>
 		typename std::enable_if< std::derived_from<TemplatedSubsystem, Subsystem> && !std::derived_from<TemplatedSubsystem, ImGuiWindowBuilder> >::type
 			RegisterSubsystem( TemplatedSubsystem * subsystem )
@@ -111,7 +108,7 @@ namespace Core
 	protected:
 		virtual void RegisterComponentDetails();
 
-	private:
+		//Subsystem functions
 		virtual void RegisterSubsystemInternal( Subsystem * subsystem );
 		virtual void RegisterImguiWindowInternal( ImGuiWindowBuilder * subsystem );
 		virtual void DeregisterSubsystemInternal( Subsystem * subsystem ) noexcept;

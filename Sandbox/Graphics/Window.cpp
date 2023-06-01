@@ -138,6 +138,7 @@ namespace Graphics
 		GLFWCallbackWrapper::SetApplication(this);
 		CreateWindow();
 		m_renderer = std::make_unique<Renderer>(registry);
+		m_renderer->Init();
 	}
 
 	Window::~Window()

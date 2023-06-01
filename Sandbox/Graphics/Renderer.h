@@ -69,6 +69,7 @@ namespace Graphics
 		void UpdateMesh( MeshComponent& meshComponent );
 
 		void CreateRenderBufferObject();
+		void ResizeRenderTextureBuffer( float WidthToUse, float HeightToUse );
 
 		Core::Registry& m_registry;
 

@@ -1,9 +1,6 @@
 #pragma once
 
-#include "../Core/Subsystem.h"
-
 #include "entt/core/type_info.hpp"
-
 
 namespace Editor
 {

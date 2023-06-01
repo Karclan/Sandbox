@@ -157,13 +157,7 @@ namespace Graphics
 						} );
 
 					//Resize the render texture buffer
-					glBindTexture( GL_TEXTURE_2D, m_renderedTexture );
-					glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, static_cast< GLsizei >( WidthToUse ), static_cast< GLsizei >( HeightToUse ), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL );
-					glBindTexture( GL_TEXTURE_2D, 0 );
-
-					glBindRenderbuffer( GL_RENDERBUFFER, m_renderBufferObject );
-					glRenderbufferStorage( GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, static_cast< GLsizei >( WidthToUse ), static_cast< GLsizei >( HeightToUse ) );
-
+					ResizeRenderTextureBuffer( WidthToUse, HeightToUse );
 				}
 				ImGui::EndMenu();
 			}
@@ -220,12 +214,8 @@ namespace Graphics
 						} );
 
 					//Resize the render texture buffer
-					glBindTexture( GL_TEXTURE_2D, m_renderedTexture );
-					glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, static_cast< GLsizei >( m_sceneSize.x ), static_cast< GLsizei >( m_sceneSize.y ), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL );
-					glBindTexture( GL_TEXTURE_2D, 0 );
 
-					glBindRenderbuffer( GL_RENDERBUFFER, m_renderBufferObject );
-					glRenderbufferStorage( GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, static_cast< GLsizei >( m_sceneSize.x ), static_cast< GLsizei >( m_sceneSize.y ) );
+					ResizeRenderTextureBuffer( m_sceneSize.x, m_sceneSize.y );
 				}
 			}
 			ImGui::End();
@@ -428,7 +418,6 @@ namespace Graphics
 				cameraComponent.m_dirtyViewMatrix = true;
 				cameraComponent.m_dirtyProjectionMatrix = true;
 			} );
-
 	}
 
 	void Renderer::UpdateCamera()
@@ -487,7 +476,7 @@ namespace Graphics
 			size_t const diff = m_boundTexturesSize - newTexturesSize;
 			if ( diff > 0 ) //We have less textures than last
 			{
-				for ( size_t i = m_boundTexturesSize; i > -1; --i ) //Go down the list and unbind textures
+				for ( int i = static_cast<int>(m_boundTexturesSize); i > -1; --i ) //Go down the list and unbind textures
 				{
 					//unbind
 					glActiveTexture( GL_TEXTURE0 + static_cast<GLenum>(i) );
@@ -600,6 +589,19 @@ namespace Graphics
 		}
 
 		glBindFramebuffer( GL_FRAMEBUFFER, 0 );
+	}
+
+	void Renderer::ResizeRenderTextureBuffer( float WidthToUse, float HeightToUse )
+	{
+		//Resize the render texture buffer
+		glBindTexture( GL_TEXTURE_2D, m_renderedTexture );
+		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, static_cast< GLsizei >( WidthToUse ), static_cast< GLsizei >( HeightToUse ), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL );
+		glBindTexture( GL_TEXTURE_2D, 0 );
+
+		glBindRenderbuffer( GL_RENDERBUFFER, m_renderBufferObject );
+		glRenderbufferStorage( GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, static_cast< GLsizei >( WidthToUse ), static_cast< GLsizei >( HeightToUse ) );
+
+		m_boundTexturesSize = 0;
 	}
 
 }

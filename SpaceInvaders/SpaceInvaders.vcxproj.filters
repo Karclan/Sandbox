@@ -13,53 +13,83 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\TestingPrototypeSystems">
+      <UniqueIdentifier>{f70bb3fa-4419-4881-99c6-a292d71653e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TestingPrototypeSystems">
+      <UniqueIdentifier>{903e430b-34d6-492f-8bbe-1fb82d29d755}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ComponentDetails">
+      <UniqueIdentifier>{8fe97dad-f5d7-46d1-a3d6-cdc0c4d31fda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ComponentDetails">
+      <UniqueIdentifier>{beab8dfa-b371-4a1b-8ec1-3e3473df019a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="SpaceInvaders.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BasicMovementSubsystem.cpp">
+    <ClCompile Include="TestingPrototypeSystems\Basic2DGameTestSubsystem.cpp">
+      <Filter>Source Files\TestingPrototypeSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="TestingPrototypeSystems\BasicMovementSubsystem.cpp">
+      <Filter>Source Files\TestingPrototypeSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="TestingPrototypeSystems\BasicSpriteTestSubsystem.cpp">
+      <Filter>Source Files\TestingPrototypeSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="TestingPrototypeSystems\CollisionTestSubsystem.cpp">
+      <Filter>Source Files\TestingPrototypeSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="TestingPrototypeSystems\ImguiWindow.cpp">
+      <Filter>Source Files\TestingPrototypeSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="TestingPrototypeSystems\VectorMathExampleSubsystem.cpp">
+      <Filter>Source Files\TestingPrototypeSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerControllerSubsystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameImplementation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ImguiWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BasicSpriteTestSubsystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VectorMathExampleSubsystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CollisionTestSubsystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Basic2DGameTestSubsystem.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ComponentDetails\GameComponentDetails.cpp">
+      <Filter>Source Files\ComponentDetails</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BasicMovementSubsystem.h">
+    <ClInclude Include="GameImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameImplementation.h">
+    <ClInclude Include="TestingPrototypeSystems\Basic2DGameTestSubsystem.h">
+      <Filter>Header Files\TestingPrototypeSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="TestingPrototypeSystems\BasicMovementSubsystem.h">
+      <Filter>Header Files\TestingPrototypeSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="TestingPrototypeSystems\BasicSpriteTestSubsystem.h">
+      <Filter>Header Files\TestingPrototypeSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="TestingPrototypeSystems\CollisionTestSubsystem.h">
+      <Filter>Header Files\TestingPrototypeSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="TestingPrototypeSystems\ImguiWindow.h">
+      <Filter>Header Files\TestingPrototypeSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="TestingPrototypeSystems\VectorMathExampleSubsystem.h">
+      <Filter>Header Files\TestingPrototypeSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ImguiWindow.h">
+    <ClInclude Include="PlayerControllerSubsystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BasicSpriteTestSubsystem.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ComponentDetails\GameComponentDetails.h">
+      <Filter>Header Files\ComponentDetails</Filter>
     </ClInclude>
-    <ClInclude Include="VectorMathExampleSubsystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CollisionTestSubsystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Basic2DGameTestSubsystem.h">
+    <ClInclude Include="GameTags.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

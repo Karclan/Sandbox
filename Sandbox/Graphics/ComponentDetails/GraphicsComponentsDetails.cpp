@@ -63,6 +63,8 @@ namespace Editor
 			ImGui::DragFloat3( "Target", &inComponent.m_target.x );
 			ImGui::DragFloat3( "Up", &inComponent.m_up.x );
 
+			inComponent.m_dirtyProjectionMatrix = true;
+			inComponent.m_dirtyViewMatrix = true;
 			ImGui::Checkbox( "Dirty Projection Matrix", &inComponent.m_dirtyProjectionMatrix );
 			ImGui::Checkbox( "Dirty View Matrix", &inComponent.m_dirtyViewMatrix );
 
@@ -78,6 +80,7 @@ namespace Editor
 
 			ImGui::DragFloat( "View Port Height", &inComponent.m_viewPortHeight );
 			ImGui::DragFloat( "View Port Width", &inComponent.m_viewPortWidth );
+
 			//#TODO make the ortho bo/to/le/ri values be -+ aspect ratios
 			ImGui::DragFloat( "Ortho Aspect Zoom", &inComponent.m_orthoAspectScale );
 
@@ -85,6 +88,7 @@ namespace Editor
 			ImGui::DragFloat( "Ortho Top", &inComponent.m_orthoTop );
 			ImGui::DragFloat( "Ortho Left", &inComponent.m_orthoLeft );
 			ImGui::DragFloat( "Ortho Right", &inComponent.m_orthoRight );
+		 
 		}
 	}
 
