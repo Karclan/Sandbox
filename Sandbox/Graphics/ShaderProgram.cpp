@@ -10,16 +10,11 @@
 
 namespace Graphics
 {
-    ShaderProgram::ShaderProgram() noexcept
+    ShaderProgram::ShaderProgram( std::string const & shaderName, Utils::EnumBitmask<Shader::Type> flags )
+        : m_shaderName(shaderName)
+        , m_shaderTypeFlags(flags)
     {
         m_Id = glCreateProgram();
-    }
-
-    ShaderProgram::ShaderProgram( const char * shaderName, Utils::EnumBitmask<Shader::Type> flags )
-        : ShaderProgram()
-    {
-        m_shaderName = shaderName;
-        m_shaderTypeFlags = flags;
         create();
     }
 
@@ -302,4 +297,70 @@ namespace Graphics
             return "?";
         }
     }
+
+	unsigned int ShaderProgram::GetShaderId() const
+	{
+        return m_Id;
+	}
+
+	std::string const & ShaderProgram::GetShaderName() const
+	{
+        return m_shaderName;
+	}
+
+	Utils::EnumBitmask<Graphics::Shader::Type> const & ShaderProgram::GetShaderTypes() const
+	{
+        return m_shaderTypeFlags;
+	}
+
+    std::map<std::string, int> const & ShaderProgram::GetUniforms() const
+	{
+        return uniformLocations;
+	}
+
+	std::map<std::string, bool> const & ShaderProgram::GetBoolUniforms() const
+	{
+        return m_boolUniforms;
+	}
+
+	std::map<std::string, int> const & ShaderProgram::GetIntUniforms() const
+	{
+        return m_intUniforms;
+	}
+
+	std::map<std::string, float> const & ShaderProgram::GetFloatUniforms() const
+	{
+        return m_floatUniforms;
+	}
+
+	std::map<std::string, GLuint> const & ShaderProgram::GetGLuintUniforms() const
+	{
+        return m_gluintUniforms;
+	}
+
+	std::map<std::string, glm::vec2> const & ShaderProgram::GetVec2Uniforms() const
+	{
+        return m_vec2Uniforms;
+	}
+
+	std::map<std::string, glm::vec3> const & ShaderProgram::GetVec3Uniforms() const
+	{
+        return m_vec3Uniforms;
+	}
+
+	std::map<std::string, glm::vec4> const & ShaderProgram::GetVec4Uniforms() const
+	{
+        return m_vec4Uniforms;
+	}
+
+	std::map<std::string, glm::mat3> const & ShaderProgram::GetMat3Uniforms() const
+	{
+        return m_mat3Uniforms;
+	}
+
+	std::map<std::string, glm::mat4> const & ShaderProgram::GetMat4Uniforms() const
+	{
+        return m_mat4Uniforms;
+	}
+
 }

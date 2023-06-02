@@ -48,19 +48,15 @@ namespace Game
 		{
 			using namespace magic_enum::bitwise_operators;
 			//Move into system or at least out of here
-			auto basicShaderId = renderer.CreateShader( "basic", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
-			auto colourShiftShaderId = renderer.CreateShader( "colourShift", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
-			auto textureEnabledShaderId = renderer.CreateShader( "textureEnabled", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
+			Graphics::ShaderComponent basicShaderComp = renderer.CreateShader( "basic", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
+			Graphics::ShaderComponent colourShiftShaderComp = renderer.CreateShader( "colourShift", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
+			Graphics::ShaderComponent textureEnabledShaderComp = renderer.CreateShader( "textureEnabled", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
 			auto containerTextureId = renderer.CreateTexture( "container.jpg" );
 			auto awesomefaceTextureId = renderer.CreateTexture( "awesomeface.png" );
 
 			Graphics::TextureComponent containerTextureComp { { containerTextureId } };
 			Graphics::TextureComponent awesomeFaceTextureComp { { awesomefaceTextureId } };
 			Graphics::TextureComponent multiTextureComp { { containerTextureId, awesomefaceTextureId } };
-
-			Graphics::ShaderComponent basicShaderComp { basicShaderId };
-			Graphics::ShaderComponent colourShiftShaderComp { colourShiftShaderId };
-			Graphics::ShaderComponent textureEnabledShaderComp { textureEnabledShaderId };
 
 			//Triangle
 			{

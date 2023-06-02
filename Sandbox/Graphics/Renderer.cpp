@@ -57,16 +57,17 @@ namespace Graphics
 
 	}
 
-	unsigned int Renderer::CreateShader( const std::string & name, Utils::EnumBitmask<Shader::Type> flags )
+	ShaderComponent Renderer::CreateShader( const std::string & name, Utils::EnumBitmask<Shader::Type> flags )
 	{
 		unsigned int ReturnId = 0;
 		//duplicate and valid
-		auto shader = std::make_unique<ShaderProgram>( name.c_str(), flags );
+		auto shader = std::make_shared<ShaderProgram>( name.c_str(), flags );
 		ReturnId = shader->getId();
 
 		m_shaderList.push_back( std::move( shader ) );
 
-		return ReturnId;
+		ShaderComponent shaderComponent { ReturnId, std::weak_ptr<IShaderHandle>(shader) };
+		return shaderComponent;
 	}
 
 	unsigned int Renderer::CreateTexture( const std::string & textureName )

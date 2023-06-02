@@ -24,8 +24,7 @@ namespace Game
 		m_window = &window;
 		Graphics::Renderer & renderer = window.GetRenderer();
 		using namespace magic_enum::bitwise_operators;
-		unsigned int basicShaderId = renderer.CreateShader("basic", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment });
-		Graphics::ShaderComponent basicShaderComp{ basicShaderId };
+		Graphics::ShaderComponent basicShaderComp = renderer.CreateShader( "basic", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );;
 		auto containerTextureId = renderer.CreateTexture("container.jpg");
 		Graphics::TextureComponent containerTextureComp{ { containerTextureId } };
 

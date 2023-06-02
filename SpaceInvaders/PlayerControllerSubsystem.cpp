@@ -23,13 +23,12 @@ namespace Game
 	{
 		auto & renderer = windowRef.GetRenderer();
 
-		auto textureEnabledShaderId = renderer.CreateShader( "textureEnabled", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
+		Graphics::ShaderComponent textureEnabledShaderComp = renderer.CreateShader( "textureEnabled", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
 		auto containerTextureId = renderer.CreateTexture( "container.jpg" );
 		auto awesomefaceTextureId = renderer.CreateTexture( "awesomeface.png" );
 
 		Graphics::TextureComponent multiTextureComp { { containerTextureId, awesomefaceTextureId } };
 		Graphics::TextureComponent single { { awesomefaceTextureId } };
-		Graphics::ShaderComponent textureEnabledShaderComp { textureEnabledShaderId };
 
 		m_PlayerEntity = m_registry.CreateEntity( "Player" );
 		m_registry.AddComponent<PlayerComponent>( m_PlayerEntity, PlayerComponent() );

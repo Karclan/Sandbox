@@ -40,7 +40,7 @@ namespace Graphics
 		Renderer( Core::Registry& Registry );
 		~Renderer();
 
-		unsigned int CreateShader( const std::string& name, Utils::EnumBitmask<Shader::Type> flags );
+	    ShaderComponent	CreateShader( const std::string& name, Utils::EnumBitmask<Shader::Type> flags );
 		unsigned int CreateTexture( const std::string& textureName );
 
 		MeshComponent GetMesh( PrimativeType type );
@@ -117,7 +117,7 @@ namespace Graphics
 		bool m_useFrameBufferObject { true };
 		ImVec2 m_sceneSize { 800, 600 };
 
-		std::vector< std::unique_ptr<ShaderProgram> > m_shaderList;
+		std::vector< std::shared_ptr<ShaderProgram> > m_shaderList;
 
 		std::vector<GLuint> m_boundTextures {};
 
