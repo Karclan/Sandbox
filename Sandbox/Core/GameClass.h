@@ -2,7 +2,7 @@
 
 #include "CoreRegistry.h"
 
-#include "../Editor/Utilities.h"
+#include "../Editor/EditorUtilities.h"
 #include "../Editor/EditorInspector.h"
 #include "../Input/InputSystem.h"
 #include "../Utils/LoggingWindow.h"

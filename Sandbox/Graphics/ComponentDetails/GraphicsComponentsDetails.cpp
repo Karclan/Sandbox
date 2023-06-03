@@ -3,6 +3,8 @@
 #include "../magic_enum/magic_enum.hpp"
 #include "../Utils/format.h"
 
+#include "../Editor/ImGui/Widgets.h"
+
 #include "../TransformComponent.h"
 #include "../MeshComponent.h"
 #include "../CameraComponent.h"
@@ -11,6 +13,7 @@
 
 #include "imgui.h"
 #include "glm/glm.hpp"
+#include <glm/gtx/string_cast.hpp>
 
 #include <array>
 #include <string>
@@ -88,7 +91,7 @@ namespace Editor
 			ImGui::DragFloat( "Ortho Top", &inComponent.m_orthoTop );
 			ImGui::DragFloat( "Ortho Left", &inComponent.m_orthoLeft );
 			ImGui::DragFloat( "Ortho Right", &inComponent.m_orthoRight );
-		 
+
 		}
 	}
 
@@ -99,11 +102,11 @@ namespace Editor
 			ImGui::DragFloat3( "Position", &inComponent.Position.x );
 			ImGui::DragFloat3( "Scale", &inComponent.Scale.x );
 
-			glm::vec3 eulerRotation = glm::degrees(glm::eulerAngles( inComponent.RotationQuat ));
+			glm::vec3 eulerRotation = glm::degrees( glm::eulerAngles( inComponent.RotationQuat ) );
 
 			ImGui::DragFloat3( "Rotation", &eulerRotation.x );
 
-			inComponent.RotationQuat = glm::quat( glm::radians(eulerRotation) );
+			inComponent.RotationQuat = glm::quat( glm::radians( eulerRotation ) );
 		}
 	}
 
@@ -118,9 +121,71 @@ namespace Editor
 
 	void ShaderComponentDetails::BuildDetailsInternal( Graphics::ShaderComponent & inComponent ) const
 	{
-		if ( ImGui::CollapsingHeader( "Shader" ) )
+		if ( std::shared_ptr<Graphics::IShaderHandle const> const shaderHandle = inComponent.ShaderHandle.lock() )
 		{
-			ImGui::Text( fmt::format( "{}: Shader Id", inComponent.ShaderId ).c_str() );
+			std::string const & name = shaderHandle->GetShaderName();
+			unsigned int const id = shaderHandle->GetShaderId();
+
+			if ( ImGui::CollapsingHeader( fmt::format( "Shader: {} Id: {}", name, id ).c_str() ) )
+			{
+				Utils::EnumBitmask<Graphics::Shader::Type> const & types = shaderHandle->GetShaderTypes();
+				auto const & uniforms = shaderHandle->GetUniforms();
+				auto const & bools = shaderHandle->GetBoolUniforms();
+				auto const & ints = shaderHandle->GetIntUniforms();
+				auto const & floats = shaderHandle->GetFloatUniforms();
+				auto const & gluints = shaderHandle->GetGLuintUniforms();
+				auto const & vec2s = shaderHandle->GetVec2Uniforms();
+				auto const & vec3s = shaderHandle->GetVec3Uniforms();
+				auto const & vec4s = shaderHandle->GetVec4Uniforms();
+				auto const & mat3s = shaderHandle->GetMat3Uniforms();
+				auto const & mat4s = shaderHandle->GetMat4Uniforms();
+
+				Widgets::MapContainerDisplay( uniforms, "Uniforms", "Location" );
+				Widgets::MapContainerDisplay( bools, "Bools" );
+				Widgets::MapContainerDisplay( ints, "Ints" );
+				Widgets::MapContainerDisplay( floats, "Floats" );
+				Widgets::MapContainerDisplay( gluints, "GLuints" );
+				Widgets::MapContainerDisplay( vec2s, "Vec2s" );
+				Widgets::MapContainerDisplay( vec3s, "Vec3s" );
+				Widgets::MapContainerDisplay( vec4s, "Vec4s" );
+				Widgets::MapContainerDisplay( mat3s, "Mat3s" );
+				Widgets::MapContainerDisplay( mat4s, "Mat4s" );
+
+				//Widgets::MapContainerDisplay( uniforms, "Uniforms", "Location" );
+
+				/*#
+				 ImGui::Columns(4, "mycolumns"); // 4-ways, with border
+				ImGui::Separator();
+				ImGui::Text("ID"); ImGui::NextColumn();
+				ImGui::Text("Name"); ImGui::NextColumn();
+				ImGui::Text("Path"); ImGui::NextColumn();
+				ImGui::Text("Hovered"); ImGui::NextColumn();
+				ImGui::Separator();
+				const char* names[3] = { "One", "Two", "Three" };
+				const char* paths[3] = { "/path/one", "/path/two", "/path/three" };
+				static int selected = -1;
+				for (int i = 0; i < 3; i++)
+				{
+					char label[32];
+					sprintf(label, "%04d", i);
+					if (ImGui::Selectable(label, selected == i, ImGuiSelectableFlags_SpanAllColumns))
+						selected = i;
+					bool hovered = ImGui::IsItemHovered();
+					ImGui::NextColumn();
+					ImGui::Text(names[i]); ImGui::NextColumn();
+					ImGui::Text(paths[i]); ImGui::NextColumn();
+					ImGui::Text("%d", hovered); ImGui::NextColumn();
+				}
+				ImGui::Columns(1);
+				*/
+			}
+		}
+		else
+		{
+			if ( ImGui::CollapsingHeader( fmt::format("Shader: <unknown> Id: {} ", inComponent.ShaderId).c_str() ) )
+			{
+				ImGui::Text( "ShaderHandle failed to lock! Shader is somehow dead." );
+			}
 		}
 	}
 

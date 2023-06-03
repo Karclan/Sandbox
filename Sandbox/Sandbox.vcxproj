@@ -417,9 +417,10 @@
     <ClCompile Include="Editor\ComponentDetails\ComponentDetailsBase.cpp" />
     <ClCompile Include="Editor\EditorBindings.cpp" />
     <ClCompile Include="Editor\EditorInspector.cpp" />
+    <ClCompile Include="Editor\ImGui\Widgets.cpp" />
     <ClCompile Include="Editor\InputActions.cpp" />
     <ClCompile Include="Editor\SceneHierarchyWindow.cpp" />
-    <ClCompile Include="Editor\Utilities.cpp" />
+    <ClCompile Include="Editor\EditorUtilities.cpp" />
     <ClCompile Include="Generic\ComponentDetails\GenericComponentsDetails.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Graphics\CameraComponent.cpp" />
@@ -464,9 +465,10 @@
     <ClInclude Include="Editor\ComponentManifestComponent.h" />
     <ClInclude Include="Editor\EditorBindings.h" />
     <ClInclude Include="Editor\EditorInspector.h" />
+    <ClInclude Include="Editor\ImGui\Widgets.h" />
     <ClInclude Include="Editor\InputActions.h" />
     <ClInclude Include="Editor\SceneHierarchyWindow.h" />
-    <ClInclude Include="Editor\Utilities.h" />
+    <ClInclude Include="Editor\EditorUtilities.h" />
     <ClInclude Include="Generic\ComponentDetails\GenericComponentsDetails.h" />
     <ClInclude Include="Generic\NameComponent.h" />
     <ClInclude Include="glad\glad.h" />
@@ -514,6 +516,7 @@
     <ClInclude Include="Physics\CollisionDetectionSystem.h" />
     <ClInclude Include="Physics\ComponentDetails\PhysicsComponentsDetails.h" />
     <ClInclude Include="stb\stb_image.h" />
+    <ClInclude Include="Utils\customformatters.h" />
     <ClInclude Include="Utils\Delegate.h" />
     <ClInclude Include="Utils\EnumBitmask.h" />
     <ClInclude Include="Utils\format.h" />

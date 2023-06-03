@@ -2,7 +2,7 @@
 
 #include "../Utils/Logger.h"
 #include "../Utils/UnusedMacro.h"
-#include "../Editor/Utilities.h"
+#include "../Editor/EditorUtilities.h"
 #include "../Imgui/imgui.h"
 
 #include "TextureComponent.h"
@@ -64,8 +64,8 @@ namespace Graphics
 		auto shader = std::make_shared<ShaderProgram>( name.c_str(), flags );
 		ReturnId = shader->getId();
 
-		m_shaderList.push_back( std::move( shader ) );
-
+		m_shaderList.push_back( shader );
+		
 		ShaderComponent shaderComponent { ReturnId, std::weak_ptr<IShaderHandle>(shader) };
 		return shaderComponent;
 	}

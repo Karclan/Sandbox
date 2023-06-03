@@ -64,6 +64,9 @@
     <Filter Include="Generic\ComponentDetails">
       <UniqueIdentifier>{a154ff4a-7b2f-41f5-9941-8c6289fd326d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Editor\ImGui">
+      <UniqueIdentifier>{8c6c2cb3-171f-4dce-89b9-362f3446070d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Graphics\Shader.cpp">
@@ -156,7 +159,7 @@
     <ClCompile Include="Core\CoreRegistry.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Editor\Utilities.cpp">
+    <ClCompile Include="Editor\EditorUtilities.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\CameraSystem.cpp">
@@ -194,6 +197,9 @@
     </ClCompile>
     <ClCompile Include="Generic\ComponentDetails\GenericComponentsDetails.cpp">
       <Filter>Generic\ComponentDetails</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\ImGui\Widgets.cpp">
+      <Filter>Editor\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -320,7 +326,7 @@
     <ClInclude Include="Core\Entity.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Editor\Utilities.h">
+    <ClInclude Include="Editor\EditorUtilities.h">
       <Filter>Editor</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\CameraSystem.h">
@@ -394,6 +400,12 @@
     </ClInclude>
     <ClInclude Include="magic_enum\magic_enum_switch.hpp">
       <Filter>magic_enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\ImGui\Widgets.h">
+      <Filter>Editor\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\customformatters.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

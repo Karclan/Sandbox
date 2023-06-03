@@ -16,6 +16,17 @@ namespace Graphics
     {
         m_Id = glCreateProgram();
         create();
+
+        
+        m_boolUniforms[ "test" ] = true;
+        m_intUniforms[ "test" ] = 10;
+        m_floatUniforms[ "test" ] = 1.23f;
+        m_gluintUniforms[ "test" ] = 99u;
+        m_vec2Uniforms[ "test" ] = glm::vec2( 1.f, 10.f ); 
+        m_vec3Uniforms[ "test" ] = glm::vec3( 1.f, 10.f, 1.24f );
+        m_vec4Uniforms[ "test" ] = glm::vec4( 1.f, 10.f, 1.24f, 0.345f );
+        m_mat3Uniforms[ "test" ] = glm::mat3( 1.24f );
+        
     }
 
     unsigned int ShaderProgram::getId() const noexcept
@@ -106,54 +117,63 @@ namespace Graphics
     void ShaderProgram::setUniform( const char * name, glm::vec3 const & v )
     {
         this->setUniform( name, v.x, v.y, v.z );
+        m_vec3Uniforms[ name ] = v;
     }
 
     void ShaderProgram::setUniform( const char * name, glm::vec4 const & v )
     {
         GLint const loc = getUniformLocation( name );
         glUniform4f( loc, v.x, v.y, v.z, v.w );
+        m_vec3Uniforms[ name ] = v;
     }
 
     void ShaderProgram::setUniform( const char * name, glm::vec2 const & v )
     {
         GLint const loc = getUniformLocation( name );
         glUniform2f( loc, v.x, v.y );
+        m_vec2Uniforms[ name ] = v;
     }
 
     void ShaderProgram::setUniform( const char * name, glm::mat4 const & m )
     {
         GLint const loc = getUniformLocation( name );
         glUniformMatrix4fv( loc, 1, GL_FALSE, &m[ 0 ][ 0 ] );
+        m_mat4Uniforms[ name ] = m;
     }
 
     void ShaderProgram::setUniform( const char * name, glm::mat3 const & m )
     {
         GLint const loc = getUniformLocation( name );
         glUniformMatrix3fv( loc, 1, GL_FALSE, &m[ 0 ][ 0 ] );
+        m_mat3Uniforms[ name ] = m;
     }
 
     void ShaderProgram::setUniform( const char * name, float val )
     {
         GLint const loc = getUniformLocation( name );
         glUniform1f( loc, val );
+        m_floatUniforms[ name ] = val;
     }
 
     void ShaderProgram::setUniform( const char * name, int val )
     {
         GLint const loc = getUniformLocation( name );
         glUniform1i( loc, val );
+        m_intUniforms[ name ] = val;
     }
 
     void ShaderProgram::setUniform( const char * name, GLuint val )
     {
         GLint const loc = getUniformLocation( name );
         glUniform1ui( loc, val );
+        m_gluintUniforms[ name ] = val;
     }
 
     void ShaderProgram::setUniform( const char * name, bool val )
     {
         int const loc = getUniformLocation( name );
         glUniform1i( loc, val );
+        m_boolUniforms[ name ] = val;
     }
 
     void ShaderProgram::printActiveUniforms() const
