@@ -4,29 +4,11 @@
     <Filter Include="Graphics">
       <UniqueIdentifier>{41888492-c4ca-4924-8c6c-a9992776dfbb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Imgui">
-      <UniqueIdentifier>{29475090-6783-42ff-8c2e-cfeb06554002}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Input">
       <UniqueIdentifier>{3aa28cf9-7bd5-4b04-af23-af7644a51594}</UniqueIdentifier>
     </Filter>
     <Filter Include="Utils">
       <UniqueIdentifier>{204cc706-e5b9-4e7d-a9ed-dac58a66d730}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Imgui\misc">
-      <UniqueIdentifier>{b34875ad-64d4-47ce-bd56-812c209e210e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Imgui\misc\cpp">
-      <UniqueIdentifier>{332aedd7-abda-4695-bc4f-08473f10485f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Imgui\misc\fonts">
-      <UniqueIdentifier>{6fa44d1b-723e-4f9c-bdd9-a3537a2595c4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Imgui\misc\freetype">
-      <UniqueIdentifier>{95746ee1-fbee-42d1-a6ae-19ee7b626295}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Imgui\misc\natvis">
-      <UniqueIdentifier>{090c2ad3-7c55-4e95-8adb-e69c56fb86af}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics\Primatives">
       <UniqueIdentifier>{9944ed70-1679-44f8-b534-8ab941121393}</UniqueIdentifier>
@@ -67,6 +49,30 @@
     <Filter Include="Editor\ImGui">
       <UniqueIdentifier>{8c6c2cb3-171f-4dce-89b9-362f3446070d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Imgui">
+      <UniqueIdentifier>{cc95d45b-263a-48a3-8e87-046b5182b238}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\misc">
+      <UniqueIdentifier>{e91a462f-456f-4f3e-a450-cb9c5b23ea02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\misc\cpp">
+      <UniqueIdentifier>{3a057da2-e6de-473d-b3c6-d655832ae0fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\misc\fonts">
+      <UniqueIdentifier>{ad017a33-e5bb-404a-9ece-829bddf1cd88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\misc\freetype">
+      <UniqueIdentifier>{ae13e5d9-ec10-4ce1-850e-0fa2ca616a15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\misc\single_file">
+      <UniqueIdentifier>{97a6a351-d7a7-4b5a-9611-bcdfe5abf3ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\misc\debuggers">
+      <UniqueIdentifier>{9382f36b-f12b-4ed7-8308-8614fb745c45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\backends">
+      <UniqueIdentifier>{ccb9d36d-ab32-4eb6-94ad-a7c92294afcd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Graphics\Shader.cpp">
@@ -77,27 +83,6 @@
     </ClCompile>
     <ClCompile Include="Graphics\Mesh.cpp">
       <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Imgui\imgui_impl_glfw.cpp">
-      <Filter>Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Imgui\imgui_impl_opengl3.cpp">
-      <Filter>Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Imgui\imgui.cpp">
-      <Filter>Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Imgui\imgui_demo.cpp">
-      <Filter>Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Imgui\imgui_draw.cpp">
-      <Filter>Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Imgui\imgui_widgets.cpp">
-      <Filter>Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Imgui\misc\cpp\imgui_stdlib.cpp">
-      <Filter>Imgui\misc\cpp</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\Triangle.cpp">
       <Filter>Graphics\Primatives</Filter>
@@ -201,6 +186,33 @@
     <ClCompile Include="Editor\ImGui\Widgets.cpp">
       <Filter>Editor\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="Imgui\imgui.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_demo.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_draw.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_widgets.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\misc\cpp\imgui_stdlib.cpp">
+      <Filter>Imgui\misc\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\misc\fonts\binary_to_compressed_c.cpp">
+      <Filter>Imgui\misc\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_tables.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\backends\imgui_impl_glfw.cpp">
+      <Filter>Imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\backends\imgui_impl_opengl3.cpp">
+      <Filter>Imgui\backends</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\ShaderProgram.h">
@@ -211,33 +223,6 @@
     </ClInclude>
     <ClInclude Include="Graphics\Mesh.h">
       <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imgui_impl_glfw.h">
-      <Filter>Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imgui_impl_opengl3.h">
-      <Filter>Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imconfig.h">
-      <Filter>Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imgui.h">
-      <Filter>Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imgui_internal.h">
-      <Filter>Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imstb_rectpack.h">
-      <Filter>Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imstb_textedit.h">
-      <Filter>Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imstb_truetype.h">
-      <Filter>Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\misc\cpp\imgui_stdlib.h">
-      <Filter>Imgui\misc\cpp</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Renderer.h">
       <Filter>Graphics</Filter>
@@ -407,10 +392,82 @@
     <ClInclude Include="Utils\customformatters.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Imgui\imconfig.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui_internal.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imstb_rectpack.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imstb_textedit.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imstb_truetype.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\misc\cpp\imgui_stdlib.h">
+      <Filter>Imgui\misc\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\misc\single_file\imgui_single_file.h">
+      <Filter>Imgui\misc\single_file</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\backends\imgui_impl_glfw.h">
+      <Filter>Imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\backends\imgui_impl_opengl3.h">
+      <Filter>Imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\backends\imgui_impl_opengl3_loader.h">
+      <Filter>Imgui\backends</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Natvis Include="Imgui\misc\natvis\imgui.natvis">
-      <Filter>Imgui\misc\natvis</Filter>
+    <Text Include="Imgui\misc\README.txt">
+      <Filter>Imgui\misc</Filter>
+    </Text>
+    <Text Include="Imgui\misc\cpp\README.txt">
+      <Filter>Imgui\misc\cpp</Filter>
+    </Text>
+    <Text Include="Imgui\misc\debuggers\README.txt">
+      <Filter>Imgui\misc\debuggers</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Imgui\misc\fonts\Cousine-Regular.ttf">
+      <Filter>Imgui\misc\fonts</Filter>
+    </Font>
+    <Font Include="Imgui\misc\fonts\DroidSans.ttf">
+      <Filter>Imgui\misc\fonts</Filter>
+    </Font>
+    <Font Include="Imgui\misc\fonts\Karla-Regular.ttf">
+      <Filter>Imgui\misc\fonts</Filter>
+    </Font>
+    <Font Include="Imgui\misc\fonts\ProggyClean.ttf">
+      <Filter>Imgui\misc\fonts</Filter>
+    </Font>
+    <Font Include="Imgui\misc\fonts\ProggyTiny.ttf">
+      <Filter>Imgui\misc\fonts</Filter>
+    </Font>
+    <Font Include="Imgui\misc\fonts\Roboto-Medium.ttf">
+      <Filter>Imgui\misc\fonts</Filter>
+    </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Imgui\misc\debuggers\imgui.gdb">
+      <Filter>Imgui\misc\debuggers</Filter>
+    </None>
+    <None Include="Imgui\misc\debuggers\imgui.natstepfilter">
+      <Filter>Imgui\misc\debuggers</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="Imgui\misc\debuggers\imgui.natvis">
+      <Filter>Imgui\misc\debuggers</Filter>
     </Natvis>
   </ItemGroup>
 </Project>

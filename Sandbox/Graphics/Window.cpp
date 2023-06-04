@@ -10,8 +10,8 @@
 #include <GLFW/glfw3.h>
 
 #include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
 
 #include <iostream>
 
@@ -147,6 +147,7 @@ namespace Graphics
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
 
+		glfwDestroyWindow( m_glfwWindow );
 		// glfw: terminate, clearing all previously allocated GLFW resources.
 		glfwTerminate();
 	}
