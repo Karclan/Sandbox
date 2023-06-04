@@ -85,7 +85,7 @@ namespace Editor
 				}
 				ImGui::EndCombo();
 			}
-
+			ImGui::BeginChild( "##ScrollingRegion", ImVec2( 0, 0 ), false, ImGuiWindowFlags_HorizontalScrollbar );
 			//for all component storage containers
 			auto const storage = m_registry.GetStorage();
 			for ( auto && curr : storage )
@@ -113,6 +113,7 @@ namespace Editor
 					}
 				}
 			}
+			ImGui::EndChild();
 		}
 		ImGui::End();
 	}

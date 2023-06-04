@@ -140,44 +140,27 @@ namespace Editor
 				auto const & mat3s = shaderHandle->GetMat3Uniforms();
 				auto const & mat4s = shaderHandle->GetMat4Uniforms();
 
-				Widgets::MapContainerDisplay( uniforms, "Uniforms", "Location" );
-				Widgets::MapContainerDisplay( bools, "Bools" );
-				Widgets::MapContainerDisplay( ints, "Ints" );
-				Widgets::MapContainerDisplay( floats, "Floats" );
-				Widgets::MapContainerDisplay( gluints, "GLuints" );
-				Widgets::MapContainerDisplay( vec2s, "Vec2s" );
-				Widgets::MapContainerDisplay( vec3s, "Vec3s" );
-				Widgets::MapContainerDisplay( vec4s, "Vec4s" );
-				Widgets::MapContainerDisplay( mat3s, "Mat3s" );
-				Widgets::MapContainerDisplay( mat4s, "Mat4s" );
-
-				//Widgets::MapContainerDisplay( uniforms, "Uniforms", "Location" );
-
-				/*#
-				 ImGui::Columns(4, "mycolumns"); // 4-ways, with border
-				ImGui::Separator();
-				ImGui::Text("ID"); ImGui::NextColumn();
-				ImGui::Text("Name"); ImGui::NextColumn();
-				ImGui::Text("Path"); ImGui::NextColumn();
-				ImGui::Text("Hovered"); ImGui::NextColumn();
-				ImGui::Separator();
-				const char* names[3] = { "One", "Two", "Three" };
-				const char* paths[3] = { "/path/one", "/path/two", "/path/three" };
-				static int selected = -1;
-				for (int i = 0; i < 3; i++)
-				{
-					char label[32];
-					sprintf(label, "%04d", i);
-					if (ImGui::Selectable(label, selected == i, ImGuiSelectableFlags_SpanAllColumns))
-						selected = i;
-					bool hovered = ImGui::IsItemHovered();
-					ImGui::NextColumn();
-					ImGui::Text(names[i]); ImGui::NextColumn();
-					ImGui::Text(paths[i]); ImGui::NextColumn();
-					ImGui::Text("%d", hovered); ImGui::NextColumn();
-				}
-				ImGui::Columns(1);
-				*/
+				//less than ideal but not sure on best way to have indexes like this.
+				static int uniformIndex = -1;
+				static int boolIndex = -1;
+				static int intIndex = -1;
+				static int floatIndex = -1;
+				static int gluintIndex = -1;
+				static int vec2Index = -1;
+				static int vec3Index = -1;
+				static int vec4Index = -1;
+				static int mat3Index = -1;
+				static int mat4Index = -1;
+				Widgets::MapContainerDisplay( uniforms, uniformIndex, "Uniforms", "Location" );
+				Widgets::MapContainerDisplay( bools, boolIndex, "Bools" );
+				Widgets::MapContainerDisplay( ints, intIndex, "Ints" );
+				Widgets::MapContainerDisplay( floats, floatIndex, "Floats" );
+				Widgets::MapContainerDisplay( gluints, gluintIndex, "GLuints" );
+				Widgets::MapContainerDisplay( vec2s, vec2Index, "Vec2s" );
+				Widgets::MapContainerDisplay( vec3s, vec3Index, "Vec3s" );
+				Widgets::MapContainerDisplay( vec4s, vec4Index,"Vec4s" );
+				Widgets::MapContainerDisplay( mat3s, mat3Index, "Mat3s" );
+				Widgets::MapContainerDisplay( mat4s, mat4Index, "Mat4s" );
 			}
 		}
 		else
