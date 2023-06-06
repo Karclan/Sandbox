@@ -8,15 +8,15 @@ namespace Graphics
     class Shader
     {
     public:
-        enum class Type : unsigned
+        enum class Type : int
         {
             Vertex,
             Fragment,
             Geometry,
-            
+
             Total,
 
-            Invalid
+            Invalid = -1
         };
 
         Shader();

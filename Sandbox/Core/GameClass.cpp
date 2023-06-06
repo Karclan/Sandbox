@@ -3,10 +3,13 @@
 #include "Subsystem.h"
 
 #include "../Graphics/Window.h"
-#include "../Editor/EditorBindings.h"
+
 #include "../Graphics/ComponentDetails/GraphicsComponentsDetails.h"
 #include "../Physics/ComponentDetails/PhysicsComponentsDetails.h"
 #include "../Generic/ComponentDetails/GenericComponentsDetails.h"
+
+#include "../Editor/EditorBindings.h"
+#include "../Editor/EditorContextComponent.h"
 
 #include "imgui.h"
 
@@ -16,6 +19,7 @@ namespace Core
 
 	GameClass::GameClass()
 		: m_editorInspector( m_mainRegistry )
+		, m_editorHierarchyWindow( m_mainRegistry )
 		, m_inputSystem( m_mainRegistry )
 		, m_logWindow( m_mainRegistry )
 		, m_cameraSystem( m_mainRegistry )
@@ -33,8 +37,6 @@ namespace Core
 		RegisterSubsystem( &m_cameraSystem );
 		RegisterSubsystem( &m_collisionDetectionSystem );
 
-		RegisterSubsystem( &m_editorInspector );
-
 		RegisterSubsystem( &m_inputSystem );
 		RegisterSubsystem( &m_cameraSystem );
 
@@ -46,6 +48,8 @@ namespace Core
 
 	void GameClass::EditorInit()
 	{
+		m_mainRegistry.ctx().emplace<Editor::EditorContextComponent>();
+		
 		/*Core::Entity CameraEntity = EditorUtilities.CreatePerspectiveCamera( "MainCamera" );
 		m_cameraSystemRef.SetActiveCamera( "MainCamera" );*/
 		//m_editorUtilities.CreateEditorCamera( CameraEntity, m_mainRegistry );
@@ -58,22 +62,34 @@ namespace Core
 		m_inputSystem.AddBinding( MouseBindings.GetDeviceId(), std::move( MouseBindings ) );
 		m_inputSystem.AddBinding( KeyboardBindings.GetDeviceId(), std::move( KeyboardBindings ) );
 
+		RegisterSubsystem( &m_editorInspector );
+		RegisterSubsystem( &m_editorHierarchyWindow );
+
 		RegisterComponentDetails();
 	}
 
 	void GameClass::DeInit()
 	{
+		DeregisterSubsystem( &m_inputSystem );
+		DeregisterSubsystem( &m_cameraSystem );
+		DeregisterSubsystem( &m_collisionDetectionSystem );
 
+		DeregisterSubsystem( &m_inputSystem );
+		DeregisterSubsystem( &m_cameraSystem );
+
+		DeregisterSubsystem( &m_logWindow );
+		DeregisterSubsystem( &m_window.GetRenderer() );
 	}
 
 	void GameClass::DeEditorInit()
 	{
-
+		DeregisterSubsystem( &m_editorInspector );
+		DeregisterSubsystem( &m_editorHierarchyWindow );
 	}
 
 	void GameClass::RegisterSubsystemInternal( Subsystem * subsystem )
 	{
-		//TODO: Sort based on update order
+		//#TODO: Sort based on update order
 		m_subsystems.push_back( subsystem );
 	}
 

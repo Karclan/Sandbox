@@ -21,15 +21,14 @@ namespace Graphics
 	struct CameraComponent
 	{
 	public:
-
 		glm::mat4 m_viewMatrix { 0.f };
 		glm::mat4 m_projectionMatrix { 0.f };
 
-		glm::vec3 m_direction { 0.f };
 		glm::vec3 m_up { 0.f, 1.f, 0.f };
-		glm::vec3 m_target { 0.f, 0.f, -1.f };
+		glm::vec3 m_target { 0.f, 0.f, 1.f }; //We're looking into the positive Z direction by default
+		//glm::vec3 m_direction { 0.f }; //Should really be a calculated unit vector from our position to the target. Might help with visualization
 
-		bool m_orbit { true };
+		bool m_orbit { true }; //Should be removed and put into a behaviour component
 
 		bool m_dirtyViewMatrix { true };
 		bool m_dirtyProjectionMatrix { true };
@@ -40,10 +39,6 @@ namespace Graphics
 		float m_aspectRatio = m_viewPortHeight / m_viewPortWidth;
 		
 		float m_orthoAspectScale = 1.f;
-		float m_orthoLeft{ 0 };
-		float m_orthoRight { 600 };
-		float m_orthoBottom { 800 };
-		float m_orthoTop { 0 };
 
 		float m_nearPlane { 0.1f };
 		float m_farPlane { 100.f };

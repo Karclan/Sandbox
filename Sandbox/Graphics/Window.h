@@ -108,8 +108,8 @@ namespace Graphics
 		glm::ivec2 m_windowPosition { 0 };
 		bool m_windowPositionChanged { false };
 
-		unsigned int m_screenWidth { 800 };
-		unsigned int m_screenHeight { 600 };
+		unsigned int m_screenWidth { 1920 };
+		unsigned int m_screenHeight { 1080 };
 
 		double m_lastFrameTime { 0.f };
 		double m_deltaFrameTime { 0.f };

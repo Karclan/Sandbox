@@ -253,6 +253,22 @@ namespace Core
 		//////////////////////////////////////////////////////////////////////////
 		//Context components
 		//////////////////////////////////////////////////////////////////////////
+		
+		/**
+		 * @brief Returns the context object, that is, a general purpose container.
+		 * @return The context object, that is, a general purpose container.
+		 */
+		auto & ctx() noexcept
+		{
+			return m_registry.ctx();
+		}
+
+		/*! @copydoc ctx */
+		const auto & ctx() const noexcept
+		{
+			return m_registry.ctx();
+		}
+		
 		template<typename Type>
 		[[nodiscard]] std::add_const_t<Type> & GetConstContextComponent() const
 		{

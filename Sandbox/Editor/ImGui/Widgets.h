@@ -52,5 +52,40 @@ namespace Editor
 			ImGui::Columns( 1 );
 			ImGui::PopID();
 		}
+
+		static void HelpMarker( const char * desc )
+		{
+			ImGui::TextDisabled( "(?)" );
+			if ( ImGui::IsItemHovered( ImGuiHoveredFlags_DelayShort ) && ImGui::BeginTooltip() )
+			{
+				ImGui::PushTextWrapPos( ImGui::GetFontSize() * 35.0f );
+				ImGui::TextUnformatted( desc );
+				ImGui::PopTextWrapPos();
+				ImGui::EndTooltip();
+			}
+		}
+
+
+		//if ( ImGui::BeginCombo( "Entities", comboLabel.c_str() ) )
+		//{
+		//	for ( size_t i = 0; i < entityListSize; i++ )
+		//	{
+		//		Core::Entity entity = entityList[ i ];
+		//		std::string const label = generateNameLabel( entity );
+		//		bool const is_selected = ( entityListIndex == i );
+		//		if ( ImGui::Selectable( label.c_str(), is_selected ) )
+		//		{
+		//			entityListIndex = i;
+		//			m_selectedEntity = entityList[ entityListIndex ];
+		//			setContextEntity();
+		//		}
+		//		if ( is_selected )  // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+		//		{
+		//			ImGui::SetItemDefaultFocus();
+		//		}
+		//	}
+		//	ImGui::EndCombo();
+		//}
 	};
+
 }

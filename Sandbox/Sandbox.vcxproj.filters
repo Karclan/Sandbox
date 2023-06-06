@@ -165,12 +165,6 @@
     <ClCompile Include="Physics\CollisionDetectionSystem.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
-    <ClCompile Include="Editor\EditorInspector.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor\SceneHierarchyWindow.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
     <ClCompile Include="Editor\ComponentDetails\ComponentDetailsBase.cpp">
       <Filter>Editor\ComponentDetails</Filter>
     </ClCompile>
@@ -212,6 +206,12 @@
     </ClCompile>
     <ClCompile Include="Imgui\backends\imgui_impl_opengl3.cpp">
       <Filter>Imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorHierarchyWindow.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorInspector.cpp">
+      <Filter>Editor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -350,12 +350,6 @@
     <ClInclude Include="Graphics\RenderStats.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Editor\EditorInspector.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="Editor\SceneHierarchyWindow.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
     <ClInclude Include="Editor\ComponentManifestComponent.h">
       <Filter>Editor</Filter>
     </ClInclude>
@@ -424,6 +418,15 @@
     </ClInclude>
     <ClInclude Include="Imgui\backends\imgui_impl_opengl3_loader.h">
       <Filter>Imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorContextComponent.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorHierarchyWindow.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorInspector.h">
+      <Filter>Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

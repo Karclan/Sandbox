@@ -17,9 +17,12 @@
 
 #include <array>
 #include <string>
+#include <numeric>
 
 namespace Editor
 {
+	constexpr float FloatDragSpeed = 0.01f;
+
 	//work on getting tags viewable in editor
 	//work on getting camera types switchable
 	void CameraComponentDetails::BuildDetailsInternal( Graphics::CameraComponent & inComponent ) const
@@ -61,37 +64,29 @@ namespace Editor
 				}
 			}
 
-			ImGui::InputDouble( "Camera Speed", &inComponent.m_cameraSpeed );
-			ImGui::DragFloat3( "Direction", &inComponent.m_direction.x );
-			ImGui::DragFloat3( "Target", &inComponent.m_target.x );
-			ImGui::DragFloat3( "Up", &inComponent.m_up.x );
+			ImGui::InputDouble( "Camera Speed", &inComponent.m_cameraSpeed, FloatDragSpeed );
+			//ImGui::DragFloat3( "Direction", &inComponent.m_direction.x );
+			ImGui::DragFloat3( "Target", &inComponent.m_target.x, FloatDragSpeed );
+			ImGui::DragFloat3( "Up", &inComponent.m_up.x, FloatDragSpeed );
 
 			inComponent.m_dirtyProjectionMatrix = true;
 			inComponent.m_dirtyViewMatrix = true;
 			ImGui::Checkbox( "Dirty Projection Matrix", &inComponent.m_dirtyProjectionMatrix );
 			ImGui::Checkbox( "Dirty View Matrix", &inComponent.m_dirtyViewMatrix );
 
-			ImGui::DragFloat( "Far Plane", &inComponent.m_farPlane );
-			ImGui::DragFloat( "Near Plane", &inComponent.m_nearPlane );
+			ImGui::DragFloat( "Far Plane", &inComponent.m_farPlane, FloatDragSpeed );
+			ImGui::DragFloat( "Near Plane", &inComponent.m_nearPlane, FloatDragSpeed );
 			ImGui::DragFloat( "FOV", &inComponent.m_fov );
 
 			ImGui::Checkbox( "Orbit", &inComponent.m_orbit );
 
-			//custom widgets needed
-			//inComponent.m_projectionMatrix;
-			//inComponent.m_viewMatrix;
-
 			ImGui::DragFloat( "View Port Height", &inComponent.m_viewPortHeight );
 			ImGui::DragFloat( "View Port Width", &inComponent.m_viewPortWidth );
 
-			//#TODO make the ortho bo/to/le/ri values be -+ aspect ratios
-			ImGui::DragFloat( "Ortho Aspect Zoom", &inComponent.m_orthoAspectScale );
+			ImGui::DragFloat( "Ortho Aspect Zoom", &inComponent.m_orthoAspectScale, FloatDragSpeed );
 
-			ImGui::DragFloat( "Ortho Bottom", &inComponent.m_orthoBottom );
-			ImGui::DragFloat( "Ortho Top", &inComponent.m_orthoTop );
-			ImGui::DragFloat( "Ortho Left", &inComponent.m_orthoLeft );
-			ImGui::DragFloat( "Ortho Right", &inComponent.m_orthoRight );
-
+			ImGui::Text( fmt::format( "Projection Matrix \n{}", inComponent.m_projectionMatrix ).c_str() );
+			ImGui::Text( fmt::format( "View Matrix \n{}", inComponent.m_projectionMatrix ).c_str() );
 		}
 	}
 
@@ -99,12 +94,12 @@ namespace Editor
 	{
 		if ( ImGui::CollapsingHeader( "Transform" ) )
 		{
-			ImGui::DragFloat3( "Position", &inComponent.Position.x );
-			ImGui::DragFloat3( "Scale", &inComponent.Scale.x );
+			ImGui::DragFloat3( "Position", &inComponent.Position.x , FloatDragSpeed );
+			ImGui::DragFloat3( "Scale", &inComponent.Scale.x, FloatDragSpeed );
 
 			glm::vec3 eulerRotation = glm::degrees( glm::eulerAngles( inComponent.RotationQuat ) );
 
-			ImGui::DragFloat3( "Rotation", &eulerRotation.x );
+			ImGui::DragFloat3( "Rotation", &eulerRotation.x, FloatDragSpeed );
 
 			inComponent.RotationQuat = glm::quat( glm::radians( eulerRotation ) );
 		}

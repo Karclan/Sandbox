@@ -2,6 +2,7 @@
 
 #include "ComponentDetails/GameComponentDetails.h"
 #include "Graphics/CameraComponent.h"
+#include "Graphics/TransformComponent.h"
 
 namespace Game
 {
@@ -25,14 +26,12 @@ namespace Game
 		m_cameraSystem.SetActiveCamera( "EditorCamera" );
 
 		Graphics::CameraComponent & cameraComponent = m_mainRegistry.GetComponent<Graphics::CameraComponent>( CameraEntity );
-		cameraComponent.m_farPlane = 1;
-		cameraComponent.m_nearPlane = -1;
+		cameraComponent.m_farPlane = 100;
+		cameraComponent.m_nearPlane = 0.1f;
 		cameraComponent.m_orbit = false;
-		cameraComponent.m_orthoAspectScale = 4.f;
-		cameraComponent.m_orthoBottom = -0.9f;
-		cameraComponent.m_orthoTop = 0.9f;
-		cameraComponent.m_orthoLeft = 1.6f;
-		cameraComponent.m_orthoRight = -1.6f;
+		cameraComponent.m_orthoAspectScale = 10.f;
+		Graphics::TransformComponent & transformComponent = m_mainRegistry.GetComponent<Graphics::TransformComponent>( CameraEntity );
+		transformComponent.Position.z = -1.f;
 		GameClass::EditorInit();
 	}
 

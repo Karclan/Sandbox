@@ -4,6 +4,7 @@
 
 #include "../Editor/EditorUtilities.h"
 #include "../Editor/EditorInspector.h"
+#include "../Editor/EditorHierarchyWindow.h"
 #include "../Input/InputSystem.h"
 #include "../Utils/LoggingWindow.h"
 #include "../Graphics/CameraSystem.h"
@@ -127,6 +128,7 @@ namespace Core
 		//Editor
 		Editor::Utilities m_editorUtilities {};
 		Editor::EditorInspector m_editorInspector;
+		Editor::EditorHierarchyWindow m_editorHierarchyWindow;
 
 		//Core Systems
 		Input::InputSystem m_inputSystem;

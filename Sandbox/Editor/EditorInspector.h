@@ -28,10 +28,7 @@ namespace Editor
 		void BuildWindow( double deltaTime ) override;
 
 	private:
-
 		void RegisterComponentDetailsInternal(entt::type_info, std::unique_ptr<ComponentDetails> && detailsClass );
-
-		Core::Entity m_InspectedEntity = Core::NullEntity;
 
 		struct InfoDelegatePair
 		{
