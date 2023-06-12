@@ -115,6 +115,7 @@ namespace Graphics
 		unsigned int m_renderBufferObject { 0 };
 
 		bool m_useFrameBufferObject { true };
+		bool m_firstTimeRenderingSubWindow { m_useFrameBufferObject };
 		ImVec2 m_sceneSize { 800, 600 };
 
 		std::vector< std::shared_ptr<ShaderProgram> > m_shaderList;

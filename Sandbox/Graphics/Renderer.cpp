@@ -12,6 +12,7 @@
 #include "CameraComponent.h"
 #include "Mesh.h"
 #include "GraphicsTags.h"
+#include "CameraSystem.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -295,8 +296,25 @@ namespace Graphics
 	{
 		if ( m_useFrameBufferObject )
 		{
+			if ( m_firstTimeRenderingSubWindow )
+			{
+				m_registry.ForView<CameraComponent, ActiveCameraTag>( [this] ( CameraComponent & cameraComponent )
+					{
+						cameraComponent.m_viewPortHeight = static_cast< float >( m_sceneSize.y );
+						cameraComponent.m_viewPortWidth = static_cast< float >( m_sceneSize.x );
+						cameraComponent.m_aspectRatio = static_cast< float >( ( cameraComponent.m_viewPortWidth ) / ( cameraComponent.m_viewPortHeight > 0 ? cameraComponent.m_viewPortHeight : 1.f ) );
+						cameraComponent.m_dirtyProjectionMatrix = true;
+						cameraComponent.m_dirtyViewMatrix = true;
+					} );
+
+				CameraSystem::InternalCameraUpdate( m_registry );
+				m_firstTimeRenderingSubWindow = false;
+			}
+
 			glBindFramebuffer( GL_FRAMEBUFFER, m_frameBufferObject );
 			glViewport( 0, 0, static_cast< GLsizei >( m_sceneSize.x ), static_cast< GLsizei >( m_sceneSize.y ) );
+
+		
 		}
 
 		glClearColor( 0.2f, 0.3f, 0.3f, 1.0f );

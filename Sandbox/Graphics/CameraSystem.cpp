@@ -66,8 +66,34 @@ namespace Graphics
 	{
 		UNUSED( deltaTime );
 
-		m_registry.ForView<CameraComponent, TransformComponent>(
-			[this] ( CameraComponent & cameraComponent, TransformComponent & transformComponent )
+		InternalCameraUpdate( m_registry );
+
+		//Camera Controls
+	}
+
+	void CameraSystem::Update( double deltaTime ) noexcept
+	{
+		UNUSED( deltaTime );
+	}
+
+	void CameraSystem::BuildWindow( double deltaTime )
+	{
+		if ( ImGui::BeginMainMenuBar() )
+		{
+			if ( ImGui::BeginMenu( "Cameras" ) )
+			{
+				ImGui::EndMenu();
+			}
+			ImGui::EndMainMenuBar();
+		}
+
+		m_cameraInspector.BuildWindow( deltaTime );
+	}
+
+	void CameraSystem::InternalCameraUpdate( Core::Registry & registry )
+	{
+		registry.ForView<CameraComponent, TransformComponent>(
+			[] ( CameraComponent & cameraComponent, TransformComponent & transformComponent )
 			{
 				if ( cameraComponent.m_dirtyProjectionMatrix )
 				{
@@ -98,7 +124,7 @@ namespace Graphics
 							break;
 						}
 					}
-					
+
 				}
 
 				if ( cameraComponent.m_dirtyViewMatrix )
@@ -138,7 +164,7 @@ namespace Graphics
 							}
 						}
 
-						
+
 					}
 					else
 					{
@@ -164,35 +190,10 @@ namespace Graphics
 								Utils::Logger::LogMessage( Utils::LogType::Warning, "Unhandled Camera Perspective type!\n" );
 								break;
 							}
-						}					
+						}
 					}
 				}
 
 			} );
-
-		//Camera Controls
 	}
-
-	void CameraSystem::Update( double deltaTime ) noexcept
-	{
-		UNUSED( deltaTime );
-	}
-
-	void CameraSystem::BuildWindow( double deltaTime )
-	{
-		if ( ImGui::BeginMainMenuBar() )
-		{
-			if ( ImGui::BeginMenu( "Cameras" ) )
-			{
-				ImGui::EndMenu();
-			}
-			ImGui::EndMainMenuBar();
-		}
-
-		m_cameraInspector.BuildWindow( deltaTime );
-
-
-
-	}
-
 }
