@@ -8,10 +8,6 @@
 
 namespace Graphics
 {
-	using namespace entt::literals;
-	using ActiveCameraTag = entt::tag<"ActiveCamera"_hs>;
-
-
 	enum class ProjectionType : uint8_t
 	{
 		Orthographic,

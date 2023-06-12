@@ -16,7 +16,7 @@ namespace Editor
 	{
 	public:
 		template<typename key, typename value>
-		static void MapContainerDisplay( std::map<key, value> const & map, int & selectedIndexVar, const char * KeyName, const char * ValueName = ""  )
+		static void MapContainerDisplay( std::map<key, value> const & map, int & selectedIndexVar, const char * KeyName, const char * ValueName = "" )
 		{
 			ImGui::PushID( fmt::format( "{}MapColums", KeyName ).c_str() );
 			ImGui::Columns( 2, fmt::format( "{}MapColums", KeyName ).c_str() );
@@ -65,6 +65,30 @@ namespace Editor
 			}
 		}
 
+		//static bool ComboHelper( const char * Title, std::string & comboLabel, auto & container, size_t containerSize, const char * labelFormat, int & selectionIndex )
+		//{
+		//	bool selectionUpdated = false;
+		//	if ( ImGui::BeginCombo( Title, comboLabel.c_str() ) )
+		//	{
+		//		for ( size_t i = 0; i < containerSize; i++ )
+		//		{
+		//			auto element = container[ i ];
+		//			std::string const label = fmt::format( labelFormat, element );
+		//			bool const is_selected = ( selectionIndex == i );
+		//			if ( ImGui::Selectable( label.c_str(), is_selected ) )
+		//			{
+		//				selectionIndex = static_cast<int>(i);
+		//				selectionUpdated = true;
+		//			}
+		//			if ( is_selected )  // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+		//			{
+		//				ImGui::SetItemDefaultFocus();
+		//			}
+		//		}
+		//		ImGui::EndCombo();
+		//	}
+		//	return selectionUpdated;
+		//}
 
 		//if ( ImGui::BeginCombo( "Entities", comboLabel.c_str() ) )
 		//{

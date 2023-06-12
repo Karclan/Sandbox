@@ -7,6 +7,7 @@
 #include "../Graphics/ShaderComponent.h"
 #include "../Graphics/Shader.h"
 #include "../Graphics/Renderer.h"
+#include "../Graphics/GraphicsTags.h"
 
 namespace Editor
 {

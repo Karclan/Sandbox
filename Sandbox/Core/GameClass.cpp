@@ -7,6 +7,7 @@
 #include "../Graphics/ComponentDetails/GraphicsComponentsDetails.h"
 #include "../Physics/ComponentDetails/PhysicsComponentsDetails.h"
 #include "../Generic/ComponentDetails/GenericComponentsDetails.h"
+#include "../Graphics/ComponentDetails/GraphicsTagsDetails.h"
 
 #include "../Editor/EditorBindings.h"
 #include "../Editor/EditorContextComponent.h"
@@ -168,18 +169,21 @@ namespace Core
 
 	void GameClass::RegisterComponentDetails()
 	{
-		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::CameraComponentDetails>() ) );
+		m_editorInspector.RegisterNameComponentDetailsView( std::move( std::make_unique<Editor::NameComponentDetails>() ) );
+
 		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::TransformComponentDetails>() ) );
-		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::MeshComponentDetails>() ) );
-		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::ShaderComponentDetails>() ) );
-		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::TextureComponentDetails>() ) );
+		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::CameraComponentDetails>() ) );
 
 		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::CollisionComponentDetails>() ) );
 		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::SquareExtentsDetails>() ) );
 		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::CircleExtentsDetails>() ) );
 		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::SquareExtentsDebugRenderComponentDetails>() ) );
 
-		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::NameComponentDetails>() ) );
+		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::MeshComponentDetails>() ) );
+		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::ShaderComponentDetails>() ) );
+		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::TextureComponentDetails>() ) );
+
+		m_editorInspector.RegisterTagDetailsView( std::move( std::make_unique<Editor::ActiveCameraTagDetails>() ) );
 	}
 
 	void GameClass::SortSubsytems() noexcept

@@ -428,6 +428,18 @@
     <ClInclude Include="Editor\EditorInspector.h">
       <Filter>Editor</Filter>
     </ClInclude>
+    <ClInclude Include="Editor\ComponentDetails\GenericTagsDetails.h">
+      <Filter>Generic\ComponentDetails</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GraphicsTags.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\TemplateUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ComponentDetails\GraphicsTagsDetails.h">
+      <Filter>Graphics\ComponentDetails</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Imgui\misc\README.txt">

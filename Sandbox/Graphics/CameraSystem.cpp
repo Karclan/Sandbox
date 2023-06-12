@@ -5,6 +5,7 @@
 
 #include "CameraComponent.h"
 #include "TransformComponent.h"
+#include "GraphicsTags.h"
 
 #include "imgui.h"
 

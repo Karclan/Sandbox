@@ -1,6 +1,7 @@
 #pragma once
 
 #include "entt/core/type_info.hpp"
+#include <type_traits>
 
 namespace Editor
 {
@@ -9,7 +10,7 @@ namespace Editor
 	public:
 		constexpr ComponentDetails() = default;
 		virtual ~ComponentDetails() = default;
-		
+
 		virtual constexpr entt::type_info GetHandledType() const = 0;
 
 		virtual void BuildDetailsWindow( void * componentPtr ) const = 0;
@@ -24,7 +25,7 @@ namespace Editor
 		constexpr TComponentDetails() = default;
 		virtual ~TComponentDetails() = default;
 
-		constexpr entt::type_info GetHandledType() const override { return m_HandledType; }
+		constexpr entt::type_info GetHandledType() const override { return entt::type_id<Component>(); }
 
 		void BuildDetailsWindow( void * componentPtr ) const override
 		{
@@ -38,7 +39,6 @@ namespace Editor
 	protected:
 		virtual void BuildDetailsInternal( Component & inComponent ) const = 0;
 
-		//for some reason can't be constexpr??
-		const entt::type_info m_HandledType { entt::type_id<Component>() };
+		//static const entt::type_info m_HandledType { entt::type_id<Component>() };
 	};
 }

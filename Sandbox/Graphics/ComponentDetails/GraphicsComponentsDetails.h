@@ -42,4 +42,5 @@ namespace Editor
 	protected:
 		void BuildDetailsInternal( Graphics::TextureComponent & inComponent ) const override;
 	};
+
 }

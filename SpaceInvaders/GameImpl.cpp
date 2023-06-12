@@ -31,7 +31,7 @@ namespace Game
 		cameraComponent.m_orbit = false;
 		cameraComponent.m_orthoAspectScale = 10.f;
 		Graphics::TransformComponent & transformComponent = m_mainRegistry.GetComponent<Graphics::TransformComponent>( CameraEntity );
-		transformComponent.Position.z = -1.f;
+		transformComponent.Position.z = -24.f; //For the sake of switching between ortho and perspective
 		GameClass::EditorInit();
 	}
 

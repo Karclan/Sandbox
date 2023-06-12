@@ -464,6 +464,7 @@
     <ClInclude Include="Core\Subsystem.h" />
     <ClInclude Include="Editor\ArcballBehaviour.h" />
     <ClInclude Include="Editor\ComponentDetails\ComponentDetailsBase.h" />
+    <ClInclude Include="Editor\ComponentDetails\GenericTagsDetails.h" />
     <ClInclude Include="Editor\ComponentManifestComponent.h" />
     <ClInclude Include="Editor\EditorBindings.h" />
     <ClInclude Include="Editor\EditorContextComponent.h" />
@@ -479,7 +480,9 @@
     <ClInclude Include="Graphics\CameraInspector.h" />
     <ClInclude Include="Graphics\CameraSystem.h" />
     <ClInclude Include="Graphics\ComponentDetails\GraphicsComponentsDetails.h" />
+    <ClInclude Include="Graphics\ComponentDetails\GraphicsTagsDetails.h" />
     <ClInclude Include="Graphics\Cube.h" />
+    <ClInclude Include="Graphics\GraphicsTags.h" />
     <ClInclude Include="Graphics\Mesh.h" />
     <ClInclude Include="Graphics\MeshComponent.h" />
     <ClInclude Include="Graphics\MeshLoader.h" />
@@ -527,6 +530,7 @@
     <ClInclude Include="Utils\format.h" />
     <ClInclude Include="Utils\Logger.h" />
     <ClInclude Include="Utils\LoggingWindow.h" />
+    <ClInclude Include="Utils\TemplateUtils.h" />
     <ClInclude Include="Utils\UnusedMacro.h" />
   </ItemGroup>
   <ItemGroup>
