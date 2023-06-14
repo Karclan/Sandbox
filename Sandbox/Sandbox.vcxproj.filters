@@ -452,6 +452,9 @@
     <ClInclude Include="Input\InputStatsComponent.h">
       <Filter>Input</Filter>
     </ClInclude>
+    <ClInclude Include="Core\ResourceType.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Imgui\misc\README.txt">

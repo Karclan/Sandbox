@@ -462,6 +462,7 @@
     <ClInclude Include="Core\Entity.h" />
     <ClInclude Include="Core\GameClass.h" />
     <ClInclude Include="Core\ResourceManager.h" />
+    <ClInclude Include="Core\ResourceType.h" />
     <ClInclude Include="Core\Subsystem.h" />
     <ClInclude Include="Editor\ArcballBehaviour.h" />
     <ClInclude Include="Editor\ComponentDetails\ComponentDetailsBase.h" />

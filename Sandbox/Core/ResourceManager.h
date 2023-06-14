@@ -3,6 +3,9 @@
 #include <map>
 #include <string>
 
+#include "Subsystem.h"
+#include "ResourceType.h"
+
 namespace Graphics
 {
     class Renderer;
@@ -10,16 +13,15 @@ namespace Graphics
 
 namespace Core
 {
-    using ResourceId = unsigned int;
-
-    class ResourceManager
+    
+    class ResourceManager : public Subsystem, public ImGuiWindowBuilder
     {
     public:
-        ResourceManager();
-        ~ResourceManager();
+        ResourceManager() = default;
+        ~ResourceManager() = default;
 
-        ResourceId createOrLoadShader();
-        ResourceId createOrLoadTexture();
+        ResourceId CreateOrLoadShader();
+        ResourceId CreateOrLoadTexture();
 
     private:
         std::map<std::string, ResourceId> m_loadedResourceMap;
