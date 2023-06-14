@@ -1,5 +1,7 @@
 #include "Window.h"
 
+#include "RenderStats.h"
+
 #include "../Core/CoreRegistry.h"
 #include "../Input/InputSystem.h"
 #include "../Input/InputState.h"
@@ -15,101 +17,101 @@
 
 #include <iostream>
 
-void APIENTRY glDebugOutput(GLenum source,
+void APIENTRY glDebugOutput( GLenum source,
 	GLenum type,
 	unsigned int id,
 	[[maybe_unused]] GLenum severity,
 	[[maybe_unused]] GLsizei length,
-	const char* message,
-	[[maybe_unused]] const void* userParam)
+	const char * message,
+	[[maybe_unused]] const void * userParam )
 {
-	if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return; // ignore these non-significant error codes
+	if ( id == 131169 || id == 131185 || id == 131218 || id == 131204 ) return; // ignore these non-significant error codes
 
 	std::string debugMessage = "--------------- \n";
-	debugMessage.append("Debug message (");
-	debugMessage.append(std::to_string(id));
-	debugMessage.append("): ");
-	debugMessage.append(message);
-	debugMessage.append("\n");
+	debugMessage.append( "Debug message (" );
+	debugMessage.append( std::to_string( id ) );
+	debugMessage.append( "): " );
+	debugMessage.append( message );
+	debugMessage.append( "\n" );
 
-	debugMessage.append("Source :");
-	switch (source)
+	debugMessage.append( "Source :" );
+	switch ( source )
 	{
-	case GL_DEBUG_SOURCE_API:
-		debugMessage.append("API\n");
-		break;
-	case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
-		debugMessage.append("System\n");
-		break;
-	case GL_DEBUG_SOURCE_SHADER_COMPILER:
-		debugMessage.append("Compiler\n");
-		break;
-	case GL_DEBUG_SOURCE_THIRD_PARTY:
-		debugMessage.append("Third Party\n");
-		break;
-	case GL_DEBUG_SOURCE_APPLICATION:
-		debugMessage.append("Application\n");
-		break;
-	case GL_DEBUG_SOURCE_OTHER:
-		debugMessage.append("Other\n");
-		break;
-	default:
-		debugMessage.append("Unknown source\n");
-		break;
+		case GL_DEBUG_SOURCE_API:
+			debugMessage.append( "API\n" );
+			break;
+		case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
+			debugMessage.append( "System\n" );
+			break;
+		case GL_DEBUG_SOURCE_SHADER_COMPILER:
+			debugMessage.append( "Compiler\n" );
+			break;
+		case GL_DEBUG_SOURCE_THIRD_PARTY:
+			debugMessage.append( "Third Party\n" );
+			break;
+		case GL_DEBUG_SOURCE_APPLICATION:
+			debugMessage.append( "Application\n" );
+			break;
+		case GL_DEBUG_SOURCE_OTHER:
+			debugMessage.append( "Other\n" );
+			break;
+		default:
+			debugMessage.append( "Unknown source\n" );
+			break;
 	}
 
-	debugMessage.append("Type: ");
-	switch (type)
+	debugMessage.append( "Type: " );
+	switch ( type )
 	{
-	case GL_DEBUG_TYPE_ERROR:
-		debugMessage.append("Error\n");
-		break;
-	case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
-		debugMessage.append("Deprecated Behaviour\n");
-		break;
-	case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
-		debugMessage.append("Undefined Behaviour\n");
-		break;
-	case GL_DEBUG_TYPE_PORTABILITY:
-		debugMessage.append("Portability\n");
-		break;
-	case GL_DEBUG_TYPE_PERFORMANCE:
-		debugMessage.append("Performance\n");
-		break;
-	case GL_DEBUG_TYPE_MARKER:
-		debugMessage.append("Marker\n");
-		break;
-	case GL_DEBUG_TYPE_PUSH_GROUP:
-		debugMessage.append("Push Group\n");
-		break;
-	case GL_DEBUG_TYPE_POP_GROUP:
-		debugMessage.append("Pop Group\n"); break;
-	case GL_DEBUG_TYPE_OTHER:
-		debugMessage.append("Other\n");
-		break;
-	default:
-		debugMessage.append("Unknown type\n");
-		break;
+		case GL_DEBUG_TYPE_ERROR:
+			debugMessage.append( "Error\n" );
+			break;
+		case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+			debugMessage.append( "Deprecated Behaviour\n" );
+			break;
+		case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+			debugMessage.append( "Undefined Behaviour\n" );
+			break;
+		case GL_DEBUG_TYPE_PORTABILITY:
+			debugMessage.append( "Portability\n" );
+			break;
+		case GL_DEBUG_TYPE_PERFORMANCE:
+			debugMessage.append( "Performance\n" );
+			break;
+		case GL_DEBUG_TYPE_MARKER:
+			debugMessage.append( "Marker\n" );
+			break;
+		case GL_DEBUG_TYPE_PUSH_GROUP:
+			debugMessage.append( "Push Group\n" );
+			break;
+		case GL_DEBUG_TYPE_POP_GROUP:
+			debugMessage.append( "Pop Group\n" ); break;
+		case GL_DEBUG_TYPE_OTHER:
+			debugMessage.append( "Other\n" );
+			break;
+		default:
+			debugMessage.append( "Unknown type\n" );
+			break;
 	}
 
-	debugMessage.append("Severity :");
-	switch (severity)
+	debugMessage.append( "Severity :" );
+	switch ( severity )
 	{
-	case GL_DEBUG_SEVERITY_HIGH:
-		debugMessage.append("high\n");
-		break;
-	case GL_DEBUG_SEVERITY_MEDIUM:
-		debugMessage.append("medium\n");
-		break;
-	case GL_DEBUG_SEVERITY_LOW:
-		debugMessage.append("low\n");
-		break;
-	case GL_DEBUG_SEVERITY_NOTIFICATION:
-		debugMessage.append("notification\n");
-		break;
-	default:
-		debugMessage.append("Unknown severity\n");
-		break;
+		case GL_DEBUG_SEVERITY_HIGH:
+			debugMessage.append( "high\n" );
+			break;
+		case GL_DEBUG_SEVERITY_MEDIUM:
+			debugMessage.append( "medium\n" );
+			break;
+		case GL_DEBUG_SEVERITY_LOW:
+			debugMessage.append( "low\n" );
+			break;
+		case GL_DEBUG_SEVERITY_NOTIFICATION:
+			debugMessage.append( "notification\n" );
+			break;
+		default:
+			debugMessage.append( "Unknown severity\n" );
+			break;
 	}
 
 	Utils::Logger::LogMessage( Utils::LogType::Error, debugMessage.c_str() );
@@ -117,27 +119,27 @@ void APIENTRY glDebugOutput(GLenum source,
 
 namespace Graphics
 {
-	Window* Window::GLFWCallbackWrapper::s_window = nullptr;
+	Window * Window::GLFWCallbackWrapper::s_window = nullptr;
 
-	Window::Window(Core::Registry& registry, Input::InputSystem& inInputSystem)
-		: m_registry(registry)
-		, m_inputSystem(inInputSystem)
+	Window::Window( Core::Registry & registry, Input::InputSystem & inInputSystem )
+		: m_registry( registry )
+		, m_inputSystem( inInputSystem )
 	{
-		GLFWCallbackWrapper::SetApplication(this);
+		GLFWCallbackWrapper::SetApplication( this );
 		CreateWindow();
-		m_renderer = std::make_unique<Renderer>(registry);
+		m_renderer = std::make_unique<Renderer>( registry, m_screenWidth, m_screenHeight );
 		m_renderer->Init();
 	}
 
-	Window::Window(unsigned int width, unsigned int height, Core::Registry& registry, Input::InputSystem& inInputSystem)
-		: m_registry(registry)
-		, m_inputSystem(inInputSystem)
-		, m_screenWidth(width)
-		, m_screenHeight(height)
+	Window::Window( unsigned int width, unsigned int height, Core::Registry & registry, Input::InputSystem & inInputSystem )
+		: m_registry( registry )
+		, m_inputSystem( inInputSystem )
+		, m_screenWidth( width )
+		, m_screenHeight( height )
 	{
-		GLFWCallbackWrapper::SetApplication(this);
+		GLFWCallbackWrapper::SetApplication( this );
 		CreateWindow();
-		m_renderer = std::make_unique<Renderer>(registry);
+		m_renderer = std::make_unique<Renderer>( registry, m_screenWidth, m_screenHeight );
 		m_renderer->Init();
 	}
 
@@ -155,54 +157,63 @@ namespace Graphics
 	void Window::CreateWindow()
 	{
 		glfwInit();
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+		glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 4 );
+		glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 3 );
+		glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
+		glfwWindowHint( GLFW_OPENGL_DEBUG_CONTEXT, true );
 		//glfwWindowHint( GLFW_DOUBLEBUFFER, GL_FALSE );
 
 		// glfw window creation
-		GLFWwindow* window = glfwCreateWindow(m_screenWidth, m_screenHeight, "Sandbox", NULL, NULL);
+		GLFWwindow * window = glfwCreateWindow( m_screenWidth, m_screenHeight, "Sandbox", NULL, NULL );
 		// glfw: initialize and configure
-		if (!window)
+		if ( !window )
 		{
-			Utils::Logger::LogMessage(Utils::LogType::Error, "Failed to create GLFW window.\n");
+			Utils::Logger::LogMessage( Utils::LogType::Error, "Failed to create GLFW window.\n" );
 			glfwTerminate();
 			m_glfwWindow = nullptr;
 		}
-		glfwMakeContextCurrent(window);
-		glfwSetFramebufferSizeCallback(window, GLFWCallbackWrapper::FramebufferSizeCallback);
+		glfwMakeContextCurrent( window );
+
+		glfwSetWindowPosCallback( window, GLFWCallbackWrapper::WindowPositionCallback );
+		glfwSetWindowSizeCallback( window, GLFWCallbackWrapper::WindowSizeCallback );
+		glfwSetWindowCloseCallback( window, GLFWCallbackWrapper::WindowCloseCallback );
+		glfwSetWindowRefreshCallback( window, GLFWCallbackWrapper::WindowRefreshCabllack );
+		glfwSetWindowFocusCallback( window, GLFWCallbackWrapper::WindowFocusCallback );
+		glfwSetWindowIconifyCallback( window, GLFWCallbackWrapper::WindowIconifyCallback );
+		glfwSetWindowMaximizeCallback( window, GLFWCallbackWrapper::WindowMaximizedCallback );
+		glfwSetFramebufferSizeCallback( window, GLFWCallbackWrapper::FramebufferSizeCallback );
+		glfwSetWindowContentScaleCallback( window, GLFWCallbackWrapper::WindowContentScaleCallback );
+
 		glfwSetKeyCallback( window, GLFWCallbackWrapper::KeyCallback );
 		glfwSetMouseButtonCallback( window, GLFWCallbackWrapper::MouseButtonCallback );
 		glfwSetScrollCallback( window, GLFWCallbackWrapper::ScrollCallback );
 		glfwSetCursorPosCallback( window, GLFWCallbackWrapper::CursorPositionCallback );
-
 		// tell GLFW to capture our mouse
 	   // glfwSetInputMode( window, GLFW_CURSOR, GLFW_CURSOR_DISABLED );
-		glfwSwapInterval(0);
+		glfwSwapInterval( 0 );
 
 		// glad: load all OpenGL function pointers
-		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+		if ( !gladLoadGLLoader( ( GLADloadproc ) glfwGetProcAddress ) )
 		{
-			Utils::Logger::LogMessage(Utils::LogType::Error, "Failed to initalize GLAD.\n");
+			Utils::Logger::LogMessage( Utils::LogType::Error, "Failed to initalize GLAD.\n" );
 			m_glfwWindow = nullptr;
 		}
 
 		// enable OpenGL debug context if context allows for debug context
-		int flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
-		if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
+		int flags; glGetIntegerv( GL_CONTEXT_FLAGS, &flags );
+		if ( flags & GL_CONTEXT_FLAG_DEBUG_BIT )
 		{
-			glEnable(GL_DEBUG_OUTPUT);
-			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); // makes sure errors are displayed synchronously
-			glDebugMessageCallback(glDebugOutput, NULL);
-			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+			glEnable( GL_DEBUG_OUTPUT );
+			glEnable( GL_DEBUG_OUTPUT_SYNCHRONOUS ); // makes sure errors are displayed synchronously
+			glDebugMessageCallback( glDebugOutput, NULL );
+			glDebugMessageControl( GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE );
 		}
 
 		m_glfwWindow = window;
 
 		InitImgui();
 
-		glEnable(GL_DEPTH_TEST);
+		glEnable( GL_DEPTH_TEST );
 	}
 
 	void Window::PollInput()
@@ -216,7 +227,32 @@ namespace Graphics
 
 	void Window::PreRender()
 	{
-		m_windowPositionChanged = false;
+		if ( m_windowPositionChanged )
+		{
+			RenderStats & renderStats = m_registry.ctx().get< RenderStats >();
+			renderStats.ScreenStartingPosition = m_windowPosition;
+			m_windowPositionChanged = false;
+		}
+
+		if ( m_windowSizeChanged || m_frameBufferSizeChanged )
+		{
+			RenderStats & renderStats = m_registry.ctx().get< RenderStats >();
+			renderStats.ScreenDimensions = { m_screenWidth, m_screenHeight };
+
+			glViewport( 0, 0, m_screenWidth, m_screenHeight );
+			//Update camera
+			if ( m_windowSizeChanged )
+			{
+				m_renderer->ScreenSizeCallback( m_screenWidth, m_screenHeight );
+				m_windowSizeChanged = false;
+			}
+			if ( m_frameBufferSizeChanged )
+			{
+				m_renderer->FramebufferSizeCallback( m_screenWidth, m_screenHeight );
+				m_frameBufferSizeChanged = false;
+			}
+		}
+
 		//glFlush();
 		ImguiPreRender();
 
@@ -225,7 +261,7 @@ namespace Graphics
 
 		m_frameTimer += m_deltaFrameTime;
 		m_renderedFrames++;
-		if (m_frameTimer >= 1.f)
+		if ( m_frameTimer >= 1.f )
 		{
 			m_fps = m_renderedFrames;
 			m_renderedFrames = 0;
@@ -253,62 +289,155 @@ namespace Graphics
 		ImguiRender();
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-		glfwSwapBuffers(m_glfwWindow);
+		glfwSwapBuffers( m_glfwWindow );
 	}
 
 	bool Window::ShouldClose() const noexcept
 	{
-		return glfwWindowShouldClose(m_glfwWindow);
+		return glfwWindowShouldClose( m_glfwWindow );
 	}
 
-	bool Window::DrawLine(glm::vec3 A, glm::vec3 B, glm::vec4 colour, float thickness) noexcept
+	bool Window::DrawLine( glm::vec3 A, glm::vec3 B, glm::vec4 colour, float thickness ) noexcept
 	{
-		return m_renderer->DrawLine(A, B, colour, thickness);
+		return m_renderer->DrawLine( A, B, colour, thickness );
 	}
 
-	void Window::FramebufferSizeCallback(GLFWwindow* window, int width, int height)
-	{
-		UNUSED(window);
-
-		m_screenWidth = width;
-		m_screenHeight = width;
-		glViewport(0, 0, width, height);
-		//Update camera
-		m_renderer->FramebufferSizeCallback(width, height);
-	}
-
-	void Window::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
-	{
-		m_inputSystem.KeyAction(key, scancode, static_cast<Input::ActionState>(action), mods);
-	}
-
-	void Window::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
-	{
-		m_inputSystem.MouseAction(button, static_cast<Input::ActionState>(action), mods);
-	}
-
-	void Window::CursorPositionCallback(GLFWwindow* window, double xPosition, double yPosition)
-	{
-		m_inputSystem.UpdateCursorPosition(xPosition, yPosition);
-	}
-
-	void Window::ScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
-	{
-		m_inputSystem.ScrollAction(xOffset, yOffset);
-	}
+	//////////////////////////////////////////////////////////////////////////
+	//Window callbacks
+	//////////////////////////////////////////////////////////////////////////
 
 	void Window::WindowPositionCallback( GLFWwindow * window, int xPosition, int yPosition )
 	{
 		m_windowPosition = { xPosition, yPosition };
 		m_windowPositionChanged = true;
-		
 	}
+
+	void Window::WindowSizeCallback( GLFWwindow * window, int width, int height )
+	{
+		m_screenHeight = height;
+		m_screenWidth = width;
+		m_windowSizeChanged = true;
+	}
+
+	void Window::WindowCloseCallback( GLFWwindow * window )
+	{
+		//Unimplemented
+		// 
+		//The callback function is called directly after the close flag has been set. 
+		//It can be used for example to filter close requests and clear the close flag again 
+		//unless certain conditions are met.
+	}
+
+	void Window::WindowRefreshCabllack( GLFWwindow * window )
+	{
+		//Unimplemented
+		//
+		//The callback function is called when the contents of the window needs to be refreshed.
+		//On compositing window systems such as Aero, Compiz or Aqua, 
+		//where the window contents are saved off-screen,
+		//this callback might only be called when the window or framebuffer is resized.
+	}
+
+	void Window::WindowFocusCallback( GLFWwindow * window, int focused )
+	{
+		//Unimplemented
+		//Keep in mind that it can be very disruptive to the user when a window is forced to the top. 
+		//For a less disruptive way of getting the user's attention, see attention requests.
+		//The callback function receives changes in the input focus state of the window.
+		// 
+		//if ( focused )
+		//{
+		//	//Gained input focus
+		//}	
+		//else
+		//{
+		//	//Lost input focus
+		//}
+	}
+
+	void Window::WindowIconifyCallback( GLFWwindow * window, int iconified )
+	{
+		//Unimplemented
+		// 
+		//is function sets the iconification callback of the specified window, 
+		//which is called when the window is iconified or restored.
+		//if ( iconified )
+		//{
+		//	// The window was iconified
+		//}
+		//else
+		//{
+		//	// The window was restored
+		//}
+	}
+
+	void Window::WindowMaximizedCallback( GLFWwindow * window, int maximized )
+	{
+		//Unimplemented
+		//The callback function receives changes in the maximization state of the window.
+		// 
+		//if ( maximized )
+		//{
+		//	// The window was maximized
+		//}
+		//else
+		//{
+		//	// The window was restored
+		//}
+	}
+
+	void Window::FramebufferSizeCallback( GLFWwindow * window, int width, int height )
+	{
+		UNUSED( window );
+
+		m_screenWidth = width;
+		m_screenHeight = height;
+		m_frameBufferSizeChanged = true;
+
+	}
+
+	void Window::WindowContentScaleCallback( GLFWwindow * window, float xScale, float yScale )
+	{
+		//Unimplemented
+		/*The content scale is the ratio between the current DPI and the platform's default DPI.
+		  This is especially important for text and any UI elements.
+		  If the pixel dimensions of your UI scaled by this look appropriate on your machine then it
+		  should appear at a reasonable size on other machines regardless of their DPI and scaling settings.
+		  This relies on the system DPI and scaling settings being somewhat correct.
+		*/
+		//set_interface_scale(xscale, yscale);
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	//Input callbacks
+	//////////////////////////////////////////////////////////////////////////
+	void Window::KeyCallback( GLFWwindow * window, int key, int scancode, int action, int mods )
+	{
+		m_inputSystem.KeyAction( key, scancode, static_cast< Input::ActionState >( action ), mods );
+	}
+
+	void Window::MouseButtonCallback( GLFWwindow * window, int button, int action, int mods )
+	{
+		m_inputSystem.MouseAction( button, static_cast< Input::ActionState >( action ), mods );
+	}
+
+	void Window::CursorPositionCallback( GLFWwindow * window, double xPosition, double yPosition )
+	{
+		m_inputSystem.UpdateCursorPosition( xPosition, yPosition );
+	}
+
+	void Window::ScrollCallback( GLFWwindow * window, double xOffset, double yOffset )
+	{
+		m_inputSystem.ScrollAction( xOffset, yOffset );
+	}
+
+	//////////////////////////////////////////////////////////////////////////
 
 	void Window::ProcessInput()
 	{
-		if (glfwGetKey(m_glfwWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		if ( glfwGetKey( m_glfwWindow, GLFW_KEY_ESCAPE ) == GLFW_PRESS )
 		{
-			glfwSetWindowShouldClose(m_glfwWindow, true);
+			glfwSetWindowShouldClose( m_glfwWindow, true );
 		}
 	}
 
@@ -324,18 +453,18 @@ namespace Graphics
 		//Imgui render
 		ImGui::Render();
 		int display_w, display_h;
-		glfwGetFramebufferSize(m_glfwWindow, &display_w, &display_h);
-		glViewport(0, 0, display_w, display_h);
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		glfwGetFramebufferSize( m_glfwWindow, &display_w, &display_h );
+		glViewport( 0, 0, display_w, display_h );
+		ImGui_ImplOpenGL3_RenderDrawData( ImGui::GetDrawData() );
 
 		ImGui::EndFrame();
-		ImGuiIO& io = ImGui::GetIO();
-		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		ImGuiIO & io = ImGui::GetIO();
+		if ( io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable )
 		{
-			GLFWwindow* backup_current_context = glfwGetCurrentContext();
+			GLFWwindow * backup_current_context = glfwGetCurrentContext();
 			ImGui::UpdatePlatformWindows();
 			ImGui::RenderPlatformWindowsDefault();
-			glfwMakeContextCurrent(backup_current_context);
+			glfwMakeContextCurrent( backup_current_context );
 		}
 	}
 
@@ -343,7 +472,7 @@ namespace Graphics
 	{
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
-		ImGuiIO& io = ImGui::GetIO();
+		ImGuiIO & io = ImGui::GetIO();
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable; //Enable docking
@@ -352,51 +481,97 @@ namespace Graphics
 		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();
 
-		ImGuiStyle& style = ImGui::GetStyle();
-		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		ImGuiStyle & style = ImGui::GetStyle();
+		if ( io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable )
 		{
 			style.WindowRounding = 0.0f;
-			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+			style.Colors[ ImGuiCol_WindowBg ].w = 1.0f;
 		}
 
 		// Setup Platform/Renderer bindings
-		ImGui_ImplGlfw_InitForOpenGL(m_glfwWindow, true);
-		ImGui_ImplOpenGL3_Init("#version 330");
+		ImGui_ImplGlfw_InitForOpenGL( m_glfwWindow, true );
+		ImGui_ImplOpenGL3_Init( "#version 330" );
 	}
 
-	void Window::GLFWCallbackWrapper::FramebufferSizeCallback(GLFWwindow* window, int width, int height)
-	{
-		s_window->FramebufferSizeCallback(window, width, height);
-	}
 
-	void Window::GLFWCallbackWrapper::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
-	{
-		s_window->KeyCallback(window, key, scancode, action, mods);
-	}
-
-	void Window::GLFWCallbackWrapper::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
-	{
-		s_window->MouseButtonCallback(window, button, action, mods);
-	}
-
-	void Window::GLFWCallbackWrapper::CursorPositionCallback(GLFWwindow* window, double xPosition, double yPosition)
-	{
-		s_window->CursorPositionCallback(window, xPosition, yPosition);
-	}
-
-	void Window::GLFWCallbackWrapper::ScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
-	{
-		s_window->ScrollCallback(window, xOffset, yOffset);
-	}
+	//////////////////////////////////////////////////////////////////////////
+	//Window callbacks
+	//////////////////////////////////////////////////////////////////////////
 
 	void Window::GLFWCallbackWrapper::WindowPositionCallback( GLFWwindow * window, int xPosition, int yPosition )
 	{
 		s_window->WindowPositionCallback( window, xPosition, yPosition );
 	}
 
+	void Window::GLFWCallbackWrapper::WindowSizeCallback( GLFWwindow * window, int width, int height )
+	{
+		s_window->WindowSizeCallback( window, width, height );
+	}
+
+	void Window::GLFWCallbackWrapper::WindowCloseCallback( GLFWwindow * window )
+	{
+		s_window->WindowCloseCallback( window );
+	}
+
+	void Window::GLFWCallbackWrapper::WindowRefreshCabllack( GLFWwindow * window )
+	{
+		s_window->WindowRefreshCabllack( window );
+	}
+
+	void Window::GLFWCallbackWrapper::WindowFocusCallback( GLFWwindow * window, int focused )
+	{
+		s_window->WindowFocusCallback( window, focused );
+	}
+
+	void Window::GLFWCallbackWrapper::WindowIconifyCallback( GLFWwindow * window, int iconified )
+	{
+		s_window->WindowIconifyCallback( window, iconified );
+	}
+
+	void Window::GLFWCallbackWrapper::WindowMaximizedCallback( GLFWwindow * window, int maximized )
+	{
+		s_window->WindowMaximizedCallback( window, maximized );
+	}
+
+	void Window::GLFWCallbackWrapper::FramebufferSizeCallback( GLFWwindow * window, int width, int height )
+	{
+		s_window->FramebufferSizeCallback( window, width, height );
+	}
+
+	void Window::GLFWCallbackWrapper::WindowContentScaleCallback( GLFWwindow * window, float xScale, float yScale )
+	{
+		s_window->WindowContentScaleCallback( window, xScale, yScale );
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	//Input Callbacks
+	//////////////////////////////////////////////////////////////////////////
+
+	void Window::GLFWCallbackWrapper::KeyCallback( GLFWwindow * window, int key, int scancode, int action, int mods )
+	{
+		s_window->KeyCallback( window, key, scancode, action, mods );
+	}
+
+	void Window::GLFWCallbackWrapper::MouseButtonCallback( GLFWwindow * window, int button, int action, int mods )
+	{
+		s_window->MouseButtonCallback( window, button, action, mods );
+	}
+
+	void Window::GLFWCallbackWrapper::CursorPositionCallback( GLFWwindow * window, double xPosition, double yPosition )
+	{
+		s_window->CursorPositionCallback( window, xPosition, yPosition );
+	}
+
+	void Window::GLFWCallbackWrapper::ScrollCallback( GLFWwindow * window, double xOffset, double yOffset )
+	{
+		s_window->ScrollCallback( window, xOffset, yOffset );
+	}
+
 	void Window::GLFWCallbackWrapper::SetApplication( Window * window )
 	{
 		s_window = window;
 	}
+
+	//////////////////////////////////////////////////////////////////////////
 
 }

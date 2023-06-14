@@ -4,6 +4,7 @@
 #include "../Utils/UnusedMacro.h"
 
 #include "CameraComponent.h"
+#include "CameraStatsComponent.h"
 #include "TransformComponent.h"
 #include "GraphicsTags.h"
 
@@ -17,7 +18,7 @@ namespace Graphics
 		: Core::Subsystem( registry )
 		, m_cameraInspector( registry )
 	{
-
+		m_registry.ctx().emplace<CameraStats>();
 	}
 
 	Core::Entity CreateCamera( std::string && CameraName, ProjectionType ProjType, Core::Registry & Registry )
@@ -46,8 +47,10 @@ namespace Graphics
 	{
 		Utils::Logger::LogMessage( Utils::LogType::Info, "Changed Camera\n" );
 
-		m_registry.ForView<Graphics::CameraComponent const, Generic::NameComponent const>(
-			[this, &CameraName] ( Core::Entity entity, CameraComponent const & cameraComponent, Generic::NameComponent const & nameComponent )
+		Core::Entity newMainCamera = Core::NullEntity;
+
+		m_registry.ForView<CameraComponent const, Generic::NameComponent const>(
+			[this, &CameraName, &newMainCamera] ( Core::Entity entity, CameraComponent const & cameraComponent, Generic::NameComponent const & nameComponent )
 			{
 				if ( m_registry.HasComponent<ActiveCameraTag>( entity ) )
 				{
@@ -57,9 +60,13 @@ namespace Graphics
 				if ( nameComponent.Name == CameraName )
 				{
 					m_registry.AddComponent<ActiveCameraTag>( entity );
+					newMainCamera = entity;
 				}
 
 			} );
+
+		CameraStats & stats = m_registry.ctx().get<CameraStats>();
+		stats.m_mainCameraEntity = newMainCamera;
 	}
 
 	void CameraSystem::FixedUpdate( double deltaTime ) noexcept

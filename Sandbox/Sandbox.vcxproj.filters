@@ -213,6 +213,9 @@
     <ClCompile Include="Editor\EditorInspector.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
+    <ClCompile Include="Editor\EditorStatsViewer.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\ShaderProgram.h">
@@ -439,6 +442,15 @@
     </ClInclude>
     <ClInclude Include="Graphics\ComponentDetails\GraphicsTagsDetails.h">
       <Filter>Graphics\ComponentDetails</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\CameraStatsComponent.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorStatsViewer.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\InputStatsComponent.h">
+      <Filter>Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

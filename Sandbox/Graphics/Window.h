@@ -74,13 +74,20 @@ namespace Graphics
 			GLFWCallbackWrapper( GLFWCallbackWrapper && ) = delete;
 			~GLFWCallbackWrapper() = delete;
 
+			static void WindowPositionCallback( GLFWwindow * window, int xPosition, int yPosition );
+			static void WindowSizeCallback( GLFWwindow * window, int width, int height );
+			static void WindowCloseCallback( GLFWwindow * window );
+			static void WindowRefreshCabllack( GLFWwindow * window );
+			static void WindowFocusCallback( GLFWwindow * window, int focused );
+			static void WindowIconifyCallback( GLFWwindow * window, int iconified );
+			static void WindowMaximizedCallback( GLFWwindow * window, int maximized );
 			static void FramebufferSizeCallback( GLFWwindow * window, int width, int height );
+			static void WindowContentScaleCallback( GLFWwindow * window, float xScale, float yScale );
+
 			static void KeyCallback( GLFWwindow * window, int key, int scancode, int action, int mods );
 			static void MouseButtonCallback( GLFWwindow * window, int button, int action, int mods );
 			static void CursorPositionCallback( GLFWwindow * window, double xPosition, double yPosition );
 			static void ScrollCallback( GLFWwindow * window, double xOffset, double yOffset );
-
-			static void WindowPositionCallback( GLFWwindow * window, int xPosition, int yPosition );
 
 			static void SetApplication( Window * application );
 		private:
@@ -89,12 +96,20 @@ namespace Graphics
 
 		void CreateWindow();
 
+		void WindowPositionCallback( GLFWwindow * window, int xPosition, int yPosition );
+		void WindowSizeCallback( GLFWwindow * window, int width, int height );
+		void WindowCloseCallback( GLFWwindow * window );
+		void WindowRefreshCabllack( GLFWwindow * window );
+		void WindowFocusCallback( GLFWwindow * window, int focused );
+		void WindowIconifyCallback( GLFWwindow * window, int iconified );
+		void WindowMaximizedCallback( GLFWwindow * window, int maximized );
 		void FramebufferSizeCallback( GLFWwindow * window, int width, int height );
+		void WindowContentScaleCallback( GLFWwindow * window, float xScale, float yScale );
+
 		void KeyCallback( GLFWwindow * window, int key, int scancode, int action, int mods );
 		void MouseButtonCallback( GLFWwindow * window, int button, int action, int mods );
 		void CursorPositionCallback( GLFWwindow * window, double xPosition, double yPosition );
 		void ScrollCallback( GLFWwindow * window, double xOffset, double yOffset );
-		void WindowPositionCallback( GLFWwindow * window, int xPosition, int yPosition );
 
 		void ProcessInput();
 		void InitImgui();
@@ -107,6 +122,8 @@ namespace Graphics
 
 		glm::ivec2 m_windowPosition { 0 };
 		bool m_windowPositionChanged { false };
+		bool m_windowSizeChanged { false };
+		bool m_frameBufferSizeChanged { false };
 
 		unsigned int m_screenWidth { 1920 };
 		unsigned int m_screenHeight { 1080 };

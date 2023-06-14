@@ -8,7 +8,7 @@ namespace Game
 {
 
 	SpaceInvadersGame::SpaceInvadersGame() 
-		: m_PlayerControllerSubsytem( GetRegistry(), GetWindow() )
+		: m_PlayerControllerSubsytem( GetRegistry(), GetWindow(), GetInputSystem() )
 	{
 
 	}

@@ -6,6 +6,7 @@
 #include "Physics/CollisionComponent.h"
 
 #include "Input/InputSystem.h"
+#include "Input/InputStatsComponent.h"
 #include "Imgui/imgui.h"
 
 #include "Graphics/TransformComponent.h"
@@ -40,30 +41,30 @@ namespace Game
 		UNUSED( deltaTime );
 
 		Graphics::RenderStats const renderStats = m_registry.GetConstContextComponent<Graphics::RenderStats const>();
-
+		Input::InputStatsComponent const inputState = m_registry.ctx().get<Input::InputStatsComponent const>();
 		//Get position of mouse
 		//Get position of render window
 		//when mouse is within the bounds of the render window
 		//calculate the mouse's position related to that top right position
 
-		cachedViewPortSize = { renderStats.ViewPortWidth, renderStats.ViewPortHeight };
-		cachedViewPortStart = { renderStats.ViewPortStartX, renderStats.ViewPortStartY };
+		cachedViewPortSize =  renderStats.ViewportDimensions;
+		cachedViewPortStart = renderStats.ViewportStartingPosition;
 		glm::dvec2 mousePosition = m_inputSystem.GetMousePosition();
 		//glfwMousePos = mousePosition;
 
-		ImVec2 const imVec2ImGuiMousePositon = ImGui::GetIO().MousePos;
+		/*ImVec2 const imVec2ImGuiMousePositon = ImGui::GetIO().MousePos;
 
 		mousePosition.x = imVec2ImGuiMousePositon.x;
-		mousePosition.y = imVec2ImGuiMousePositon.y;
+		mousePosition.y = imVec2ImGuiMousePositon.y;*/
 
 		//Cache off the Mouse position
 		imGuiMousePos = mousePosition;
 
-		xAxis = mousePosition.x >= static_cast< double >( renderStats.ViewPortStartX )
-			&& mousePosition.x <= static_cast< double >( renderStats.ViewPortStartX + renderStats.ViewPortWidth );
+		xAxis = mousePosition.x >= static_cast< double >( renderStats.ViewportStartingPosition.x )
+			&& mousePosition.x <= static_cast< double >( renderStats.ViewportStartingPosition.x + renderStats.ViewportDimensions.x);
 
-		yAxis = mousePosition.y >= static_cast< double >( renderStats.ViewPortStartY )
-			&& mousePosition.y <= static_cast< double >( renderStats.ViewPortStartY + renderStats.ViewPortHeight );
+		yAxis = mousePosition.y >= static_cast< double >( renderStats.ViewportStartingPosition.y )
+			&& mousePosition.y <= static_cast< double >( renderStats.ViewportStartingPosition.y + renderStats.ViewportDimensions.y);
 
 		if ( xAxis && yAxis )
 		{

@@ -37,11 +37,11 @@ namespace Graphics
 	class Renderer : public Core::ImGuiWindowBuilder
 	{
 	public:
-		Renderer( Core::Registry& Registry );
-		~Renderer();
+		Renderer( Core::Registry & Registry, int width, int height );
+		~Renderer() = default;
 
-	    ShaderComponent	CreateShader( const std::string& name, Utils::EnumBitmask<Shader::Type> flags );
-		unsigned int CreateTexture( const std::string& textureName );
+		ShaderComponent	CreateShader( const std::string & name, Utils::EnumBitmask<Shader::Type> flags );
+		unsigned int CreateTexture( const std::string & textureName );
 
 		MeshComponent GetMesh( PrimativeType type );
 
@@ -54,6 +54,7 @@ namespace Graphics
 		bool DrawLine( glm::vec3 A, glm::vec3 b, glm::vec4 colour = glm::vec4( 1.f ), float thickness = 1.f ) noexcept;
 
 		void FramebufferSizeCallback( int width, int height );
+		void ScreenSizeCallback( int width, int height );
 
 		void SetUseFrameBufferObject( bool flag ) { m_useFrameBufferObject = flag; }
 
@@ -63,15 +64,15 @@ namespace Graphics
 
 	private:
 		void UpdateCamera();
-		void UpdateTransform( TransformComponent& transform );
-		void UpdateTextures( TextureComponent& textureComponent );
-		void UpdateShader( ShaderComponent& shaderComponent );
-		void UpdateMesh( MeshComponent& meshComponent );
+		void UpdateTransform( TransformComponent & transform );
+		void UpdateTextures( TextureComponent & textureComponent );
+		void UpdateShader( ShaderComponent & shaderComponent );
+		void UpdateMesh( MeshComponent & meshComponent );
 
 		void CreateRenderBufferObject();
 		void ResizeRenderTextureBuffer( float WidthToUse, float HeightToUse );
 
-		Core::Registry& m_registry;
+		Core::Registry & m_registry;
 
 		TextureLoader m_textureLoader {};
 
@@ -79,13 +80,13 @@ namespace Graphics
 		Square m_squareMesh {};
 		Cube m_cubeMesh {};
 
-		ShaderProgram* m_activeShader { nullptr };
+		ShaderProgram * m_activeShader { nullptr };
 		PrimativeType m_activeMeshType { PrimativeType::Invalid };
 
 		size_t m_boundTexturesSize {};
-		std::string m_currentImGuiTexture;
+		std::string m_currentImGuiTexture {"unset"};
 
-		ShaderProgram* m_lineShader { nullptr };
+		ShaderProgram * m_lineShader { nullptr };
 		unsigned int m_lineDrawCalls { 0 };
 		unsigned int m_lineVbo { 0 };
 		unsigned int m_lineVao { 0 };
@@ -103,12 +104,14 @@ namespace Graphics
 
 		std::array<LineDrawCall, m_maxLinesPerRender> m_lineDrawCallList;
 
-		int m_width { 800 };
-		int m_height { 600 };
+		glm::ivec2 m_frameBufferDimensons { 800, 600 };
+		glm::ivec2 m_screenDimensions { 800, 600 };
+		glm::ivec2 m_screenStartingPosition { 0,0 };
+		glm::ivec2 m_frameBufferStartingPosition { 0,0 };
 
 		bool m_showTextureWindow { false };
 
-		ShaderProgram* m_screenShader { nullptr };
+		ShaderProgram * m_screenShader { nullptr };
 
 		unsigned int m_frameBufferObject { 0 };
 		unsigned int m_renderedTexture { 0 };
@@ -116,12 +119,10 @@ namespace Graphics
 
 		bool m_useFrameBufferObject { true };
 		bool m_firstTimeRenderingSubWindow { m_useFrameBufferObject };
-		ImVec2 m_sceneSize { 800, 600 };
+		//ImVec2 m_sceneSize { static_cast< float >( m_frameBufferDimensons.x ), static_cast< float >( m_frameBufferDimensons.y ) };
 
 		std::vector< std::shared_ptr<ShaderProgram> > m_shaderList;
 
 		std::vector<GLuint> m_boundTextures {};
-
-		RenderStats m_renderStats {};
 	};
 }

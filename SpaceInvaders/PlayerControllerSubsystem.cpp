@@ -8,13 +8,17 @@
 #include "Graphics/TextureComponent.h"
 #include "Graphics/ShaderComponent.h"
 
+#include "Input/InputSystem.h"
+
 #include "PlayerComponent.h"
+#include "GameTags.h"
 
 namespace Game
 {
 
-	PlayerControllerSubsystem::PlayerControllerSubsystem( Core::Registry & registry, Graphics::Window & windowRef )
+	PlayerControllerSubsystem::PlayerControllerSubsystem( Core::Registry & registry, Graphics::Window & windowRef, Input::InputSystem const & inputSystem )
 		: Subsystem( registry )
+		, m_inputSystem(inputSystem)
 	{
 		CreateComponents( windowRef );
 	}
@@ -39,7 +43,7 @@ namespace Game
 		m_registry.AddComponent<Graphics::MeshComponent>( m_PlayerEntity, renderer.GetMesh( Graphics::PrimativeType::Cube ) );
 		m_registry.AddComponent<Graphics::TextureComponent>( m_PlayerEntity, multiTextureComp );
 		m_registry.AddComponent<Graphics::ShaderComponent>( m_PlayerEntity, textureEnabledShaderComp );
-
+		m_registry.AddComponent<Game::PlayerTag>( m_PlayerEntity );
 
 		{
 			auto entity = m_registry.CreateEntity( "Player2" );
@@ -62,6 +66,11 @@ namespace Game
 	void PlayerControllerSubsystem::Update( double deltaTime )
 	{
 		UNUSED( deltaTime );
+		m_registry.ForView<Graphics::TransformComponent, Game::PlayerTag>( [this] (Graphics::TransformComponent & transform)
+			{
+				glm::dvec3 mousePosition = m_inputSystem.GetMouseWorldPosition();
+				transform.Position = static_cast<glm::vec3>(mousePosition);
+			} );
 	}
 
 	void PlayerControllerSubsystem::BuildWindow( double deltaTime )

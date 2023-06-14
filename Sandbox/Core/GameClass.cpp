@@ -21,10 +21,11 @@ namespace Core
 	GameClass::GameClass()
 		: m_editorInspector( m_mainRegistry )
 		, m_editorHierarchyWindow( m_mainRegistry )
+		, m_editorStatsViewer( m_mainRegistry )
 		, m_inputSystem( m_mainRegistry )
 		, m_logWindow( m_mainRegistry )
 		, m_cameraSystem( m_mainRegistry )
-		, m_window(m_mainRegistry, m_inputSystem )
+		, m_window( m_mainRegistry, m_inputSystem )
 		, m_collisionDetectionSystem( m_mainRegistry, m_window )
 	{
 		m_baseImguiWindowBuilder = std::make_unique<Core::BaseImGuiWindowBuilder>( m_mainRegistry, m_window );
@@ -34,14 +35,11 @@ namespace Core
 
 	void GameClass::Init()
 	{
+		RegisterSubsystem( &m_logWindow );
 		RegisterSubsystem( &m_inputSystem );
 		RegisterSubsystem( &m_cameraSystem );
 		RegisterSubsystem( &m_collisionDetectionSystem );
 
-		RegisterSubsystem( &m_inputSystem );
-		RegisterSubsystem( &m_cameraSystem );
-
-		RegisterSubsystem( &m_logWindow );
 		RegisterSubsystem( &m_window.GetRenderer() );
 
 		m_baseImguiWindowBuilder->GetInfo();
@@ -50,7 +48,7 @@ namespace Core
 	void GameClass::EditorInit()
 	{
 		m_mainRegistry.ctx().emplace<Editor::EditorContextComponent>();
-		
+
 		/*Core::Entity CameraEntity = EditorUtilities.CreatePerspectiveCamera( "MainCamera" );
 		m_cameraSystemRef.SetActiveCamera( "MainCamera" );*/
 		//m_editorUtilities.CreateEditorCamera( CameraEntity, m_mainRegistry );
@@ -65,6 +63,7 @@ namespace Core
 
 		RegisterSubsystem( &m_editorInspector );
 		RegisterSubsystem( &m_editorHierarchyWindow );
+		RegisterSubsystem( &m_editorStatsViewer );
 
 		RegisterComponentDetails();
 	}
@@ -86,6 +85,7 @@ namespace Core
 	{
 		DeregisterSubsystem( &m_editorInspector );
 		DeregisterSubsystem( &m_editorHierarchyWindow );
+		DeregisterSubsystem( &m_editorStatsViewer );
 	}
 
 	void GameClass::RegisterSubsystemInternal( Subsystem * subsystem )

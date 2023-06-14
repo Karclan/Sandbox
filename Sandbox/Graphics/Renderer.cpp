@@ -5,6 +5,8 @@
 #include "../Editor/EditorUtilities.h"
 #include "../Imgui/imgui.h"
 
+#include "../Input/InputStatsComponent.h"
+
 #include "TextureComponent.h"
 #include "ShaderComponent.h"
 #include "TransformComponent.h"
@@ -21,17 +23,19 @@
 #include <algorithm>
 
 
+
 namespace Graphics
 {
-	static constexpr float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
-	   // positions   // texCoords
-	   -1.0f,  1.0f,  0.0f, 1.0f,
-	   -1.0f, -1.0f,  0.0f, 0.0f,
-		1.0f, -1.0f,  1.0f, 0.0f,
+	//vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
+	static constexpr float quadVertices[] = {
+		// positions   // texCoords
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		-1.0f, -1.0f,  0.0f, 0.0f,
+		 1.0f, -1.0f,  1.0f, 0.0f,
 
-	   -1.0f,  1.0f,  0.0f, 1.0f,
-		1.0f, -1.0f,  1.0f, 0.0f,
-		1.0f,  1.0f,  1.0f, 1.0f
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		 1.0f, -1.0f,  1.0f, 0.0f,
+		 1.0f,  1.0f,  1.0f, 1.0f
 	};
 
 	unsigned int quadVAO = 0;
@@ -49,14 +53,15 @@ namespace Graphics
 		glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof( float ), ( void * ) ( 2 * sizeof( float ) ) );
 	}
 
-	Renderer::Renderer( Core::Registry & Registry )
+	Renderer::Renderer( Core::Registry & Registry, int width, int height )
 		: m_registry( Registry )
+		, m_screenDimensions { width, height }
 	{
-	}
+		RenderStats renderStats;
+		renderStats.ScreenDimensions = m_screenDimensions;
+		renderStats.FrameBufferDimensions = m_frameBufferDimensons;
 
-	Renderer::~Renderer()
-	{
-
+		m_registry.ctx().emplace<RenderStats>( renderStats );
 	}
 
 	ShaderComponent Renderer::CreateShader( const std::string & name, Utils::EnumBitmask<Shader::Type> flags )
@@ -67,8 +72,8 @@ namespace Graphics
 		ReturnId = shader->getId();
 
 		m_shaderList.push_back( shader );
-		
-		ShaderComponent shaderComponent { ReturnId, std::weak_ptr<IShaderHandle>(shader) };
+
+		ShaderComponent shaderComponent { ReturnId, std::weak_ptr<IShaderHandle>( shader ) };
 		return shaderComponent;
 	}
 
@@ -147,8 +152,8 @@ namespace Graphics
 			{
 				if ( ImGui::Checkbox( "Render Scene into window", &m_useFrameBufferObject ) )
 				{
-					float HeightToUse = static_cast< float >( m_useFrameBufferObject ? m_sceneSize.y : m_height );
-					float WidthToUse = static_cast< float >( m_useFrameBufferObject ? m_sceneSize.x : m_width );
+					float HeightToUse = static_cast< float >( m_useFrameBufferObject ? m_frameBufferDimensons.y : m_screenDimensions.y );
+					float WidthToUse = static_cast< float >( m_useFrameBufferObject ? m_frameBufferDimensons.x : m_screenDimensions.x );
 
 					m_registry.ForView<CameraComponent, ActiveCameraTag>( [&HeightToUse, &WidthToUse] ( CameraComponent & cameraComponent )
 						{
@@ -181,36 +186,43 @@ namespace Graphics
 				// Get the size of the child (i.e. the whole draw size of the windows).
 				ImVec2 const wsize = ImGui::GetWindowSize();
 				bool windowSizeChanged = false;
-				windowSizeChanged = m_sceneSize.x != wsize.x;
-				windowSizeChanged |= m_sceneSize.y != wsize.y;
+				windowSizeChanged = m_frameBufferDimensons.x != wsize.x;
+				windowSizeChanged |= m_frameBufferDimensons.y != wsize.y;
 				if ( windowSizeChanged )
 				{
-					m_sceneSize = wsize;
+					m_frameBufferDimensons = { wsize.x, wsize.y };
 				}
-				// Because I use the texture from OpenGL, I need to invert the V from the UV.
 				ImVec2 const gameRenderPosition = ImGui::GetCursorScreenPos();
-				ImGui::Image( static_cast< ImTextureID >( m_renderedTexture ), m_sceneSize, ImVec2( 0, 1 ), ImVec2( 1, 0 ) );
-				
+				m_frameBufferStartingPosition = { gameRenderPosition.x, gameRenderPosition.y };
+				// Because I use the texture from OpenGL, I need to invert the V from the UV.
+				ImGui::Image( static_cast< ImTextureID >( m_renderedTexture ), { static_cast< float >( m_frameBufferDimensons.x ), static_cast< float >( m_frameBufferDimensons.y ) }, ImVec2( 0, 1 ), ImVec2( 1, 0 ) );
+
 				ImVec2 const itemRectSize = ImGui::GetItemRectSize();
-				m_renderStats.ViewPortStartX = static_cast< unsigned int >( gameRenderPosition.x );
-				m_renderStats.ViewPortStartY = static_cast< unsigned int >( gameRenderPosition.y );
-				m_renderStats.ViewPortWidth = static_cast< unsigned int >( itemRectSize.x );
-				m_renderStats.ViewPortHeight = static_cast< unsigned int >( itemRectSize.y );
-				m_registry.SetContextComponent<RenderStats>( m_renderStats );
+
+				RenderStats & renderStats = m_registry.ctx().get<RenderStats>();
+				renderStats.FramebufferStartingPosition = { gameRenderPosition.x ,gameRenderPosition.y };
+				renderStats.FrameBufferDimensions = { itemRectSize.x, itemRectSize.y };
+
+				renderStats.ViewportDimensions = renderStats.FrameBufferDimensions;
+				renderStats.ViewportStartingPosition = renderStats.FramebufferStartingPosition;
+
+				renderStats.m_renderingSubwindow = true;
+
 				if ( ImGui::IsItemHovered() )
 				{
-					m_renderStats.ViewPortCursorX = ImGui::GetMousePos().x;
-					m_renderStats.ViewPortCursorY = ImGui::GetMousePos().y;
+					Input::InputStatsComponent & inputStats = m_registry.ctx().get<Input::InputStatsComponent>();
+					ImVec2 const imguiIOMousePos = ImGui::GetMousePos();
+					inputStats.ViewPortCursorPos = { imguiIOMousePos.x - gameRenderPosition.x, imguiIOMousePos.y - gameRenderPosition.y };
 				}
-				
+
 				ImGui::EndChild();
 
 				if ( windowSizeChanged )
 				{
 					m_registry.ForView<CameraComponent, ActiveCameraTag>( [this] ( CameraComponent & cameraComponent )
 						{
-							cameraComponent.m_viewPortHeight = static_cast< float >( m_sceneSize.y );
-							cameraComponent.m_viewPortWidth = static_cast< float >( m_sceneSize.x );
+							cameraComponent.m_viewPortHeight = static_cast< float >( m_frameBufferDimensons.y );
+							cameraComponent.m_viewPortWidth = static_cast< float >( m_frameBufferDimensons.x );
 							cameraComponent.m_aspectRatio = static_cast< float >( ( cameraComponent.m_viewPortWidth ) / ( cameraComponent.m_viewPortHeight > 0 ? cameraComponent.m_viewPortHeight : 1.f ) );
 							cameraComponent.m_dirtyProjectionMatrix = true;
 							cameraComponent.m_dirtyViewMatrix = true;
@@ -218,20 +230,22 @@ namespace Graphics
 
 					//Resize the render texture buffer
 
-					ResizeRenderTextureBuffer( m_sceneSize.x, m_sceneSize.y );
+					ResizeRenderTextureBuffer( static_cast< float >( m_frameBufferDimensons.x ), static_cast< float >( m_frameBufferDimensons.y ) );
 				}
 			}
 			ImGui::End();
-			ImGui::PopStyleVar(3);
+			ImGui::PopStyleVar( 3 );
 		}
 		else
 		{
-			m_renderStats.ViewPortStartX = 0u;
-			m_renderStats.ViewPortStartY = 0u;
-			m_renderStats.ViewPortHeight = static_cast< unsigned int >( m_sceneSize.x );
-			m_renderStats.ViewPortWidth = static_cast< unsigned int >( m_sceneSize.y );
-			m_registry.SetContextComponent<RenderStats>( m_renderStats );
+			RenderStats & renderStats = m_registry.ctx().get<RenderStats>();
+
+			renderStats.ViewportDimensions = m_screenDimensions;
+			renderStats.ViewportStartingPosition = {0,0}; //glfw's cursor position is from the top of the window
+
+			renderStats.m_renderingSubwindow = false;
 		}
+
 		if ( m_showTextureWindow )
 		{
 			if ( ImGui::Begin( "Graphics" ) )
@@ -300,8 +314,8 @@ namespace Graphics
 			{
 				m_registry.ForView<CameraComponent, ActiveCameraTag>( [this] ( CameraComponent & cameraComponent )
 					{
-						cameraComponent.m_viewPortHeight = static_cast< float >( m_sceneSize.y );
-						cameraComponent.m_viewPortWidth = static_cast< float >( m_sceneSize.x );
+						cameraComponent.m_viewPortHeight = static_cast< float >( m_frameBufferDimensons.y );
+						cameraComponent.m_viewPortWidth = static_cast< float >( m_frameBufferDimensons.x );
 						cameraComponent.m_aspectRatio = static_cast< float >( ( cameraComponent.m_viewPortWidth ) / ( cameraComponent.m_viewPortHeight > 0 ? cameraComponent.m_viewPortHeight : 1.f ) );
 						cameraComponent.m_dirtyProjectionMatrix = true;
 						cameraComponent.m_dirtyViewMatrix = true;
@@ -312,18 +326,16 @@ namespace Graphics
 			}
 
 			glBindFramebuffer( GL_FRAMEBUFFER, m_frameBufferObject );
-			glViewport( 0, 0, static_cast< GLsizei >( m_sceneSize.x ), static_cast< GLsizei >( m_sceneSize.y ) );
-
-		
+			glViewport( 0, 0, static_cast< GLsizei >( m_frameBufferDimensons.x ), static_cast< GLsizei >( m_frameBufferDimensons.y ) );
 		}
 
 		glClearColor( 0.2f, 0.3f, 0.3f, 1.0f );
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
 		//Grab the components from the registry here!
-		m_registry.ForView<TransformComponent, MeshComponent, ShaderComponent, TextureComponent>( 
-			[this] ( TransformComponent & transform , MeshComponent & meshComponent, ShaderComponent & shaderComponent , TextureComponent & textureComponent )
-		{
+		m_registry.ForView<TransformComponent, MeshComponent, ShaderComponent, TextureComponent>(
+			[this] ( TransformComponent & transform, MeshComponent & meshComponent, ShaderComponent & shaderComponent, TextureComponent & textureComponent )
+			{
 				UpdateShader( shaderComponent );
 
 				UpdateCamera();
@@ -351,11 +363,12 @@ namespace Graphics
 					default:
 						break;
 				}
-		} );
+			} );
 
 		if ( m_lineDrawCalls > 0 )
 		{
 			m_lineShader->useProgram();
+
 
 			m_lineShader->setUniform( "model", glm::mat4( 1.f ) );
 			m_registry.ForConstView<CameraComponent const, ActiveCameraTag const>(
@@ -380,7 +393,7 @@ namespace Graphics
 
 		if ( m_useFrameBufferObject )
 		{
-			glViewport( 0, 0, m_width, m_height );
+			glViewport( 0, 0, m_frameBufferDimensons.x, m_frameBufferDimensons.y );
 			glBindFramebuffer( GL_FRAMEBUFFER, 0 );
 
 			glClearColor( 0.f, 0.f, 0.f, 1.0f );
@@ -423,21 +436,49 @@ namespace Graphics
 
 	void Renderer::FramebufferSizeCallback( int width, int height )
 	{
-		m_width = width;
-		m_height = height;
+		m_frameBufferDimensons = { width, height };
 
-		m_registry.ForView<CameraComponent, ActiveCameraTag>( [this] ( CameraComponent & cameraComponent )
-			{
-				if ( !m_useFrameBufferObject )
+		RenderStats & renderStats = m_registry.ctx().get<RenderStats>();
+		renderStats.FrameBufferDimensions = { width, height };
+
+		if ( m_useFrameBufferObject )
+		{
+			renderStats.ViewportDimensions = m_frameBufferDimensons;
+
+			m_registry.ForView<CameraComponent, ActiveCameraTag>( [this] ( CameraComponent & cameraComponent )
 				{
-					cameraComponent.m_viewPortHeight = static_cast< float >( m_height );
-					cameraComponent.m_viewPortWidth = static_cast< float >( m_width );
+					cameraComponent.m_viewPortWidth = static_cast< float >( m_frameBufferDimensons.x );
+					cameraComponent.m_viewPortHeight = static_cast< float >( m_frameBufferDimensons.y );
 					cameraComponent.m_aspectRatio = static_cast< float >( ( cameraComponent.m_viewPortWidth ) / ( cameraComponent.m_viewPortHeight > 0 ? cameraComponent.m_viewPortHeight : 1.f ) );
-				}
 
-				cameraComponent.m_dirtyViewMatrix = true;
-				cameraComponent.m_dirtyProjectionMatrix = true;
-			} );
+					cameraComponent.m_dirtyViewMatrix = true;
+					cameraComponent.m_dirtyProjectionMatrix = true;
+				} );
+		}
+	}
+
+	void Renderer::ScreenSizeCallback( int width, int height )
+	{
+		m_screenDimensions = { width, height };
+
+		RenderStats & renderStats = m_registry.ctx().get<RenderStats>();
+		renderStats.ScreenDimensions = { width, height };
+
+		if ( !m_useFrameBufferObject )
+		{
+			renderStats.ViewportDimensions = m_screenDimensions;
+
+			m_registry.ForView<CameraComponent, ActiveCameraTag>( [this] ( CameraComponent & cameraComponent )
+				{
+					cameraComponent.m_viewPortWidth = static_cast< float >( m_screenDimensions.x );
+					cameraComponent.m_viewPortHeight = static_cast< float >( m_screenDimensions.y );
+					cameraComponent.m_aspectRatio = static_cast< float >( ( cameraComponent.m_viewPortWidth ) / ( cameraComponent.m_viewPortHeight > 0 ? cameraComponent.m_viewPortHeight : 1.f ) );
+
+					cameraComponent.m_dirtyViewMatrix = true;
+					cameraComponent.m_dirtyProjectionMatrix = true;
+				} );
+		}
+
 	}
 
 	void Renderer::UpdateCamera()
@@ -496,10 +537,10 @@ namespace Graphics
 			size_t const diff = m_boundTexturesSize - newTexturesSize;
 			if ( diff > 0 ) //We have less textures than last
 			{
-				for ( int i = static_cast<int>(m_boundTexturesSize); i > -1; --i ) //Go down the list and unbind textures
+				for ( int i = static_cast< int >( m_boundTexturesSize ); i > -1; --i ) //Go down the list and unbind textures
 				{
 					//unbind
-					glActiveTexture( GL_TEXTURE0 + static_cast<GLenum>(i) );
+					glActiveTexture( GL_TEXTURE0 + static_cast< GLenum >( i ) );
 					glBindTexture( GL_TEXTURE_2D, 0 );
 				}
 			}
@@ -589,7 +630,7 @@ namespace Graphics
 		//Create texture for it
 		glGenTextures( 1, &m_renderedTexture );
 		glBindTexture( GL_TEXTURE_2D, m_renderedTexture );
-		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, m_height, m_width, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL );
+		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, m_frameBufferDimensons.x, m_frameBufferDimensons.y, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 		glBindTexture( GL_TEXTURE_2D, 0 );
@@ -600,7 +641,7 @@ namespace Graphics
 		//Create and bind render buffer object
 		glGenRenderbuffers( 1, &m_renderBufferObject );
 		glBindRenderbuffer( GL_RENDERBUFFER, m_renderBufferObject );
-		glRenderbufferStorage( GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_height, m_width );
+		glRenderbufferStorage( GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_frameBufferDimensons.x, m_frameBufferDimensons.y );
 		glFramebufferRenderbuffer( GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_renderBufferObject );
 
 		if ( glCheckFramebufferStatus( GL_FRAMEBUFFER ) != GL_FRAMEBUFFER_COMPLETE )

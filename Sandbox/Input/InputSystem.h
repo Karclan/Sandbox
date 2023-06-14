@@ -7,6 +7,8 @@
 #include "InputState.h"
 #include "DeviceBindings.h"
 
+#include "glm/fwd.hpp"
+
 namespace Input
 {
 	class InputSystem : public Core::Subsystem, public Core::ImGuiWindowBuilder
@@ -32,11 +34,13 @@ namespace Input
 		float GetValue( ActionId const actionId ) const;
 		//Ugly but I want to change this to something like axis value or w.e
 		glm::dvec2 GetMousePosition() const;
-
+		glm::dvec3 GetMouseWorldPosition() const;
 
 		void AddBinding( DeviceId inId, DeviceBindings && Mapping );
 
 	private:
+		glm::dvec3 ScreenToWorldSpace( glm::dvec2 const & position ) const;
+
 		/*  theory
 			action ids link to state values
 			devices link key codes to action ids

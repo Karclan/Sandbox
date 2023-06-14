@@ -5,10 +5,15 @@
 #include "../Editor/EditorUtilities.h"
 #include "../Editor/EditorInspector.h"
 #include "../Editor/EditorHierarchyWindow.h"
+#include "../Editor/EditorStatsViewer.h"
+
 #include "../Input/InputSystem.h"
+
 #include "../Utils/LoggingWindow.h"
+
 #include "../Graphics/CameraSystem.h"
 #include "../Graphics/Window.h"
+
 #include "../Physics/CollisionDetectionSystem.h"
 
 #include <memory>
@@ -48,21 +53,21 @@ namespace Core
 		//Subsystem functions
 		//Possibly rename these functions when they're referring to an imgui window as well. It's a little odd to call it a subsystem when it's not one
 		template<typename TemplatedSubsystem>
-		typename std::enable_if< std::derived_from<TemplatedSubsystem, Subsystem> && !std::derived_from<TemplatedSubsystem, ImGuiWindowBuilder> >::type
+		typename std::enable_if< std::is_base_of<Subsystem, TemplatedSubsystem>::value && !std::is_base_of<ImGuiWindowBuilder, TemplatedSubsystem>::value >::type
 			RegisterSubsystem( TemplatedSubsystem * subsystem )
 		{
 			RegisterSubsystemInternal( subsystem );
 		}
 
 		template<typename TemplatedSubsystem>
-		typename std::enable_if< !std::derived_from<TemplatedSubsystem, Subsystem> && std::derived_from<TemplatedSubsystem, ImGuiWindowBuilder> >::type
+		typename std::enable_if< !std::is_base_of<Subsystem, TemplatedSubsystem>::value && std::is_base_of<ImGuiWindowBuilder, TemplatedSubsystem>::value >::type
 			RegisterSubsystem( TemplatedSubsystem * subsystem )
 		{
 			RegisterImguiWindowInternal( subsystem );
 		}
 
 		template<typename TemplatedSubsystem>
-		typename std::enable_if< std::derived_from<TemplatedSubsystem, Subsystem> && std::derived_from<TemplatedSubsystem, ImGuiWindowBuilder> >::type
+		typename std::enable_if< std::is_base_of<Subsystem, TemplatedSubsystem>::value && std::is_base_of<ImGuiWindowBuilder, TemplatedSubsystem>::value >::type
 			RegisterSubsystem( TemplatedSubsystem * subsystem )
 		{
 			RegisterSubsystemInternal( subsystem );
@@ -70,21 +75,21 @@ namespace Core
 		}
 
 		template<typename TemplatedSubsystem>
-		typename std::enable_if< std::derived_from<TemplatedSubsystem, Subsystem> && !std::derived_from<TemplatedSubsystem, ImGuiWindowBuilder> >::type
+		typename std::enable_if< std::is_base_of<Subsystem, TemplatedSubsystem>::value && !std::is_base_of<ImGuiWindowBuilder, TemplatedSubsystem>::value >::type
 			DeregisterSubsystem( TemplatedSubsystem * subsystem )
 		{
 			DeregisterSubsystemInternal( subsystem );
 		}
 
 		template<typename TemplatedSubsystem>
-		typename std::enable_if< !std::derived_from<TemplatedSubsystem, Subsystem> && std::derived_from<TemplatedSubsystem, ImGuiWindowBuilder> >::type
+		typename std::enable_if< !std::is_base_of<Subsystem, TemplatedSubsystem>::value && std::is_base_of<ImGuiWindowBuilder, TemplatedSubsystem>::value >::type
 			DeregisterSubsystem( TemplatedSubsystem * subsystem )
 		{
 			DeregisterImguiWindowInternal( subsystem );
 		}
 
 		template<typename TemplatedSubsystem>
-		typename std::enable_if< std::derived_from<TemplatedSubsystem, Subsystem> && std::derived_from<TemplatedSubsystem, ImGuiWindowBuilder> >::type
+		typename std::enable_if< std::is_base_of<Subsystem, TemplatedSubsystem>::value && std::is_base_of<ImGuiWindowBuilder, TemplatedSubsystem>::value >::type
 			DeregisterSubsystem( TemplatedSubsystem * subsystem )
 		{
 			DeregisterSubsystemInternal( subsystem );
@@ -129,6 +134,7 @@ namespace Core
 		Editor::Utilities m_editorUtilities {};
 		Editor::EditorInspector m_editorInspector;
 		Editor::EditorHierarchyWindow m_editorHierarchyWindow;
+		Editor::EditorStatsViewer m_editorStatsViewer;
 
 		//Core Systems
 		Input::InputSystem m_inputSystem;
