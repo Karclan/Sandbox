@@ -308,6 +308,11 @@ namespace Graphics
 
 	void Renderer::Render()
 	{
+		glEnable( GL_DEPTH_TEST );
+		glEnable( GL_BLEND );
+		glBlendEquation( GL_FUNC_ADD );
+		glBlendFuncSeparate( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO );
+
 		if ( m_useFrameBufferObject )
 		{
 			if ( m_firstTimeRenderingSubWindow )

@@ -27,35 +27,36 @@ namespace Game
 	{
 		auto & renderer = windowRef.GetRenderer();
 
-		Graphics::ShaderComponent textureEnabledShaderComp = renderer.CreateShader( "textureEnabled", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
-		auto containerTextureId = renderer.CreateTexture( "container.jpg" );
-		auto awesomefaceTextureId = renderer.CreateTexture( "awesomeface.png" );
+		Graphics::ShaderComponent const textureEnabledShaderComp = renderer.CreateShader( "textureEnabled", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
+		auto const containerTextureId = renderer.CreateTexture( "container.jpg" );
+		auto const awesomefaceTextureId = renderer.CreateTexture( "awesomeface.png" );
+		auto const playerTextureId = renderer.CreateTexture( "Player.png" );
 
-		Graphics::TextureComponent multiTextureComp { { containerTextureId, awesomefaceTextureId } };
-		Graphics::TextureComponent single { { awesomefaceTextureId } };
+		Graphics::TextureComponent const multiTextureComp { { containerTextureId, awesomefaceTextureId } };
+		Graphics::TextureComponent const playerTextureComp { { playerTextureId } };
 
 		m_PlayerEntity = m_registry.CreateEntity( "Player" );
 		m_registry.AddComponent<PlayerComponent>( m_PlayerEntity, PlayerComponent() );
 		auto & transformComponent = m_registry.AddComponent<Graphics::TransformComponent>( m_PlayerEntity, Graphics::TransformComponent() );
-		transformComponent.Position = glm::vec3( -7.f, 0.f, 0.f );
-		transformComponent.Scale = glm::vec3( 4.f, 4.f, 1.f );
+		transformComponent.Position = glm::vec3( 0.f, 0.f, 0.f );
+		transformComponent.Scale = glm::vec3( 2.f, 2.f, 1.f );
 
 		m_registry.AddComponent<Graphics::MeshComponent>( m_PlayerEntity, renderer.GetMesh( Graphics::PrimativeType::Cube ) );
-		m_registry.AddComponent<Graphics::TextureComponent>( m_PlayerEntity, multiTextureComp );
+		m_registry.AddComponent<Graphics::TextureComponent>( m_PlayerEntity, playerTextureComp );
 		m_registry.AddComponent<Graphics::ShaderComponent>( m_PlayerEntity, textureEnabledShaderComp );
 		m_registry.AddComponent<Game::PlayerTag>( m_PlayerEntity );
 
-		{
-			auto entity = m_registry.CreateEntity( "Player2" );
-			m_registry.AddComponent<PlayerComponent>( entity, PlayerComponent() );
-			auto & transformComponent = m_registry.AddComponent<Graphics::TransformComponent>( entity, Graphics::TransformComponent() );
-			transformComponent.Position = glm::vec3( 7.f, 0.f, 0.f );
-			transformComponent.Scale = glm::vec3( 4.f, 4.f, 1.f );
+		//{
+		//	auto entity = m_registry.CreateEntity( "Player2" );
+		//	m_registry.AddComponent<PlayerComponent>( entity, PlayerComponent() );
+		//	auto & transformComponent = m_registry.AddComponent<Graphics::TransformComponent>( entity, Graphics::TransformComponent() );
+		//	transformComponent.Position = glm::vec3( 7.f, 0.f, 0.f );
+		//	transformComponent.Scale = glm::vec3( 4.f, 4.f, 1.f );
 
-			m_registry.AddComponent<Graphics::MeshComponent>( entity, renderer.GetMesh( Graphics::PrimativeType::Cube ) );
-			m_registry.AddComponent<Graphics::TextureComponent>( entity, multiTextureComp );
-			m_registry.AddComponent<Graphics::ShaderComponent>( entity, textureEnabledShaderComp );
-		}
+		//	m_registry.AddComponent<Graphics::MeshComponent>( entity, renderer.GetMesh( Graphics::PrimativeType::Cube ) );
+		//	m_registry.AddComponent<Graphics::TextureComponent>( entity, multiTextureComp );
+		//	m_registry.AddComponent<Graphics::ShaderComponent>( entity, textureEnabledShaderComp );
+		//}
 	}
 
 	void PlayerControllerSubsystem::FixedUpdate( double deltaTime )

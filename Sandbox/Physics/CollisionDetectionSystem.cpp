@@ -79,10 +79,13 @@ namespace Physics
 				glm::vec3 const bottomRight = glm::vec3( debugRender.cachedBottomRight, 0.f );
 
 				glm::vec4 const colour = collision.isColliding ? Graphics::Window::Red : Graphics::Window::White;
-				m_window.DrawLine( topLeft, topRight, colour );
-				m_window.DrawLine( topLeft, bottomLeft, colour );
-				m_window.DrawLine( topRight, bottomRight, colour );
-				m_window.DrawLine( bottomRight, bottomLeft, colour );
+				if ( collision.drawDebugLines )
+				{
+					m_window.DrawLine( topLeft, topRight, colour );
+					m_window.DrawLine( topLeft, bottomLeft, colour );
+					m_window.DrawLine( topRight, bottomRight, colour );
+					m_window.DrawLine( bottomRight, bottomLeft, colour );
+				}
 			} );
 	}
 

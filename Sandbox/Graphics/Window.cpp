@@ -213,7 +213,7 @@ namespace Graphics
 
 		InitImgui();
 
-		glEnable( GL_DEPTH_TEST );
+
 	}
 
 	void Window::PollInput()

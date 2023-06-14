@@ -22,6 +22,7 @@ namespace Physics
 		ShapeType Shape { ShapeType::Square };
 
 		bool isColliding { false };
+		bool drawDebugLines { false };
 	};
 
 	struct SquareExtents
