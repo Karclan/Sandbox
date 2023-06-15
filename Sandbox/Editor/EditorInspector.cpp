@@ -66,7 +66,8 @@ namespace Editor
 			auto const registryStorage = m_registry.GetStorage();
 			for ( auto && curr : registryStorage )//Go over all the component storage
 			{
-				entt::type_info const storageType = curr.second.type();
+				auto & storage = curr.second;
+				entt::type_info const storageType = storage.type();
 
 				//Skip over entity pool
 				if ( storageType.hash() == entt::type_hash<Core::Entity>() )
@@ -75,7 +76,7 @@ namespace Editor
 				}
 
 				//if this storage contains our selected entity
-				if ( auto & storage = curr.second; storage.contains( editorContextComponent.m_InspectedEntity ) )
+				if ( storage.contains( editorContextComponent.m_InspectedEntity ) )
 				{
 					bool detailMatch = false;
 					entt::id_type const id = curr.first;
