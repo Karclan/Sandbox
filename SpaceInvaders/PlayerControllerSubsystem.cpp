@@ -12,6 +12,7 @@
 
 #include "PlayerComponent.h"
 #include "GameTags.h"
+#include "Physics/CollisionComponent.h"
 
 namespace Game
 {
@@ -46,17 +47,30 @@ namespace Game
 		m_registry.AddComponent<Graphics::ShaderComponent>( m_PlayerEntity, textureEnabledShaderComp );
 		m_registry.AddComponent<Game::PlayerTag>( m_PlayerEntity );
 
-		//{
-		//	auto entity = m_registry.CreateEntity( "Player2" );
-		//	m_registry.AddComponent<PlayerComponent>( entity, PlayerComponent() );
-		//	auto & transformComponent = m_registry.AddComponent<Graphics::TransformComponent>( entity, Graphics::TransformComponent() );
-		//	transformComponent.Position = glm::vec3( 7.f, 0.f, 0.f );
-		//	transformComponent.Scale = glm::vec3( 4.f, 4.f, 1.f );
+		auto & collisionComponent =	m_registry.AddComponent<Physics::CollisionComponent>( m_PlayerEntity );
+		collisionComponent.drawDebugLines = true;
+		auto & extents = m_registry.AddComponent<Physics::SquareExtents>( m_PlayerEntity );
+		extents.width = 2.f;
+		extents.height = 1.21f;
+		extents.offset = { 0.f, -0.40f };
 
-		//	m_registry.AddComponent<Graphics::MeshComponent>( entity, renderer.GetMesh( Graphics::PrimativeType::Cube ) );
-		//	m_registry.AddComponent<Graphics::TextureComponent>( entity, multiTextureComp );
-		//	m_registry.AddComponent<Graphics::ShaderComponent>( entity, textureEnabledShaderComp );
-		//}
+		{
+			auto entity = m_registry.CreateEntity( "Player2" );
+			m_registry.AddComponent<PlayerComponent>( entity, PlayerComponent() );
+			auto & transformComponent = m_registry.AddComponent<Graphics::TransformComponent>( entity, Graphics::TransformComponent() );
+			transformComponent.Position = glm::vec3( 7.f, 0.f, 0.f );
+			transformComponent.Scale = glm::vec3( 4.f, 4.f, 1.f );
+
+			m_registry.AddComponent<Graphics::MeshComponent>( entity, renderer.GetMesh( Graphics::PrimativeType::Cube ) );
+			m_registry.AddComponent<Graphics::TextureComponent>( entity, multiTextureComp );
+			m_registry.AddComponent<Graphics::ShaderComponent>( entity, textureEnabledShaderComp );
+
+			auto & collisionComponent = m_registry.AddComponent<Physics::CollisionComponent>( entity );
+			collisionComponent.drawDebugLines = true;
+			auto & extents = m_registry.AddComponent<Physics::SquareExtents>( entity );
+			extents.width = 4.f;
+			extents.height = 4.f;
+		}
 	}
 
 	void PlayerControllerSubsystem::FixedUpdate( double deltaTime )

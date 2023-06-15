@@ -60,31 +60,26 @@ namespace Physics
 		m_registry.ForView<CollisionComponent const, SquareExtents, Graphics::TransformComponent const>( [] ( CollisionComponent const & collision, SquareExtents & extents, Graphics::TransformComponent const & transform )
 			{
 				glm::vec3 const halfExtents( extents.width / 2.f, extents.height / 2.f, 0 );
-				extents.topLeft = transform.Position - halfExtents;
-				extents.bottomRight = transform.Position + halfExtents;
+				extents.topLeft = transform.Position + glm::vec3( extents.offset, 0.f ) - halfExtents;
+				extents.bottomRight = transform.Position + glm::vec3( extents.offset, 0.f ) + halfExtents;
 				//extents.topLeft = { transform.Position.x - halfExtents.x, transform.Position.y - halfExtents.y };
 				//extents.bottomRight = { transform.Position.x + halfExtents.x, transform.Position.y + halfExtents.y };
 			} );
 
 		m_registry.ForView<CollisionComponent const, SquareExtents const, SquareExtentsDebugRenderComponent>( [this] ( CollisionComponent const & collision, SquareExtents const & extents, SquareExtentsDebugRenderComponent & debugRender )
 			{
-				//if ( debugRender != extents )
-				{
-					debugRender = extents;
-				}
-
-				glm::vec3 const topLeft = glm::vec3( debugRender.cachedTopLeft, 0.f );
-				glm::vec3 const topRight = glm::vec3( debugRender.cachedTopLeft.x + debugRender.cachedWidth, debugRender.cachedTopLeft.y, 0.f );
-				glm::vec3 const bottomLeft = glm::vec3( debugRender.cachedBottomRight.x - debugRender.cachedWidth, debugRender.cachedBottomRight.y, 0.f );
-				glm::vec3 const bottomRight = glm::vec3( debugRender.cachedBottomRight, 0.f );
-
-				glm::vec4 const colour = collision.isColliding ? Graphics::Window::Red : Graphics::Window::White;
 				if ( collision.drawDebugLines )
 				{
-					m_window.DrawLine( topLeft, topRight, colour );
-					m_window.DrawLine( topLeft, bottomLeft, colour );
-					m_window.DrawLine( topRight, bottomRight, colour );
-					m_window.DrawLine( bottomRight, bottomLeft, colour );
+					debugRender = extents;
+					glm::vec4 const colour = collision.isColliding ? Graphics::Window::Red : Graphics::Window::White;
+					glm::vec3 const topLeft = glm::vec3( debugRender.cachedTopLeft, 0.f );
+					glm::vec3 const topRight = glm::vec3( debugRender.cachedTopLeft.x + debugRender.cachedWidth, debugRender.cachedTopLeft.y, 0.f );
+					glm::vec3 const bottomLeft = glm::vec3( debugRender.cachedBottomRight.x - debugRender.cachedWidth, debugRender.cachedBottomRight.y, 0.f );
+					glm::vec3 const bottomRight = glm::vec3( debugRender.cachedBottomRight, 0.f );
+					m_window.DrawLine( topLeft, topRight, colour, 1.f );
+					m_window.DrawLine( topLeft, bottomLeft, colour, 1.f );
+					m_window.DrawLine( topRight, bottomRight, colour, 1.f );
+					m_window.DrawLine( bottomRight, bottomLeft, colour, 1.f );
 				}
 			} );
 	}
@@ -131,7 +126,7 @@ namespace Physics
 				{
 					case CollisionComponent::ShapeType::Square:
 					{
-						if( SquareCircleCollision( second, secondCollision, first, firstCollision ))
+						if ( SquareCircleCollision( second, secondCollision, first, firstCollision ) )
 						{
 							firstCollision.isColliding = true;
 							secondCollision.isColliding = true;
@@ -140,7 +135,7 @@ namespace Physics
 					}
 					case CollisionComponent::ShapeType::Circle:
 					{
-						if( CircleCircleCollision( first, firstCollision, second, secondCollision ))
+						if ( CircleCircleCollision( first, firstCollision, second, secondCollision ) )
 						{
 							firstCollision.isColliding = true;
 							secondCollision.isColliding = true;

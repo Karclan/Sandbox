@@ -27,18 +27,19 @@ namespace Physics
 
 	struct SquareExtents
 	{
-		double width { 0.f };
-		double height { 0.f };
+		float width { 0.f };
+		float height { 0.f };
 
 		bool recalculateExtents { true };
 
 		glm::vec2 topLeft { 0.f };
 		glm::vec2 bottomRight { 0.f };
+		glm::vec2 offset { 0.f };
 	};
 
 	struct CircleExtents
 	{
-		double radius { 0.f };
+		float radius { 0.f };
 	};
 
 	struct SquareExtentsDebugRenderComponent
@@ -49,6 +50,7 @@ namespace Physics
 			cachedBottomRight = extents.bottomRight;
 			cachedWidth = extents.width;
 			cachedHeight = extents.height;
+			cachedOffset = extents.offset;
 			return *this;
 		}
 
@@ -57,6 +59,7 @@ namespace Physics
 			return ( 
 				   ( cachedTopLeft == extents.topLeft )
 				|| ( cachedTopLeft == extents.bottomRight )
+				|| ( cachedOffset == extents.offset )
 				|| ( cachedWidth == extents.width )
 				|| ( cachedHeight == extents.height ) 
 				);
@@ -67,11 +70,13 @@ namespace Physics
 			return !( *this == extents );
 		}
 
-		double cachedWidth { 0.f };
-		double cachedHeight { 0.f };
+		float cachedWidth { 0.f };
+		float cachedHeight { 0.f };
 
 		glm::vec2 cachedTopLeft { 0.f };
 		glm::vec2 cachedBottomRight { 0.f };
+		glm::vec2 cachedOffset { 0.f };
+
 		bool recalculateDebugMesh { false };
 	};
 }

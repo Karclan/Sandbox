@@ -1,14 +1,18 @@
 #include "PhysicsComponentsDetails.h"
 
-#include "../magic_enum/magic_enum.hpp"
-#include "../Utils/format.h"
-
 #include "../CollisionComponent.h"
+
+#include "../Utils/format.h"
+#include "../Utils/customformatters.h"
+
+#include "../magic_enum/magic_enum.hpp"
 
 #include "imgui.h"
 
 namespace Editor
 {
+	constexpr float FloatDragSpeed = 0.01f;
+
 	void CollisionComponentDetails::BuildDetailsInternal( Physics::CollisionComponent & inComponent ) const
 	{
 		if ( ImGui::CollapsingHeader( "Collision Component" ) )
@@ -55,11 +59,14 @@ namespace Editor
 	{
 		if ( ImGui::CollapsingHeader( "Square Extents" ) )
 		{
-			ImGui::DragFloat2( "Bottom Right", &inComponent.bottomRight.x );
-			ImGui::DragFloat2( "Top Left", &inComponent.topLeft.x );
-			ImGui::InputDouble( "Height", &inComponent.height );
-			ImGui::InputDouble( "Width", &inComponent.width );
+			ImGui::PushID( "##Details" );
+			ImGui::Text( fmt::format( "Bottom Right: {}", inComponent.bottomRight ).c_str() );
+			ImGui::Text( fmt::format( "Top Left: {}", inComponent.topLeft ).c_str() );
+			ImGui::DragFloat( "Height", &inComponent.height, FloatDragSpeed );
+			ImGui::DragFloat( "Width", &inComponent.width, FloatDragSpeed );
+			ImGui::DragFloat2( "Offset", &inComponent.offset.x, FloatDragSpeed );
 			ImGui::Checkbox( "Recalculate Extents", &inComponent.recalculateExtents );
+			ImGui::PopID();
 		}
 	}
 
@@ -67,19 +74,24 @@ namespace Editor
 	{
 		if ( ImGui::CollapsingHeader( "Circle Extents" ) )
 		{
-			ImGui::InputDouble( "Radius", &inComponent.radius);
+			ImGui::PushID( "##Details" );
+			ImGui::DragFloat( "Radius", &inComponent.radius, FloatDragSpeed );
+			ImGui::PopID();
 		}
 	}
 
 	void SquareExtentsDebugRenderComponentDetails::BuildDetailsInternal( Physics::SquareExtentsDebugRenderComponent & inComponent ) const
 	{
-		if ( ImGui::CollapsingHeader( "Circle Extents" ) )
+		if ( ImGui::CollapsingHeader( "Square Debug Render Extents" ) )
 		{
-			ImGui::DragFloat2( "Bottom Right", &inComponent.cachedBottomRight.x );
-			ImGui::DragFloat2( "Top Left", &inComponent.cachedTopLeft.x );
-			ImGui::InputDouble( "Height", &inComponent.cachedHeight );
-			ImGui::InputDouble( "Width", &inComponent.cachedWidth );
+			ImGui::PushID( "##Details" );
+			ImGui::Text( fmt::format( "Bottom Right: {}", inComponent.cachedBottomRight ).c_str() );
+			ImGui::Text( fmt::format( "Top Left: {}", inComponent.cachedTopLeft ).c_str() );
+			ImGui::Text( fmt::format( "Height: {}", inComponent.cachedHeight ).c_str() );
+			ImGui::Text( fmt::format( "Width: {}", inComponent.cachedWidth ).c_str() );
+			ImGui::Text( fmt::format( "Offset: {}", inComponent.cachedOffset ).c_str() );
 			ImGui::Checkbox( "Recalculate Mesh", &inComponent.recalculateDebugMesh );
+			ImGui::PopID();
 		}
 	}
 
