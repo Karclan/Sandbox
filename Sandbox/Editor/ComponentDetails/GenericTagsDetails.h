@@ -2,7 +2,8 @@
 
 #include "entt/core/type_info.hpp"
 
-#include "../Utils/TemplateUtils.h"
+#include "../../Utils/TemplateUtils.h"
+
 #include <string>
 
 namespace Editor
@@ -27,9 +28,9 @@ namespace Editor
 		constexpr TTagDetails() = default;
 		virtual ~TTagDetails() = default;
 
-		constexpr entt::type_info GetHandledType() const override { return entt::type_id<Tag>(); }
-		constexpr char const * GetTagName() const override { return humanReadableName.Value; }
-		constexpr entt::id_type GetTagId() const override { return entt::type_hash<Tag>(); }
+		constexpr entt::type_info GetHandledType() const final { return entt::type_id<Tag>(); }
+		constexpr char const * GetTagName() const final { return humanReadableName.Value; }
+		constexpr entt::id_type GetTagId() const final { return entt::type_hash<Tag>(); }
 
 	private:
 	};

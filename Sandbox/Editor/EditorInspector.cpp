@@ -47,7 +47,14 @@ namespace Editor
 			};
 			struct UnmatchedDetails
 			{
-				entt::id_type Id = {};
+				UnmatchedDetails( entt::id_type id, entt::type_info info )
+					: Id(id)
+					, typeInfo(info)
+				{
+
+				}
+				entt::id_type const Id;
+				entt::type_info const typeInfo;
 			};
 
 			NameComponentHolder nameComponentHolder;
@@ -56,15 +63,23 @@ namespace Editor
 			std::vector<UnmatchedDetails> unmatchedDetails;
 
 			auto const & editorContextComponent = m_registry.ctx().get<EditorContextComponent const>();
-			auto const storage = m_registry.GetStorage();
-			for ( auto && curr : storage )//Go over all the component storage
+			auto const registryStorage = m_registry.GetStorage();
+			for ( auto && curr : registryStorage )//Go over all the component storage
 			{
+				entt::type_info const storageType = curr.second.type();
+
+				//Skip over entity pool
+				if ( storageType.hash() == entt::type_hash<Core::Entity>() )
+				{
+					continue;
+				}
+
 				//if this storage contains our selected entity
 				if ( auto & storage = curr.second; storage.contains( editorContextComponent.m_InspectedEntity ) )
 				{
 					bool detailMatch = false;
 					entt::id_type const id = curr.first;
-
+				
 					//Special case for the name component
 					if ( id == m_NameComponentDetails.Info.hash() )
 					{
@@ -98,7 +113,7 @@ namespace Editor
 					//Unmatched Search!
 					if ( !detailMatch )
 					{
-						unmatchedDetails.push_back( { id } );
+						unmatchedDetails.push_back( { id, storageType } );
 					}
 				}
 			}
@@ -159,7 +174,7 @@ namespace Editor
 			//For all unmatched details
 			for ( UnmatchedDetails const & unmatched : unmatchedDetails )
 			{
-				ImGui::Text( fmt::format( "Component Id Name: Unhandled Type Id: {}", unmatched.Id ).c_str() );
+				ImGui::Text( fmt::format( "Component Id Name\nUnhandled Type Id: {}\nType Name: {}", unmatched.Id, unmatched.typeInfo.name() ).c_str() );
 			}
 
 			ImGui::EndChild();

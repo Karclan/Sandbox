@@ -51,5 +51,7 @@ namespace Game
 	{
 		GameClass::RegisterComponentDetails();
 		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::PlayerComponentDetails>() ) );
+
+		m_editorInspector.RegisterTagDetailsView( std::move( std::make_unique<Editor::PlayerTagDetails>() ));
 	}
 }
