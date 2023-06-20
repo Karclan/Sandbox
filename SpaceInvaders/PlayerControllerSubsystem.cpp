@@ -14,6 +14,8 @@
 #include "GameTags.h"
 #include "Physics/CollisionComponent.h"
 
+#include "GameInputActions.h"
+
 namespace Game
 {
 
@@ -81,6 +83,20 @@ namespace Game
 	void PlayerControllerSubsystem::FixedUpdate( double deltaTime )
 	{
 		UNUSED( deltaTime );
+
+		m_registry.ForView<Graphics::TransformComponent, PlayerComponent, PlayerTag>( [this, &deltaTime] ( Graphics::TransformComponent & transform, PlayerComponent & player)
+			{
+				if ( m_inputSystem.IsPressesd( PlayerInputActions::MoveLeft ) || m_inputSystem.IsHeld( PlayerInputActions::MoveLeft ) )
+				{
+					transform.Position.x += player.m_MovementSpeed * static_cast< float >( deltaTime );
+				}
+
+				if ( m_inputSystem.IsPressesd( PlayerInputActions::MoveRight ) || m_inputSystem.IsHeld( PlayerInputActions::MoveRight ) )
+				{
+					transform.Position.x -= player.m_MovementSpeed * static_cast<float>(deltaTime);
+				}
+			} );
+
 	}
 
 	void PlayerControllerSubsystem::Update( double deltaTime )
@@ -88,9 +104,9 @@ namespace Game
 		UNUSED( deltaTime );
 		m_registry.ForView<Graphics::TransformComponent, PlayerTag>( [this] ( Graphics::TransformComponent & transform )
 			{
-				glm::dvec3 mousePosition = m_inputSystem.GetMouseWorldPosition();
-				transform.Position.x = static_cast< float >( mousePosition.x );
-				transform.Position.y = static_cast< float >( mousePosition.y );
+				//glm::dvec3 mousePosition = m_inputSystem.GetMouseWorldPosition();
+				//transform.Position.x = static_cast< float >( mousePosition.x );
+				//transform.Position.y = static_cast< float >( mousePosition.y );
 			} );
 	}
 

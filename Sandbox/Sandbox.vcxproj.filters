@@ -455,6 +455,9 @@
     <ClInclude Include="Core\ResourceType.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Input\InputContext.h">
+      <Filter>Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Imgui\misc\README.txt">

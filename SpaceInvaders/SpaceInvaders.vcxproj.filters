@@ -57,6 +57,15 @@
     <ClCompile Include="ComponentDetails\GameComponentDetails.cpp">
       <Filter>Source Files\ComponentDetails</Filter>
     </ClCompile>
+    <ClCompile Include="GameGridSubsystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameInputActions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameBindings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameImpl.h">
@@ -90,6 +99,18 @@
       <Filter>Header Files\ComponentDetails</Filter>
     </ClInclude>
     <ClInclude Include="GameTags.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameGridComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameGridSubsystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameBindings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameInputActions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

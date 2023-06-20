@@ -34,7 +34,6 @@ namespace Input
 		//Also show out the key code status values
 
 		InputStatsComponent & inputStats = m_registry.ctx().get<InputStatsComponent>();
-
 	}
 
 	void InputSystem::FixedUpdate( double deltaTime ) noexcept
@@ -57,6 +56,9 @@ namespace Input
 	void InputSystem::Update( double deltaTime ) noexcept
 	{
 		UNUSED( deltaTime );
+		//////////////////////////////////////////////////////////////////////////
+		//Mouse position
+		//////////////////////////////////////////////////////////////////////////
 		Graphics::RenderStats const renderStats = m_registry.ctx().get<Graphics::RenderStats const>();
 		if ( renderStats.m_renderingSubwindow )
 		{
@@ -78,6 +80,9 @@ namespace Input
 		inputStats.m_oldMouseState = m_oldMouseState;
 		inputStats.m_lerpedMouseState = m_lerpedMouseState;
 		inputStats.m_deltaMouseState = m_deltaMouseState;
+		//////////////////////////////////////////////////////////////////////////
+		//Input actions
+		//////////////////////////////////////////////////////////////////////////
 
 	}
 
@@ -94,7 +99,7 @@ namespace Input
 	void InputSystem::MouseAction( KeyCode button, ActionState action, int mods )
 	{
 		//Mouse buttons are 1 or 0 if pressed or released
-		DeviceId constexpr keyboardId = { 0, DeviceType::Mouse };
+		DeviceId constexpr keyboardId = { 1, DeviceType::Mouse };
 		//Key values are 1 or 0 if the key is released or not.
 		SetActionInternal( keyboardId, button, { action, ( action != ActionState::Released ) ? 1.0f : 0.f } );
 
@@ -115,25 +120,25 @@ namespace Input
 	bool InputSystem::IsPressesd( ActionId const actionId ) const
 	{
 		assert( m_actionStates.find( actionId ) != m_actionStates.end() );
-		return m_actionStates.at( actionId ).m_state == ActionState::Pressed;
+		return m_actionStates.at( actionId ).State == ActionState::Pressed;
 	}
 
 	bool InputSystem::IsHeld( ActionId const actionId ) const
 	{
 		assert( m_actionStates.find( actionId ) != m_actionStates.end() );
-		return m_actionStates.at( actionId ).m_state == ActionState::Repeat;
+		return m_actionStates.at( actionId ).State == ActionState::Repeat;
 	}
 
 	bool InputSystem::IsReleased( ActionId const actionId ) const
 	{
 		assert( m_actionStates.find( actionId ) != m_actionStates.end() );
-		return m_actionStates.at( actionId ).m_state == ActionState::Released;
+		return m_actionStates.at( actionId ).State == ActionState::Released;
 	}
 
 	float InputSystem::GetValue( ActionId const actionId ) const
 	{
 		assert( m_actionStates.find( actionId ) != m_actionStates.end() );
-		return m_actionStates.at( actionId ).m_value;
+		return m_actionStates.at( actionId ).Value;
 	}
 
 	glm::dvec2 InputSystem::GetMousePosition() const
@@ -146,9 +151,50 @@ namespace Input
 		return m_newMouseState.m_worldPosition;
 	}
 
-	void InputSystem::AddBinding( DeviceId inId, DeviceBindings && Mapping )
+	glm::dvec3 InputSystem::GetOldMouseWorldPosition() const
 	{
-		m_deviceBindings.emplace( inId, std::move( Mapping ) );
+		return m_oldMouseState.m_worldPosition;
+	}
+
+	glm::dvec3 InputSystem::GetDeltaMouseWorldPosition() const
+	{
+		return m_deltaMouseState.m_worldPosition;
+	}
+
+	glm::dvec3 InputSystem::GetLerpedMouseWorldPosition() const
+	{
+		return m_lerpedMouseState.m_worldPosition;
+	}
+
+	void InputSystem::AddBinding( std::shared_ptr<DeviceBindings> & Mapping )
+	{
+		if ( Mapping )
+		{
+			Mapping->SetupBindings();
+
+			DeviceId const MappingId = Mapping->GetDeviceId();
+			//Go through the mapping and add the ActionId into our action states.
+			//Default initialize entries so we can query them.
+			KeyCodeActionIdMap const & Bindings = Mapping->GetKeyCodeActionIdBinding();
+			for ( auto const & binding : Bindings )
+			{
+				ActionId const & action = binding.second;
+				m_actionStates[ action ] = {};
+			}
+
+			m_deviceBindings.emplace( MappingId, Mapping );
+
+			DeviceBindingsContainer::iterator mergedMappingIterator = m_mergedDeviceBindings.find( MappingId );
+			if ( mergedMappingIterator != m_mergedDeviceBindings.end() )
+			{
+				std::shared_ptr<DeviceBindings> MergedBinding = mergedMappingIterator->second;
+				MergedBinding->Merge( *Mapping.get() );
+			}
+			else
+			{
+				m_mergedDeviceBindings.emplace( MappingId, Mapping );
+			}
+		}
 	}
 
 	glm::dvec3 InputSystem::ScreenToWorldSpace( glm::dvec2 const & position ) const
@@ -179,10 +225,10 @@ namespace Input
 
 	DeviceBindings const & InputSystem::GetDeviceBinding( DeviceId const & deviceId ) const
 	{
-		DeviceBindingsContainer::const_iterator const it = m_deviceBindings.find( deviceId );
-		if ( it != m_deviceBindings.end() )
+		DeviceBindingsContainer::const_iterator const it = m_mergedDeviceBindings.find( deviceId );
+		if ( it != m_mergedDeviceBindings.end() )
 		{
-			return it->second;
+			return *it->second.get();
 		}
 		else
 		{
@@ -193,10 +239,9 @@ namespace Input
 
 	bool InputSystem::SetActionInternal( DeviceId const & deviceId, KeyCode key, InputState const & state )
 	{
-		DeviceBindings const & binding = GetDeviceBinding( deviceId );
-		KeyCodeActionIdMap const & keycodeMap = binding.GetKeyCodeActionIdBinding();
-		KeyCodeActionIdMap::const_iterator const keyCodeIterator = keycodeMap.find( key );
-		if ( keyCodeIterator != keycodeMap.end() )
+		KeyCodeActionIdMap const & keyCodeActionIdMap = GetDeviceBinding( deviceId ).GetKeyCodeActionIdBinding();
+		KeyCodeActionIdMap::const_iterator const keyCodeIterator = keyCodeActionIdMap.find( key );
+		if ( keyCodeIterator != keyCodeActionIdMap.end() )
 		{
 			ActionId const & actionId = keyCodeIterator->second;
 			m_actionStates[ actionId ] = state;

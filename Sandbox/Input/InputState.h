@@ -6,23 +6,24 @@
 #include "glm/ext/vector_double3.hpp"
 
 #include <map>
+#include <set>
 
 namespace Input
 {
-	typedef typename int KeyCode;
+	using KeyCode = int;
 
 	enum class ActionState : int
 	{
+		Released = 0,
+		Pressed,
+		Repeat,
 		Unknown = -1,
-		Pressed = 0,
-		Released,
-		Repeat
 	};
 
 	struct InputState
 	{
-		ActionState m_state{ ActionState::Unknown };
-		float m_value{ 0.f };
+		ActionState State { ActionState::Unknown };
+		float Value { 0.f };
 	};
 
 	using KeyCodeActionIdMap = std::map<KeyCode, ActionId>;
@@ -30,8 +31,8 @@ namespace Input
 
 	struct MouseState
 	{
-		glm::dvec2 m_position{ 0.f };
-		glm::dvec2 m_scroll{ 0.f };
+		glm::dvec2 m_position { 0.f };
+		glm::dvec2 m_scroll { 0.f };
 
 		glm::dvec3 m_worldPosition { 0.f }; //World position of mouse based on current active camera
 	};

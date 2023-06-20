@@ -7,15 +7,15 @@ int main( [[maybe_unused]] int argc, [[maybe_unused]] char * argv[] )
 {
 	Game::SpaceInvadersGame Game = Game::SpaceInvadersGame();
 
-	Game.Init();
 	Game.EditorInit();
+	Game.Init();
 
 	while ( !Game.ShouldClose() )
 	{
 		Game.Run();
 	}
 
-	Game.DeEditorInit();
 	Game.DeInit();
+	Game.DeEditorInit();
 	return 0;
 }

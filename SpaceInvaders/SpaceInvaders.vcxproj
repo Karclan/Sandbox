@@ -346,8 +346,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ComponentDetails\GameComponentDetails.cpp" />
+    <ClCompile Include="GameBindings.cpp" />
+    <ClCompile Include="GameGridSubsystem.cpp" />
     <ClCompile Include="GameImpl.cpp" />
     <ClCompile Include="PlayerControllerSubsystem.cpp" />
+    <ClCompile Include="GameInputActions.cpp" />
     <ClCompile Include="SpaceInvaders.cpp" />
     <ClCompile Include="TestingPrototypeSystems\Basic2DGameTestSubsystem.cpp" />
     <ClCompile Include="TestingPrototypeSystems\BasicMovementSubsystem.cpp" />
@@ -358,10 +361,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ComponentDetails\GameComponentDetails.h" />
+    <ClInclude Include="GameGridComponent.h" />
+    <ClInclude Include="GameGridSubsystem.h" />
     <ClInclude Include="GameImpl.h" />
     <ClInclude Include="GameTags.h" />
     <ClInclude Include="PlayerComponent.h" />
     <ClInclude Include="PlayerControllerSubsystem.h" />
+    <ClInclude Include="GameBindings.h" />
+    <ClInclude Include="GameInputActions.h" />
     <ClInclude Include="TestingPrototypeSystems\Basic2DGameTestSubsystem.h" />
     <ClInclude Include="TestingPrototypeSystems\BasicMovementSubsystem.h" />
     <ClInclude Include="TestingPrototypeSystems\BasicSpriteTestSubsystem.h" />

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <type_traits>
+#include <cstdint>
 
 namespace Input
 {
@@ -11,10 +11,18 @@ namespace Input
 		Keyboard,
 		Controller
 	};
-	
+
+
 	struct DeviceId
 	{
-		bool operator==(DeviceId const & other) const noexcept
+		using IdType = int32_t;
+		constexpr DeviceId( IdType id, DeviceType type )
+			: m_id( id )
+			, m_type( type )
+		{
+		}
+
+		bool operator==( DeviceId const & other ) const noexcept
 		{
 			bool bSame = true;
 			bSame &= m_id == other.m_id;
@@ -34,20 +42,19 @@ namespace Input
 			}
 		}
 
-		int32_t m_id{ -1 };
-		DeviceType m_type;
+		int32_t const m_id;
+		DeviceType const  m_type;
 	};
 
 	class Device
 	{
 	public:
-		constexpr Device(DeviceId inId) noexcept
-			: m_id(inId)
+		constexpr Device( DeviceId inId ) noexcept
+			: m_id( inId )
 		{
-
 		}
 
-		bool operator==(Device const & other) const noexcept
+		bool operator==( Device const & other ) const noexcept
 		{
 			return m_id == other.m_id;
 		}

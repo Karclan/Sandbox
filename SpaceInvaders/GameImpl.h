@@ -3,6 +3,10 @@
 #include "Core/GameClass.h"
 
 #include "PlayerControllerSubsystem.h"
+#include "GameGridSubsystem.h"
+#include "GameBindings.h"
+
+#include <memory>
 
 namespace Game
 {
@@ -23,5 +27,9 @@ namespace Game
 
 	private:
 		Game::PlayerControllerSubsystem m_PlayerControllerSubsytem;
+		Game::GameGridSubsystem m_GridSubsystem;
+
+		std::shared_ptr<Input::DeviceBindings> KeyboardBindings;
+		std::shared_ptr<Input::DeviceBindings> MouseBindings;
 	};
 }

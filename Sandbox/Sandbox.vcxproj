@@ -516,6 +516,7 @@
     <ClInclude Include="Input\DeviceBindings.h" />
     <ClInclude Include="Input\Device.h" />
     <ClInclude Include="Input\InputAction.h" />
+    <ClInclude Include="Input\InputContext.h" />
     <ClInclude Include="Input\InputState.h" />
     <ClInclude Include="Input\InputStatsComponent.h" />
     <ClInclude Include="Input\InputSystem.h" />

@@ -6,29 +6,16 @@
 
 namespace Editor
 {
-	EditorMouseBindings::EditorMouseBindings() noexcept
-		:Input::DeviceBindings( Input::DeviceId( 0, { Input::DeviceType::Mouse } ) )
-	{
-	}
-
 	void EditorMouseBindings::SetupBindings()
 	{
-		using namespace Input::Literals;
-		m_keycodeActionIdMap.emplace( static_cast< Input::KeyCode >( GLFW_MOUSE_BUTTON_1 ), Actions::CameraPanToggle );
-	}
-
-	EditorKeyboardBindings::EditorKeyboardBindings() noexcept
-		:Input::DeviceBindings( Input::DeviceId( 0, { Input::DeviceType::Keyboard } ) )
-	{
+		/*m_keycodeActionIdMap.emplace( static_cast< Input::KeyCode >( GLFW_MOUSE_BUTTON_1 ), Actions::CameraPanToggle );*/
 	}
 
 	void EditorKeyboardBindings::SetupBindings()
 	{
-		using namespace Input::Literals;
-		m_keycodeActionIdMap.emplace( static_cast< Input::KeyCode >( GLFW_KEY_W ), Actions::CameraPanUp );
-		m_keycodeActionIdMap.emplace( static_cast< Input::KeyCode >( GLFW_KEY_S ), Actions::CameraPanDown );
-		m_keycodeActionIdMap.emplace( static_cast< Input::KeyCode >( GLFW_KEY_A ), Actions::CameraPanLeft );
-		m_keycodeActionIdMap.emplace( static_cast< Input::KeyCode >( GLFW_KEY_D ), Actions::CameraPanRight );
+		/*m_keycodeActionIdMap.emplace( static_cast< Input::KeyCode >( GLFW_KEY_UP ), Actions::CameraPanUp );
+		m_keycodeActionIdMap.emplace( static_cast< Input::KeyCode >( GLFW_KEY_DOWN ), Actions::CameraPanDown );
+		m_keycodeActionIdMap.emplace( static_cast< Input::KeyCode >( GLFW_KEY_LEFT ), Actions::CameraPanLeft );
+		m_keycodeActionIdMap.emplace( static_cast< Input::KeyCode >( GLFW_KEY_RIGHT ), Actions::CameraPanRight );*/
 	}
-
 }

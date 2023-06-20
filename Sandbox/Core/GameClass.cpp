@@ -9,7 +9,6 @@
 #include "../Generic/ComponentDetails/GenericComponentsDetails.h"
 #include "../Graphics/ComponentDetails/GraphicsTagsDetails.h"
 
-#include "../Editor/EditorBindings.h"
 #include "../Editor/EditorContextComponent.h"
 
 #include "imgui.h"
@@ -54,12 +53,10 @@ namespace Core
 		//m_editorUtilities.CreateEditorCamera( CameraEntity, m_mainRegistry );
 		/*auto CameraEntity = m_cameraSystem.CreatePerspectiveCamera( "EditorCamera" );
 		m_cameraSystem.SetActiveCamera( "EditorCamera" );*/
-
-		Editor::EditorMouseBindings MouseBindings {};
-		Editor::EditorKeyboardBindings KeyboardBindings {};
-
-		m_inputSystem.AddBinding( MouseBindings.GetDeviceId(), std::move( MouseBindings ) );
-		m_inputSystem.AddBinding( KeyboardBindings.GetDeviceId(), std::move( KeyboardBindings ) );
+		KeyboardBindings = std::make_shared<Editor::EditorKeyboardBindings>();
+		MouseBindings = std::make_shared<Editor::EditorMouseBindings>();
+		m_inputSystem.AddBinding( MouseBindings );
+		m_inputSystem.AddBinding( KeyboardBindings );
 
 		RegisterSubsystem( &m_editorInspector );
 		RegisterSubsystem( &m_editorHierarchyWindow );

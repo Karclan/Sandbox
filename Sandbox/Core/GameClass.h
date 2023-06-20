@@ -6,6 +6,7 @@
 #include "../Editor/EditorInspector.h"
 #include "../Editor/EditorHierarchyWindow.h"
 #include "../Editor/EditorStatsViewer.h"
+#include "../Editor/EditorBindings.h"
 
 #include "../Input/InputSystem.h"
 
@@ -135,6 +136,9 @@ namespace Core
 		Editor::EditorInspector m_editorInspector;
 		Editor::EditorHierarchyWindow m_editorHierarchyWindow;
 		Editor::EditorStatsViewer m_editorStatsViewer;
+
+		std::shared_ptr<Input::DeviceBindings> MouseBindings;
+		std::shared_ptr<Input::DeviceBindings> KeyboardBindings;
 
 		//Core Systems
 		Input::InputSystem m_inputSystem;

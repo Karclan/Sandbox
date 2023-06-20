@@ -4,6 +4,8 @@
 #include "InputAction.h"
 #include "InputState.h"
 
+#include "../Utils/TemplateUtils.h"
+
 #include <map>
 
 namespace Input
@@ -12,37 +14,42 @@ namespace Input
 	class DeviceBindings
 	{
 	public:
-		DeviceBindings( DeviceId inId ) noexcept
-			:m_deviceId( inId )
-		{
-		};
-
+		DeviceBindings() = default;
 		virtual ~DeviceBindings() = default;
 
 		bool operator==( DeviceId const & inId ) const noexcept
 		{
-			return m_deviceId == inId;
+			return GetDeviceId() == inId;
 		}
 
 		bool operator<( DeviceBindings const & other ) const noexcept
 		{
-			return m_deviceId < other.m_deviceId;
+			return GetDeviceId() < other.GetDeviceId();
 		}
 
-		DeviceId const & GetDeviceId() const noexcept 
-		{
-			return m_deviceId;
-		}
+		virtual constexpr DeviceId GetDeviceId() const = 0;
+		virtual char const * GetBindingName() const = 0;
 
 		//Function to setup bindings for a given device
 		//This will in future take a processed file with a list of bindings and action ids
-		virtual void SetupBindings() {};
+		virtual void SetupBindings() = 0;
 
-		KeyCodeActionIdMap const & GetKeyCodeActionIdBinding() const noexcept { return m_keycodeActionIdMap; }
+		KeyCodeActionIdMap const & GetKeyCodeActionIdBinding() const noexcept;
+
+		void Merge( DeviceBindings const & other );
 
 	protected:
-		DeviceId const m_deviceId;
-		KeyCodeActionIdMap m_keycodeActionIdMap;
+		KeyCodeActionIdMap m_keycodeActionIdMap {};
 	};
 
+	template<DeviceId deviceId, Utils::StringLiteral humanReadableName>
+	class TDeviceBindings : public DeviceBindings
+	{
+	public:
+		virtual constexpr DeviceId GetDeviceId() const { return deviceId; }
+		virtual char const * GetBindingName() const { return humanReadableName.Value; }
+
+		virtual void SetupBindings() = 0;
+
+	};
 }

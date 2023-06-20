@@ -4,21 +4,15 @@
 
 namespace Editor
 {
-	class EditorMouseBindings : public Input::DeviceBindings
+	class EditorMouseBindings : public Input::TDeviceBindings < Input::DeviceId( 0, { Input::DeviceType::Mouse } ), "Editor Mouse Bindings" >
 	{
 	public:
-		EditorMouseBindings() noexcept;
-		virtual ~EditorMouseBindings() = default;
-
-		void SetupBindings() override;
+		void SetupBindings() final;
 	};
 
-	class EditorKeyboardBindings : public Input::DeviceBindings
+	class EditorKeyboardBindings : public Input::TDeviceBindings < Input::DeviceId( 0, { Input::DeviceType::Keyboard } ), "Editor Keyboard Bindings" >
 	{
 	public:
-		EditorKeyboardBindings() noexcept;
-		virtual ~EditorKeyboardBindings() = default;
-
-		void SetupBindings() override;
+		void SetupBindings() final;
 	};
 }
