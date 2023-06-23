@@ -89,13 +89,13 @@ namespace Graphics
             switch( m_type )
             {
             case Type::Vertex:
-                m_shaderFilePath.append( ".vertexShader" );
+                m_shaderFilePath.append( ".vert" );
                 break;
             case Type::Fragment:
-                m_shaderFilePath.append( ".fragmentShader" );
+                m_shaderFilePath.append( ".frag" );
                 break;
             case Type::Geometry:
-                m_shaderFilePath.append( ".geometryShader" );
+                m_shaderFilePath.append( ".geom" );
             case Type::Invalid:
             default:
                 break;
