@@ -16,6 +16,8 @@
 #include "GraphicsTags.h"
 #include "CameraSystem.h"
 
+#include "GraphicsDraw.h"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -62,6 +64,8 @@ namespace Graphics
 		renderStats.FrameBufferDimensions = m_frameBufferDimensons;
 
 		m_registry.ctx().emplace<RenderStats>( renderStats );
+
+		GraphicsDraw::Initalize( this );
 	}
 
 	ShaderComponent Renderer::CreateShader( const std::string & name, Utils::EnumBitmask<Shader::Type> flags )

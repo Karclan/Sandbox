@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Renderer.h"
+#include "Colours.h"
 
 #include <glad/glad.h>
 
@@ -56,13 +57,9 @@ namespace Graphics
 			return m_fps;
 		}
 
-		static constexpr glm::vec4 Red { 1.f, 0.f, 0.f, 1.f };
-		static constexpr glm::vec4 Green { 0.f, 1.f, 0.f, 1.f };
-		static constexpr glm::vec4 Blue { 0.f, 0.f, 1.f, 1.f };
-		static constexpr glm::vec4 Black { 0.f, 0.f, 0.f, 1.f };
-		static constexpr glm::vec4 White { 1.f, 1.f, 1.f, 1.f };
 
-		bool DrawLine( glm::vec3 A, glm::vec3 B, glm::vec4 colour = White, float thickness = 1.f ) noexcept;
+
+		//bool DrawLine( glm::vec3 A, glm::vec3 B, glm::vec4 colour = Colours::White, float thickness = 1.f ) noexcept;
 
 	private:
 

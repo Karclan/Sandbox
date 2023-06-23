@@ -429,6 +429,7 @@
     <ClCompile Include="Graphics\CameraSystem.cpp" />
     <ClCompile Include="Graphics\ComponentDetails\GraphicsComponentsDetails.cpp" />
     <ClCompile Include="Graphics\Cube.cpp" />
+    <ClCompile Include="Graphics\GraphicsDraw.cpp" />
     <ClCompile Include="Graphics\Mesh.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
     <ClCompile Include="Graphics\Texture.cpp" />
@@ -483,9 +484,11 @@
     <ClInclude Include="Graphics\CameraInspector.h" />
     <ClInclude Include="Graphics\CameraStatsComponent.h" />
     <ClInclude Include="Graphics\CameraSystem.h" />
+    <ClInclude Include="Graphics\Colours.h" />
     <ClInclude Include="Graphics\ComponentDetails\GraphicsComponentsDetails.h" />
     <ClInclude Include="Graphics\ComponentDetails\GraphicsTagsDetails.h" />
     <ClInclude Include="Graphics\Cube.h" />
+    <ClInclude Include="Graphics\GraphicsDraw.h" />
     <ClInclude Include="Graphics\GraphicsTags.h" />
     <ClInclude Include="Graphics\Mesh.h" />
     <ClInclude Include="Graphics\MeshComponent.h" />

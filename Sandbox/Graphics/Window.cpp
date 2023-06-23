@@ -297,10 +297,10 @@ namespace Graphics
 		return glfwWindowShouldClose( m_glfwWindow );
 	}
 
-	bool Window::DrawLine( glm::vec3 A, glm::vec3 B, glm::vec4 colour, float thickness ) noexcept
-	{
-		return m_renderer->DrawLine( A, B, colour, thickness );
-	}
+	//bool Window::DrawLine( glm::vec3 A, glm::vec3 B, glm::vec4 colour, float thickness ) noexcept
+	//{
+	//	return m_renderer->DrawLine( A, B, colour, thickness );
+	//}
 
 	//////////////////////////////////////////////////////////////////////////
 	//Window callbacks

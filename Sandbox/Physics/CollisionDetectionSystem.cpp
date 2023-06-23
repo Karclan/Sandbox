@@ -7,6 +7,7 @@
 
 #include "../Graphics/TransformComponent.h"
 #include "../Graphics/Window.h"
+#include "../Graphics/GraphicsDraw.h"
 
 namespace Physics
 {
@@ -72,15 +73,15 @@ namespace Physics
 				{
 					float const zPosMinus1 = transform.Position.z - 1.f; //#TODO_Collision: For the purpose of rendering on top of whatever object we're rendering on. Though this doesn't work in 3d spaces, will need to figure this out with a proper render fix
 					debugRender = extents;
-					glm::vec4 const colour = collision.isColliding ? Graphics::Window::Red : Graphics::Window::White;
+					glm::vec4 const colour = collision.isColliding ? Graphics::Colours::Red : Graphics::Colours::White;
 					glm::vec3 const topLeft = glm::vec3( debugRender.cachedTopLeft, zPosMinus1 );
 					glm::vec3 const topRight = glm::vec3( debugRender.cachedTopLeft.x + debugRender.cachedWidth, debugRender.cachedTopLeft.y, zPosMinus1 );
 					glm::vec3 const bottomLeft = glm::vec3( debugRender.cachedBottomRight.x - debugRender.cachedWidth, debugRender.cachedBottomRight.y, zPosMinus1 );
 					glm::vec3 const bottomRight = glm::vec3( debugRender.cachedBottomRight, zPosMinus1 );
-					m_window.DrawLine( topLeft, topRight, colour, 1.f );
-					m_window.DrawLine( topLeft, bottomLeft, colour, 1.f );
-					m_window.DrawLine( topRight, bottomRight, colour, 1.f );
-					m_window.DrawLine( bottomRight, bottomLeft, colour, 1.f );
+					Graphics::GraphicsDraw::DrawLine( topLeft, topRight, colour, 1.f );
+					Graphics::GraphicsDraw::DrawLine( topLeft, bottomLeft, colour, 1.f );
+					Graphics::GraphicsDraw::DrawLine( topRight, bottomRight, colour, 1.f );
+					Graphics::GraphicsDraw::DrawLine( bottomRight, bottomLeft, colour, 1.f );
 				}
 			} );
 	}

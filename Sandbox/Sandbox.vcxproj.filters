@@ -216,6 +216,9 @@
     <ClCompile Include="Editor\EditorStatsViewer.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\GraphicsDraw.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\ShaderProgram.h">
@@ -457,6 +460,12 @@
     </ClInclude>
     <ClInclude Include="Input\InputContext.h">
       <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GraphicsDraw.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Colours.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

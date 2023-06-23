@@ -9,6 +9,7 @@
 
 #include "magic_enum/magic_enum.hpp"
 #include "Utils/UnusedMacro.h"
+#include "Graphics/GraphicsDraw.h"
 
 namespace Game
 {
@@ -138,12 +139,12 @@ namespace Game
 				glm::vec3 const AB = PointB - PointA;
 				glm::vec3 const AC = PointC - PointA;
 
-				m_window->DrawLine(PointA, PointA + AB, Graphics::Window::Black);
-				m_window->DrawLine(PointA, PointA + AC, Graphics::Window::White);
+				Graphics::GraphicsDraw::DrawLine( PointA, PointA + AB, Graphics::Colours::Black );
+				Graphics::GraphicsDraw::DrawLine( PointA, PointA + AC, Graphics::Colours::White );
 
-				m_window->DrawLine(PointA, PointA + PointAForward, Graphics::Window::Blue );
-				m_window->DrawLine(PointA, PointA + PointARight, Graphics::Window::Red );
-				m_window->DrawLine(PointA, PointA + up, Graphics::Window::Green);
+				Graphics::GraphicsDraw::DrawLine(PointA, PointA + PointAForward, Graphics::Colours::Blue );
+				Graphics::GraphicsDraw::DrawLine(PointA, PointA + PointARight, Graphics::Colours::Red );
+				Graphics::GraphicsDraw::DrawLine(PointA, PointA + up, Graphics::Colours::Green);
 
 				float const ADotB = glm::dot(PointARight, glm::normalize(AB));
 				float const ADotC = glm::dot(PointARight, glm::normalize(AC));

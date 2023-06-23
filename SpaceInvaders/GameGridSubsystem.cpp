@@ -7,6 +7,7 @@
 
 #include "Graphics/Window.h"
 #include "Graphics/TransformComponent.h"
+#include "Graphics/GraphicsDraw.h"
 
 namespace Game
 {
@@ -53,10 +54,10 @@ namespace Game
 					glm::vec3 const topRight = glm::vec3( gridComponent.TopLeft.x + gridComponent.Width, gridComponent.TopLeft.y, transform.Position.z );
 					glm::vec3 const bottomLeft = glm::vec3( gridComponent.BottomRight.x - gridComponent.Width, gridComponent.BottomRight.y, transform.Position.z );
 					glm::vec3 const bottomRight = glm::vec3( gridComponent.BottomRight.x, gridComponent.BottomRight.y, transform.Position.z );
-					m_Window.DrawLine( topLeft, topRight, gridComponent.DebugColour, 1.f );
-					m_Window.DrawLine( topLeft, bottomLeft, gridComponent.DebugColour, 1.f );
-					m_Window.DrawLine( topRight, bottomRight, gridComponent.DebugColour, 1.f );
-					m_Window.DrawLine( bottomRight, bottomLeft, gridComponent.DebugColour, 1.f );
+					Graphics::GraphicsDraw::DrawLine( topLeft, topRight, gridComponent.DebugColour, 1.f );
+					Graphics::GraphicsDraw::DrawLine( topLeft, bottomLeft, gridComponent.DebugColour, 1.f );
+					Graphics::GraphicsDraw::DrawLine( topRight, bottomRight, gridComponent.DebugColour, 1.f );
+					Graphics::GraphicsDraw::DrawLine( bottomRight, bottomLeft, gridComponent.DebugColour, 1.f );
 				}
 			} );
 	}
