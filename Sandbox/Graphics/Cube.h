@@ -8,12 +8,8 @@ namespace Graphics
     {
     public:
         Cube();
-        virtual ~Cube();
-
+        virtual ~Cube() = default;
         // Inherited via Mesh
-        virtual void create() override;
-
-        // Inherited via Mesh
-        virtual void draw() const override;
+        virtual void Create() override;
     };
 }

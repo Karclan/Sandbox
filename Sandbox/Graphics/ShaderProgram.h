@@ -42,6 +42,9 @@ namespace Graphics
 
         virtual std::string const & GetShaderName() const = 0;
 
+        virtual std::string const & GetShaderPath( Shader::Type type ) const = 0;
+        virtual std::string const & GetShaderSource( Shader::Type type ) const = 0;
+
         virtual Utils::EnumBitmask<Shader::Type> const & GetShaderTypes() const = 0;
         virtual std::map<std::string, int> const & GetUniforms() const = 0;
 
@@ -87,6 +90,10 @@ namespace Graphics
         //---------------------------------------------------------------------//
 		unsigned int GetShaderId() const override;
         std::string const & GetShaderName() const override; 
+
+        std::string const & GetShaderPath( Shader::Type type ) const override;
+        std::string const & GetShaderSource( Shader::Type type ) const override;
+
         Utils::EnumBitmask<Shader::Type> const & GetShaderTypes() const override;
 		std::map<std::string, int> const & GetUniforms() const override;
 		std::map<std::string, bool> const & GetBoolUniforms() const override;

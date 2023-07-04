@@ -2,34 +2,34 @@
 
 #include "MeshComponent.h"
 
+#include "VertexArrayObject.h"
+#include "DataBuffer.h"
+
 namespace Graphics
 {
-    class Mesh
-    {
-    public:
-        Mesh();
-        ~Mesh();
+	class Mesh
+	{
+	public:
+		Mesh() = default;
+		virtual ~Mesh();
 
-        virtual void create() = 0;
-        virtual void draw() const;
-        void bind();
-        void cleanUp();
+		std::shared_ptr<VertexArrayObject> const & GetVAO() { return m_VAO; }
 
-protected:
-    void bindVAO();//Will generate if not made
-    void bindVertices( float const * const vertices, unsigned int size, unsigned int stride );
-    void bindIndices( unsigned int const * const indices, unsigned int size );
-    void finishBinding();
+		virtual void Create() = 0;
+		virtual void Bind();
+		void CleanUp();
 
-    void setCreated( bool flag );
-    bool getCreated() const;
+	protected:
+		void FinishBinding();
 
-    unsigned int m_vbo { 0 };
-    unsigned int m_vao { 0 };
-    unsigned int m_ebo { 0 };
-protected:
+		void SetCreated( bool flag );
+		bool GetCreated() const;
 
-    bool m_created { false };
-    bool m_hasIndicies { false };
-};
+		bool m_Created { false };
+
+		std::shared_ptr<VertexArrayObject> m_VAO { nullptr };
+		//Should remove these from the Mesh and put them on the sub objects really. 
+		std::shared_ptr<VertexBuffer> m_VBO { nullptr };
+		std::shared_ptr<IndexBuffer> m_EBO { nullptr };
+	};
 }

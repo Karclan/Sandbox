@@ -10,9 +10,11 @@ namespace Graphics
         Invalid,
     };
 
+    using MeshIdType = unsigned int;
+
     struct MeshComponent
     {
-        PrimativeType type { PrimativeType::Invalid };
-        unsigned int MeshId { 0 };
+        PrimativeType Type { PrimativeType::Invalid };
+        MeshIdType MeshId { 0 };
     };
 }

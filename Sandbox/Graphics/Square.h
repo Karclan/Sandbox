@@ -7,10 +7,8 @@ namespace Graphics
     {
     public:
         Square();
-        virtual ~Square();
+        virtual ~Square() = default;
         // Inherited via Mesh
-        virtual void create() override;
-        // Inherited via Mesh
-        //virtual void draw() override;
+        void Create() override;
     };
 }

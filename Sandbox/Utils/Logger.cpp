@@ -31,6 +31,9 @@ namespace Utils
 			case LogType::Spam:
 				OS << "Spam - ";
 				break;
+			case LogType::Trace:
+				OS << "Trace - ";
+				break;
 			case LogType::Info:
 				OS << "Info - ";
 				break;

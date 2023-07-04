@@ -1,8 +1,14 @@
-#version 430 core
+#version 450
 
 out vec4 FragColor;
 
+in VS_Out
+{
+    vec4 VertColour;
+    float Thickness;
+} fs_in;
+
 void main()
 {
-	FragColor = vec4(0.0f, 1.0f, 0.0f, 1.0f);
+	FragColor = fs_in.VertColour;
 }

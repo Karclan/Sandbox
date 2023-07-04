@@ -8,6 +8,12 @@
 #include "ShaderProgram.h"
 #include "TextureLoader.h"
 
+#include "Colours.h"
+
+#include "DataBuffer.h"
+#include "VertexArrayObject.h"
+#include "UniformBufferObject.h"
+
 #include "Square.h"
 #include "Cube.h"
 #include "Triangle.h"
@@ -84,30 +90,41 @@ namespace Graphics
 		PrimativeType m_activeMeshType { PrimativeType::Invalid };
 
 		size_t m_boundTexturesSize {};
-		std::string m_currentImGuiTexture {"unset"};
+		std::string m_currentImGuiTexture { "unset" };
 
 		ShaderProgram * m_lineShader { nullptr };
-		unsigned int m_lineDrawCalls { 0 };
-		unsigned int m_lineVbo { 0 };
-		unsigned int m_lineVao { 0 };
-		unsigned int m_lineEbo { 0 };
+		unsigned int m_lineDrawCallCount { 0 };
+		std::shared_ptr<VertexBuffer> m_lineVbo { nullptr };
+		std::shared_ptr<VertexArrayObject> m_lineVao { nullptr };
 
 		static constexpr unsigned int m_maxLinesPerRender = 1000;
 
-		struct LineDrawCall
+		struct LineVertex
 		{
-			glm::vec3 PointA { 0.f };
-			glm::vec3 PointB { 0.f };
-			glm::vec4 m_colour { 1.f };
-			float m_lineThickness { 1.f };
+			glm::vec3 Position { 0.f };
+			glm::vec4 Colour { Colours::White };
+			float Thickness { 1.f };
 		};
 
-		std::array<LineDrawCall, m_maxLinesPerRender> m_lineDrawCallList;
+		using LineDrawCallArray = std::array<LineVertex, m_maxLinesPerRender>;
+		std::array<LineVertex, m_maxLinesPerRender> m_lineDrawCallList; //Just a way of having stack allocated data we can mess around with.
+		LineDrawCallArray::iterator m_lineDrawBegin;
+		LineDrawCallArray::iterator m_lineDrawItr;
 
 		glm::ivec2 m_frameBufferDimensons { 800, 600 };
 		glm::ivec2 m_screenDimensions { 800, 600 };
 		glm::ivec2 m_screenStartingPosition { 0,0 };
 		glm::ivec2 m_frameBufferStartingPosition { 0,0 };
+
+		glm::vec4 m_clearColour { 0.2f, 0.3f, 0.3f, 1.0f };
+
+		struct CameraData
+		{
+			glm::mat4 ViewProjectionMatrix { 0.f };
+		};
+
+		CameraData m_cameraData {};
+		std::shared_ptr<UniformBufferObject> m_cameraUBO { nullptr };
 
 		bool m_showTextureWindow { false };
 

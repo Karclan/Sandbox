@@ -19,6 +19,8 @@
 #include <string>
 #include <numeric>
 
+#include "../magic_enum/magic_enum_format.hpp"
+
 namespace Editor
 {
 	constexpr float FloatDragSpeed = 0.01f;
@@ -86,7 +88,7 @@ namespace Editor
 			ImGui::DragFloat( "Ortho Aspect Zoom", &inComponent.m_orthoAspectScale, FloatDragSpeed );
 
 			ImGui::Text( fmt::format( "Projection Matrix \n{}", inComponent.m_projectionMatrix ).c_str() );
-			ImGui::Text( fmt::format( "View Matrix \n{}", inComponent.m_projectionMatrix ).c_str() );
+			ImGui::Text( fmt::format( "View Matrix \n{}", inComponent.m_viewMatrix ).c_str() );
 		}
 	}
 
@@ -94,7 +96,7 @@ namespace Editor
 	{
 		if ( ImGui::CollapsingHeader( "Transform" ) )
 		{
-			ImGui::DragFloat3( "Position", &inComponent.Position.x , FloatDragSpeed );
+			ImGui::DragFloat3( "Position", &inComponent.Position.x, FloatDragSpeed );
 			ImGui::DragFloat3( "Scale", &inComponent.Scale.x, FloatDragSpeed );
 
 			glm::vec3 eulerRotation = glm::degrees( glm::eulerAngles( inComponent.RotationQuat ) );
@@ -110,7 +112,7 @@ namespace Editor
 		if ( ImGui::CollapsingHeader( "Mesh" ) )
 		{
 			ImGui::Text( fmt::format( "{}: Mesh Id", inComponent.MeshId ).c_str() );
-			ImGui::Text( fmt::format( "{}: Primitive Type", magic_enum::enum_name<Graphics::PrimativeType>( inComponent.type ) ).c_str() );
+			ImGui::Text( fmt::format( "{}: Primitive Type", magic_enum::enum_name<Graphics::PrimativeType>( inComponent.Type ) ).c_str() );
 		}
 	}
 
@@ -123,7 +125,32 @@ namespace Editor
 
 			if ( ImGui::CollapsingHeader( fmt::format( "Shader: {} Id: {}", name, id ).c_str() ) )
 			{
-				Utils::EnumBitmask<Graphics::Shader::Type> const & types = shaderHandle->GetShaderTypes();
+				Utils::EnumBitmask<Graphics::Shader::Type> const & shaderTypes = shaderHandle->GetShaderTypes();
+
+				auto const & shaderTypesEntries = magic_enum::enum_values<Graphics::Shader::Type>();
+				for ( auto const & type : shaderTypesEntries )
+				{
+					if ( type == Graphics::Shader::Type::Invalid || type == Graphics::Shader::Type::Total )
+					{
+						continue;
+					}
+
+					if ( shaderTypes & type )
+					{
+						std::string name( magic_enum::enum_name<Graphics::Shader::Type>( type ) );
+						if ( ImGui::CollapsingHeader( name.c_str() ) )
+						{
+							std::string const & source = shaderHandle->GetShaderSource( type );
+							ImGui::Text( source.c_str() );
+							ImGui::Separator();
+							std::string const & path = shaderHandle->GetShaderPath( type );
+							ImGui::Text( path.c_str() );
+						}
+
+					}
+				}
+				ImGui::Separator();
+
 				auto const & uniforms = shaderHandle->GetUniforms();
 				auto const & bools = shaderHandle->GetBoolUniforms();
 				auto const & ints = shaderHandle->GetIntUniforms();
@@ -134,7 +161,6 @@ namespace Editor
 				auto const & vec4s = shaderHandle->GetVec4Uniforms();
 				auto const & mat3s = shaderHandle->GetMat3Uniforms();
 				auto const & mat4s = shaderHandle->GetMat4Uniforms();
-
 				//less than ideal but not sure on best way to have indexes like this.
 				static int uniformIndex = -1;
 				static int boolIndex = -1;
@@ -153,14 +179,14 @@ namespace Editor
 				Widgets::MapContainerDisplay( gluints, gluintIndex, "GLuints" );
 				Widgets::MapContainerDisplay( vec2s, vec2Index, "Vec2s" );
 				Widgets::MapContainerDisplay( vec3s, vec3Index, "Vec3s" );
-				Widgets::MapContainerDisplay( vec4s, vec4Index,"Vec4s" );
+				Widgets::MapContainerDisplay( vec4s, vec4Index, "Vec4s" );
 				Widgets::MapContainerDisplay( mat3s, mat3Index, "Mat3s" );
 				Widgets::MapContainerDisplay( mat4s, mat4Index, "Mat4s" );
 			}
 		}
 		else
 		{
-			if ( ImGui::CollapsingHeader( fmt::format("Shader: <unknown> Id: {} ", inComponent.ShaderId).c_str() ) )
+			if ( ImGui::CollapsingHeader( fmt::format( "Shader: <unknown> Id: {} ", inComponent.ShaderId ).c_str() ) )
 			{
 				ImGui::Text( "ShaderHandle failed to lock! Shader is somehow dead." );
 			}

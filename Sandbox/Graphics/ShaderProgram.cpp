@@ -328,6 +328,32 @@ namespace Graphics
         return m_shaderName;
 	}
 
+	std::string const & ShaderProgram::GetShaderPath( Shader::Type type ) const
+	{
+		static std::string emptySource = "";
+		for ( auto const & shader : m_shaders )
+		{
+			if ( shader.getType() == type )
+			{
+				return shader.getPath();
+			}
+		}
+		return emptySource;
+	}
+
+	std::string const & ShaderProgram::GetShaderSource( Shader::Type type ) const
+	{
+        static std::string emptySource = "";
+        for ( auto const & shader : m_shaders )
+        {
+            if ( shader.getType() == type )
+            {
+                return shader.getSource();
+            }
+        }
+        return emptySource;
+	}
+
 	Utils::EnumBitmask<Graphics::Shader::Type> const & ShaderProgram::GetShaderTypes() const
 	{
         return m_shaderTypeFlags;

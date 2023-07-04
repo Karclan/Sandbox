@@ -31,6 +31,7 @@ namespace Game
 		auto & renderer = windowRef.GetRenderer();
 
 		Graphics::ShaderComponent const textureEnabledShaderComp = renderer.CreateShader( "textureEnabled", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
+		Graphics::ShaderComponent const textureMixedShaderComp = renderer.CreateShader( "textureMixing", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
 		auto const containerTextureId = renderer.CreateTexture( "container.jpg" );
 		auto const awesomefaceTextureId = renderer.CreateTexture( "awesomeface.png" );
 		auto const playerTextureId = renderer.CreateTexture( "Player.png" );
@@ -70,7 +71,7 @@ namespace Game
 
 			m_registry.AddComponent<Graphics::MeshComponent>( entity, renderer.GetMesh( Graphics::PrimativeType::Cube ) );
 			m_registry.AddComponent<Graphics::TextureComponent>( entity, multiTextureComp );
-			m_registry.AddComponent<Graphics::ShaderComponent>( entity, textureEnabledShaderComp );
+			m_registry.AddComponent<Graphics::ShaderComponent>( entity, textureMixedShaderComp );
 
 			auto & collisionComponent = m_registry.AddComponent<Physics::CollisionComponent>( entity );
 			collisionComponent.drawDebugLines = true;

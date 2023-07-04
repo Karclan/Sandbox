@@ -1,5 +1,6 @@
-#version 330 core
-out vec4 FragColor;
+#version 450
+
+layout (location = 0) out vec4 FragColor;
 
 in vec3 ourColor;
 in vec2 TexCoord;
@@ -20,13 +21,6 @@ void main()
 	}
 	else
 	{
-		discard;
 		FragColor = tex1Sample;
 	}
-	
-	//FragColor = texture(texture1, TexCoord);
-	//if(FragColor.a < 0.1)
-	//{
-	//	discard;
-	//}
 }

@@ -73,6 +73,12 @@
     <Filter Include="Imgui\backends">
       <UniqueIdentifier>{ccb9d36d-ab32-4eb6-94ad-a7c92294afcd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\Platform">
+      <UniqueIdentifier>{72df9e07-5719-424c-a68c-c75ef1ad899d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Platform\OpenGL">
+      <UniqueIdentifier>{8805aef3-a1de-4bb4-bf08-ce5734a833f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Graphics\Shader.cpp">
@@ -218,6 +224,27 @@
     </ClCompile>
     <ClCompile Include="Graphics\GraphicsDraw.cpp">
       <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\VertexArrayObject.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\UniformBufferObject.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\DataBuffer.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Platform\OpenGL\OpenGLDataBuffer.cpp">
+      <Filter>Graphics\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Platform\OpenGL\OpenGLVertexArrayObject.cpp">
+      <Filter>Graphics\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\RendererAPI.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Platform\OpenGL\OpenGLUniformBufferObject.cpp">
+      <Filter>Graphics\Platform\OpenGL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -466,6 +493,36 @@
     </ClInclude>
     <ClInclude Include="Graphics\Colours.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\UniformBufferObject.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\VertexArrayObject.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\DataBuffer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\DebugBreak.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\PlatformDetection.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Platform\OpenGL\OpenGLDataBuffer.h">
+      <Filter>Graphics\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Platform\OpenGL\OpenGLVertexArrayObject.h">
+      <Filter>Graphics\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Assert.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\RendererAPI.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Platform\OpenGL\OpenGLUniformBufferObject.h">
+      <Filter>Graphics\Platform\OpenGL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

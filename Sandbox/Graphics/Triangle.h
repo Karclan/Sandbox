@@ -8,10 +8,10 @@ namespace Graphics
     {
     public:
         Triangle();
-        virtual ~Triangle();
+        virtual ~Triangle() = default;
 
         // Inherited via Mesh
-        virtual void create() override;
+        virtual void Create() override;
 
         // Inherited via Mesh
         //virtual void draw() override;

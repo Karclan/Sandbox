@@ -14,9 +14,9 @@ namespace Graphics
             Fragment,
             Geometry,
 
-            Total,
+			Total,
 
-            Invalid = -1
+			Invalid = -1
         };
 
         Shader();
@@ -32,6 +32,16 @@ namespace Graphics
         {
             return m_type;
         }
+
+        std::string const & getSource() const
+        {
+            return m_shaderSource;
+        }
+
+		std::string const & getPath() const
+		{
+			return m_shaderFilePath;
+		}
 
         bool create( Type type, char const * filePath );
 
