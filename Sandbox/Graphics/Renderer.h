@@ -26,6 +26,7 @@
 #include <memory>
 #include <vector>
 #include <array>
+#include "FrameBuffer.h"
 
 namespace Core
 {
@@ -66,8 +67,6 @@ namespace Graphics
 
 		bool IsUsingFrameBufferObject() const { return m_useFrameBufferObject; }
 
-		unsigned int GetRenderedTexture() const { return m_renderedTexture; }
-
 	private:
 		void UpdateCamera();
 		void UpdateTransform( TransformComponent & transform );
@@ -75,7 +74,6 @@ namespace Graphics
 		void UpdateShader( ShaderComponent & shaderComponent );
 		void UpdateMesh( MeshComponent & meshComponent );
 
-		void CreateRenderBufferObject();
 		void ResizeRenderTextureBuffer( float WidthToUse, float HeightToUse );
 
 		Core::Registry & m_registry;
@@ -130,13 +128,12 @@ namespace Graphics
 
 		ShaderProgram * m_screenShader { nullptr };
 
-		unsigned int m_frameBufferObject { 0 };
-		unsigned int m_renderedTexture { 0 };
-		unsigned int m_renderBufferObject { 0 };
+		std::shared_ptr<VertexArrayObject> ScreenQuadVAO { nullptr };
+		std::shared_ptr<VertexBuffer> ScreenQuadVBO { nullptr };
+		std::shared_ptr<Framebuffer> m_Framebuffer { nullptr };
 
 		bool m_useFrameBufferObject { true };
 		bool m_firstTimeRenderingSubWindow { m_useFrameBufferObject };
-		//ImVec2 m_sceneSize { static_cast< float >( m_frameBufferDimensons.x ), static_cast< float >( m_frameBufferDimensons.y ) };
 
 		std::vector< std::shared_ptr<ShaderProgram> > m_shaderList;
 

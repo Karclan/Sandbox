@@ -430,9 +430,11 @@
     <ClCompile Include="Graphics\ComponentDetails\GraphicsComponentsDetails.cpp" />
     <ClCompile Include="Graphics\Cube.cpp" />
     <ClCompile Include="Graphics\DataBuffer.cpp" />
+    <ClCompile Include="Graphics\Framebuffer.cpp" />
     <ClCompile Include="Graphics\GraphicsDraw.cpp" />
     <ClCompile Include="Graphics\Mesh.cpp" />
     <ClCompile Include="Graphics\Platform\OpenGL\OpenGLDataBuffer.cpp" />
+    <ClCompile Include="Graphics\Platform\OpenGL\OpenGLFramebuffer.cpp" />
     <ClCompile Include="Graphics\Platform\OpenGL\OpenGLUniformBufferObject.cpp" />
     <ClCompile Include="Graphics\Platform\OpenGL\OpenGLVertexArrayObject.cpp" />
     <ClCompile Include="Graphics\Renderer.cpp" />
@@ -496,12 +498,14 @@
     <ClInclude Include="Graphics\ComponentDetails\GraphicsTagsDetails.h" />
     <ClInclude Include="Graphics\Cube.h" />
     <ClInclude Include="Graphics\DataBuffer.h" />
+    <ClInclude Include="Graphics\Framebuffer.h" />
     <ClInclude Include="Graphics\GraphicsDraw.h" />
     <ClInclude Include="Graphics\GraphicsTags.h" />
     <ClInclude Include="Graphics\Mesh.h" />
     <ClInclude Include="Graphics\MeshComponent.h" />
     <ClInclude Include="Graphics\MeshLoader.h" />
     <ClInclude Include="Graphics\Platform\OpenGL\OpenGLDataBuffer.h" />
+    <ClInclude Include="Graphics\Platform\OpenGL\OpenGLFramebuffer.h" />
     <ClInclude Include="Graphics\Platform\OpenGL\OpenGLUniformBufferObject.h" />
     <ClInclude Include="Graphics\Platform\OpenGL\OpenGLVertexArrayObject.h" />
     <ClInclude Include="Graphics\Renderer.h" />

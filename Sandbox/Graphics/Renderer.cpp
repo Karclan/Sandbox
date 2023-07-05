@@ -92,20 +92,45 @@ namespace Graphics
 				} );
 
 			m_lineVao->AddVertexBuffer( m_lineVbo );
-			m_lineVao->UnBind();
 
 			m_lineDrawBegin = m_lineDrawCallList.begin();
 			m_lineDrawItr = m_lineDrawBegin;
 		}
 
-		CreateRenderBufferObject();
-		/*{
+		//Framebuffer setup
+		{
+			FramebufferSpecification framebufferSpecification;
+			framebufferSpecification.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
+			framebufferSpecification.Width = m_screenDimensions.x*2;
+			framebufferSpecification.Height = m_screenDimensions.y*2;
+			m_Framebuffer = Framebuffer::Create( framebufferSpecification );
+
+			ScreenQuadVAO = VertexArrayObject::Create();
+			//vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
+			static constexpr float QuadVertices[] = {
+				// positions		// texCoords
+				-1.0f,  1.0f, 0.f,  0.0f, 1.0f,
+				-1.0f, -1.0f, 0.f,  0.0f, 0.0f,
+				 1.0f, -1.0f, 0.f,  1.0f, 0.0f,
+
+				-1.0f,  1.0f, 0.f,  0.0f, 1.0f,
+				 1.0f, -1.0f, 0.f,  1.0f, 0.0f,
+				 1.0f,  1.0f, 0.f,  1.0f, 1.0f
+			};
+
+			ScreenQuadVBO = VertexBuffer::Create( QuadVertices, sizeof( QuadVertices ) );
+			ScreenQuadVBO->SetLayout( {
+				BufferElement::Create( ShaderDataType::Float3, "aPos" ),
+				BufferElement::Create( ShaderDataType::Float2, "aTexCoords" ),
+				} );
+			ScreenQuadVAO->AddVertexBuffer( ScreenQuadVBO );
+
 			CreateShader( "framebuffer_screen", { Shader::Type::Vertex, Shader::Type::Fragment } );
 			m_screenShader = m_shaderList.back().get();
 			m_screenShader->useProgram();
 			m_screenShader->setUniform( "screenTexture", 0 );
 			glUseProgram( 0 );
-		}*/
+		}
 
 		m_cameraUBO = UniformBufferObject::Create( sizeof( CameraData ), 0 );
 	}
@@ -169,7 +194,8 @@ namespace Graphics
 				ImVec2 const gameRenderPosition = ImGui::GetCursorScreenPos();
 				m_frameBufferStartingPosition = { gameRenderPosition.x, gameRenderPosition.y };
 				// Because I use the texture from OpenGL, I need to invert the V from the UV.
-				ImGui::Image( static_cast< ImTextureID >( m_renderedTexture ), { static_cast< float >( m_frameBufferDimensons.x ), static_cast< float >( m_frameBufferDimensons.y ) }, ImVec2( 0, 1 ), ImVec2( 1, 0 ) );
+				auto textureID = m_Framebuffer->GetColorAttachmentRendererID();
+				ImGui::Image( static_cast< ImTextureID >( textureID ), { static_cast< float >( m_frameBufferDimensons.x ), static_cast< float >( m_frameBufferDimensons.y ) }, ImVec2( 0, 1 ), ImVec2( 1, 0 ) );
 
 				ImVec2 const itemRectSize = ImGui::GetItemRectSize();
 
@@ -282,31 +308,30 @@ namespace Graphics
 
 	void Renderer::Render()
 	{
+		glUseProgram( 0 );
+
 		glEnable( GL_DEPTH_TEST );
-		glEnable( GL_BLEND );
-		glBlendEquation( GL_FUNC_ADD );
-		glBlendFuncSeparate( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO );
 
-		if ( m_useFrameBufferObject )
+		glDisable( GL_BLEND );
+		glDisable( GL_DITHER );
+		//Render into framebuffer! 
+		if ( m_firstTimeRenderingSubWindow )
 		{
-			if ( m_firstTimeRenderingSubWindow )
-			{
-				m_registry.ForView<CameraComponent, ActiveCameraTag>( [this] ( CameraComponent & cameraComponent )
-					{
-						cameraComponent.m_viewPortHeight = static_cast< float >( m_frameBufferDimensons.y );
-						cameraComponent.m_viewPortWidth = static_cast< float >( m_frameBufferDimensons.x );
-						cameraComponent.m_aspectRatio = static_cast< float >( ( cameraComponent.m_viewPortWidth ) / ( cameraComponent.m_viewPortHeight > 0 ? cameraComponent.m_viewPortHeight : 1.f ) );
-						cameraComponent.m_dirtyProjectionMatrix = true;
-						cameraComponent.m_dirtyViewMatrix = true;
-					} );
+			m_registry.ForView<CameraComponent, ActiveCameraTag>( [this] ( CameraComponent & cameraComponent )
+				{
+					cameraComponent.m_viewPortHeight = static_cast< float >( m_frameBufferDimensons.y );
+					cameraComponent.m_viewPortWidth = static_cast< float >( m_frameBufferDimensons.x );
+					cameraComponent.m_aspectRatio = static_cast< float >( ( cameraComponent.m_viewPortWidth ) / ( cameraComponent.m_viewPortHeight > 0 ? cameraComponent.m_viewPortHeight : 1.f ) );
+					cameraComponent.m_dirtyProjectionMatrix = true;
+					cameraComponent.m_dirtyViewMatrix = true;
+				} );
 
-				CameraSystem::InternalCameraUpdate( m_registry );
-				m_firstTimeRenderingSubWindow = false;
-			}
-
-			glBindFramebuffer( GL_FRAMEBUFFER, m_frameBufferObject );
-			glViewport( 0, 0, static_cast< GLsizei >( m_frameBufferDimensons.x ), static_cast< GLsizei >( m_frameBufferDimensons.y ) );
+			CameraSystem::InternalCameraUpdate( m_registry );
+			m_firstTimeRenderingSubWindow = false;
 		}
+
+		glViewport( 0, 0, static_cast< GLsizei >( m_frameBufferDimensons.x ), static_cast< GLsizei >( m_frameBufferDimensons.y ) );
+		m_Framebuffer->Bind();
 
 		glClearColor( m_clearColour.x, m_clearColour.g, m_clearColour.b, m_clearColour.a );
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -366,12 +391,6 @@ namespace Graphics
 		{
 			m_lineShader->useProgram();
 			m_lineShader->setUniform( "model", glm::mat4( 1.f ) );
-			//m_registry.ForConstView<CameraComponent const, ActiveCameraTag const>(
-			//	[this] ( CameraComponent const & cameraComponent )
-			//	{
-			//		//m_lineShader->setUniform( "projection", cameraComponent.m_projectionMatrix );
-			//		//m_lineShader->setUniform( "view", cameraComponent.m_viewMatrix );
-			//	} );
 
 			//Update the buffer
 			uint32_t const dataSize = static_cast< uint32_t >( reinterpret_cast< uint8_t * >( &( *m_lineDrawItr ) ) - reinterpret_cast< uint8_t * >( &( *m_lineDrawBegin ) ) );
@@ -392,14 +411,20 @@ namespace Graphics
 			m_activeShader->useProgram();
 		}
 
-		if ( m_useFrameBufferObject )
-		{
-			glViewport( 0, 0, m_frameBufferDimensons.x, m_frameBufferDimensons.y );
-			glBindFramebuffer( GL_FRAMEBUFFER, 0 );
+		//Done rendering into frame buffer!
+		m_Framebuffer->Unbind();
 
-			glClearColor( 0.f, 0.f, 0.f, 1.0f );
-			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-		}
+		glViewport( 0, 0, m_screenDimensions.x, m_screenDimensions.y );
+		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+
+		glEnable( GL_BLEND );
+		glBlendEquation( GL_FUNC_ADD );
+		glBlendFuncSeparate( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO );
+
+		m_screenShader->useProgram();
+		glBindTextureUnit( 0, m_Framebuffer->GetColorAttachmentRendererID() );
+		ScreenQuadVAO->Bind();
+		glDrawArrays( GL_TRIANGLES, 0, 6 );
 	}
 
 	bool Renderer::DrawLine( glm::vec3 A, glm::vec3 B, glm::vec4 colour, float thickness ) noexcept
@@ -587,49 +612,9 @@ namespace Graphics
 		}
 	}
 
-	void Renderer::CreateRenderBufferObject()
-	{
-		//Create frame buffer object
-		glGenFramebuffers( 1, &m_frameBufferObject );
-		glBindFramebuffer( GL_FRAMEBUFFER, m_frameBufferObject );
-
-
-		//Create texture for it
-		glGenTextures( 1, &m_renderedTexture );
-		glBindTexture( GL_TEXTURE_2D, m_renderedTexture );
-		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, m_frameBufferDimensons.x, m_frameBufferDimensons.y, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL );
-		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-		glBindTexture( GL_TEXTURE_2D, 0 );
-
-		//Bind texture to frame buffer
-		glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_renderedTexture, 0 );
-
-		//Create and bind render buffer object
-		glGenRenderbuffers( 1, &m_renderBufferObject );
-		glBindRenderbuffer( GL_RENDERBUFFER, m_renderBufferObject );
-		glRenderbufferStorage( GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_frameBufferDimensons.x, m_frameBufferDimensons.y );
-		glFramebufferRenderbuffer( GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_renderBufferObject );
-
-		if ( glCheckFramebufferStatus( GL_FRAMEBUFFER ) != GL_FRAMEBUFFER_COMPLETE )
-		{
-			Utils::Logger::LogMessage( Utils::LogType::Error, "Framebuffer is not complete!\n" );
-		}
-
-		glBindFramebuffer( GL_FRAMEBUFFER, 0 );
-	}
-
 	void Renderer::ResizeRenderTextureBuffer( float WidthToUse, float HeightToUse )
 	{
-		//Resize the render texture buffer
-		glBindTexture( GL_TEXTURE_2D, m_renderedTexture );
-		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, static_cast< GLsizei >( WidthToUse ), static_cast< GLsizei >( HeightToUse ), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL );
-		glBindTexture( GL_TEXTURE_2D, 0 );
-
-		glBindRenderbuffer( GL_RENDERBUFFER, m_renderBufferObject );
-		glRenderbufferStorage( GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, static_cast< GLsizei >( WidthToUse ), static_cast< GLsizei >( HeightToUse ) );
-
-		m_boundTexturesSize = 0;
+		m_Framebuffer->Resize( static_cast< uint32_t >( WidthToUse*2 ), static_cast< uint32_t >( HeightToUse*2 ) );
 	}
 
 }

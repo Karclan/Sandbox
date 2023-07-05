@@ -7,6 +7,7 @@
 #include "../Input/InputState.h"
 #include "../Utils/UnusedMacro.h"
 #include "../Utils/Logger.h"
+#include "../Utils/Assert.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -16,16 +17,29 @@
 #include "backends/imgui_impl_opengl3.h"
 
 #include <iostream>
+#include <unordered_set>
 
 void APIENTRY glDebugOutput( GLenum source,
 	GLenum type,
 	unsigned int id,
-	[[maybe_unused]] GLenum severity,
+	GLenum severity,
 	[[maybe_unused]] GLsizei length,
 	const char * message,
 	[[maybe_unused]] const void * userParam )
 {
-	if ( id == 131169 || id == 131185 || id == 131218 || id == 131204 ) return; // ignore these non-significant error codes
+	static std::unordered_set<int> const ignoredDebugOutput = {
+		131185 //131185 - Buffer detailed info
+	};
+
+	if ( ignoredDebugOutput.contains( id ) )
+	{
+		return; // ignore these non-significant error codes
+	}
+
+	if ( id == 131169 || id == 131218 || id == 131204 )
+	{
+		SB_CORE_WARN( "Previously ignored debugout {} discovered\n" , id);
+	}
 
 	std::string debugMessage = "--------------- \n";
 	debugMessage.append( "Debug message (" );
@@ -115,6 +129,7 @@ void APIENTRY glDebugOutput( GLenum source,
 	}
 
 	Utils::Logger::LogMessage( Utils::LogType::Error, debugMessage.c_str() );
+	//SB_CORE_ASSERT( false );
 }
 
 namespace Graphics
@@ -206,7 +221,7 @@ namespace Graphics
 			glEnable( GL_DEBUG_OUTPUT );
 			glEnable( GL_DEBUG_OUTPUT_SYNCHRONOUS ); // makes sure errors are displayed synchronously
 			glDebugMessageCallback( glDebugOutput, NULL );
-			glDebugMessageControl( GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE );
+			glDebugMessageControl( GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE/*GL_DEBUG_SEVERITY_NOTIFICATION*/, 0, nullptr, GL_TRUE );
 		}
 
 		m_glfwWindow = window;

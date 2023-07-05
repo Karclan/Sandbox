@@ -13,10 +13,8 @@ namespace Graphics
 			Vulkan,
 		};
 
-		static API GetAPI() { return s_API; }
-
+		static constexpr API GetAPI() { return s_API; }
 	private:
-		
-		static API s_API;
+		static constexpr API s_API = API::OpenGL;
 	};
 }

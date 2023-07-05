@@ -246,6 +246,12 @@
     <ClCompile Include="Graphics\Platform\OpenGL\OpenGLUniformBufferObject.cpp">
       <Filter>Graphics\Platform\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\Framebuffer.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Platform\OpenGL\OpenGLFramebuffer.cpp">
+      <Filter>Graphics\Platform\OpenGL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\ShaderProgram.h">
@@ -522,6 +528,12 @@
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Platform\OpenGL\OpenGLUniformBufferObject.h">
+      <Filter>Graphics\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Framebuffer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Platform\OpenGL\OpenGLFramebuffer.h">
       <Filter>Graphics\Platform\OpenGL</Filter>
     </ClInclude>
   </ItemGroup>
