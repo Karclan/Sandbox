@@ -7,6 +7,7 @@
 #include "Graphics/MeshComponent.h"
 #include "Graphics/TextureComponent.h"
 #include "Graphics/ShaderComponent.h"
+#include "Graphics/GraphicsDraw.h"
 
 #include "Input/InputSystem.h"
 
@@ -103,11 +104,13 @@ namespace Game
 	void PlayerControllerSubsystem::Update( double deltaTime )
 	{
 		UNUSED( deltaTime );
-		m_registry.ForView<Graphics::TransformComponent, PlayerTag>( [this] ( Graphics::TransformComponent & transform )
+		m_registry.ForView<Graphics::TransformComponent, PlayerComponent, PlayerTag>( [this] ( Graphics::TransformComponent & transform, PlayerComponent & player )
 			{
 				//glm::dvec3 mousePosition = m_inputSystem.GetMouseWorldPosition();
 				//transform.Position.x = static_cast< float >( mousePosition.x );
 				//transform.Position.y = static_cast< float >( mousePosition.y );
+
+				Graphics::GraphicsDraw::DrawCircle( transform.Position + player.CirclePos, player.CircleRadius, player.CircleColour, player.CirclePointCount );
 			} );
 	}
 

@@ -83,7 +83,8 @@ namespace Graphics
 			m_lineVao = VertexArrayObject::Create();
 			m_lineVao->Bind();
 
-			m_lineVbo = VertexBuffer::Create( m_maxLinesPerRender * GetElementSize( ShaderDataType::Float3 ) );
+			;
+			m_lineVbo = VertexBuffer::Create( m_maxLinesPerRender * sizeof( LineVertex ) );
 			m_lineVbo->SetLayout(
 				{
 					BufferElement::Create( ShaderDataType::Float3, "aPos" ),
@@ -97,10 +98,33 @@ namespace Graphics
 			m_lineDrawItr = m_lineDrawBegin;
 		}
 
+		{
+			CreateShader( "wireCircle", { Shader::Type::Vertex, Shader::Type::Geometry, Shader::Type::Fragment } );
+
+			m_circleShader = m_shaderList.back().get();
+
+			m_circleVao = VertexArrayObject::Create();
+			m_circleVao->Bind();
+
+			m_circleVbo = VertexBuffer::Create( m_maxCirclesPerRender * sizeof( CircleVertex ) );
+			m_circleVbo->SetLayout(
+				{
+					BufferElement::Create( ShaderDataType::Float3, "aPos" ),
+					BufferElement::Create( ShaderDataType::Float4, "aColor" ),
+					BufferElement::Create( ShaderDataType::Float, "aRadius" ),
+					BufferElement::Create( ShaderDataType::Int, "aPointCount" ),
+				} );
+
+			m_circleVao->AddVertexBuffer( m_circleVbo );
+
+			m_circleDrawBegin = m_circleDrawCallList.begin();
+			m_circleDrawItr = m_circleDrawBegin;
+		}
+
 		//Framebuffer setup
 		{
 			FramebufferSpecification framebufferSpecification;
-			framebufferSpecification.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
+			framebufferSpecification.Attachments = { FramebufferTextureFormat::RGBA8, /*FramebufferTextureFormat::RED_INTEGER,*/ FramebufferTextureFormat::Depth };
 			framebufferSpecification.Width = m_screenDimensions.x*2;
 			framebufferSpecification.Height = m_screenDimensions.y*2;
 			m_Framebuffer = Framebuffer::Create( framebufferSpecification );
@@ -308,6 +332,11 @@ namespace Graphics
 
 	void Renderer::Render()
 	{
+		DrawCircle( glm::vec3( 0.f, 0.f, 0.f ), 15.f, Colours::White, 128 );
+		DrawCircle( glm::vec3( 1.f, 1.f, 0.f ), 0.5f, Colours::Red, 3 );
+		DrawCircle( glm::vec3( -1.f, -1.f, 0.f), 10.f, Colours::Green, 3 );
+		DrawCircle( glm::vec3( 2.f, 2.f, 0.f), 1.f, Colours::Blue, 3 );
+
 		glUseProgram( 0 );
 
 		glEnable( GL_DEPTH_TEST );
@@ -411,6 +440,29 @@ namespace Graphics
 			m_activeShader->useProgram();
 		}
 
+		if ( m_circleDrawCallCount > 0 )
+		{
+			m_circleShader->useProgram();
+			m_circleShader->setUniform( "model", glm::mat4( 1.f ) );
+
+			//Update the buffer
+			uint32_t const dataSize = static_cast< uint32_t >( reinterpret_cast< uint8_t * >( &( *m_circleDrawItr ) ) - reinterpret_cast< uint8_t * >( &( *m_circleDrawBegin ) ) );
+			m_circleVbo->SetData( &( *m_circleDrawBegin ), dataSize );
+			  
+			m_circleVao->Bind();
+			for ( unsigned int i = 0; i <= m_circleDrawCallCount; ++i )
+			{
+				CircleVertex const & call = m_circleDrawCallList[ i ];
+				glDrawArrays( GL_POINTS, i, 1 );
+			}
+			m_circleVao->UnBind();
+
+			m_circleDrawCallCount = 0;
+			m_circleDrawItr = m_circleDrawBegin;
+
+			m_activeShader->useProgram();
+		}
+
 		//Done rendering into frame buffer!
 		m_Framebuffer->Unbind();
 
@@ -442,6 +494,22 @@ namespace Graphics
 			m_lineDrawItr++;
 
 			m_lineDrawCallCount += 2;
+			return true;
+		}
+		return false;
+	}
+
+	bool Renderer::DrawCircle( glm::vec3 pos, float radius, glm::vec4 colour /*= glm::vec4( 1.f )*/, int pointCount /*= 3.f */ ) noexcept
+	{
+		if ( m_circleDrawCallCount + 1 <= m_maxCirclesPerRender )
+		{
+			m_circleDrawItr->Position = pos;
+			m_circleDrawItr->Colour = colour;
+			m_circleDrawItr->Radius = radius;
+			m_circleDrawItr->PointCount = pointCount;
+			m_circleDrawItr++;
+
+			++m_circleDrawCallCount;
 			return true;
 		}
 		return false;
@@ -515,6 +583,8 @@ namespace Graphics
 				}
 
 				m_cameraData.ViewProjectionMatrix = cameraComponent.m_projectionMatrix * cameraComponent.m_viewMatrix;
+				m_cameraData.ViewMatrix = cameraComponent.m_viewMatrix;
+				m_cameraData.ProjectionMatrix = cameraComponent.m_projectionMatrix;
 				m_cameraUBO->SetData( &m_cameraData, sizeof( CameraData ) );
 			} );
 	}

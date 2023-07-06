@@ -59,7 +59,8 @@ namespace Graphics
 		void Render();
 
 		bool DrawLine( glm::vec3 A, glm::vec3 b, glm::vec4 colour = glm::vec4( 1.f ), float thickness = 1.f ) noexcept;
-
+		bool DrawCircle( glm::vec3 pos, float radius, glm::vec4 colour = glm::vec4( 1.f ), int pointCount = 3.f ) noexcept;
+		
 		void FramebufferSizeCallback( int width, int height );
 		void ScreenSizeCallback( int width, int height );
 
@@ -90,12 +91,16 @@ namespace Graphics
 		size_t m_boundTexturesSize {};
 		std::string m_currentImGuiTexture { "unset" };
 
+		//////////////////////////////////////////////////////////////////////////
+		//Line Shader
+		//////////////////////////////////////////////////////////////////////////
+
 		ShaderProgram * m_lineShader { nullptr };
 		unsigned int m_lineDrawCallCount { 0 };
 		std::shared_ptr<VertexBuffer> m_lineVbo { nullptr };
 		std::shared_ptr<VertexArrayObject> m_lineVao { nullptr };
 
-		static constexpr unsigned int m_maxLinesPerRender = 1000;
+		static constexpr unsigned int m_maxLinesPerRender = 2000;
 
 		struct LineVertex
 		{
@@ -109,6 +114,32 @@ namespace Graphics
 		LineDrawCallArray::iterator m_lineDrawBegin;
 		LineDrawCallArray::iterator m_lineDrawItr;
 
+		//////////////////////////////////////////////////////////////////////////
+		//Circle Shader
+		//////////////////////////////////////////////////////////////////////////
+
+		ShaderProgram * m_circleShader { nullptr };
+		unsigned int m_circleDrawCallCount { 0 };
+		std::shared_ptr<VertexBuffer> m_circleVbo { nullptr };
+		std::shared_ptr<VertexArrayObject> m_circleVao { nullptr };
+
+		static constexpr unsigned int m_maxCirclesPerRender = 1000;
+
+		struct CircleVertex
+		{
+			glm::vec3 Position { 0.f };
+			glm::vec4 Colour { Colours::White };
+			float Radius { 1.f };
+			int PointCount { 3 };
+		};
+
+		using CircleDrawCallArray = std::array<CircleVertex, m_maxCirclesPerRender>;
+		std::array<CircleVertex, m_maxCirclesPerRender> m_circleDrawCallList; //Just a way of having stack allocated data we can mess around with.
+		CircleDrawCallArray::iterator m_circleDrawBegin;
+		CircleDrawCallArray::iterator m_circleDrawItr;
+
+		//////////////////////////////////////////////////////////////////////////
+
 		glm::ivec2 m_frameBufferDimensons { 800, 600 };
 		glm::ivec2 m_screenDimensions { 800, 600 };
 		glm::ivec2 m_screenStartingPosition { 0,0 };
@@ -119,6 +150,8 @@ namespace Graphics
 		struct CameraData
 		{
 			glm::mat4 ViewProjectionMatrix { 0.f };
+			glm::mat4 ViewMatrix { 0.f };
+			glm::mat4 ProjectionMatrix { 0.f };
 		};
 
 		CameraData m_cameraData {};

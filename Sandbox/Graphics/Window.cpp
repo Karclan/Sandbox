@@ -129,7 +129,7 @@ void APIENTRY glDebugOutput( GLenum source,
 	}
 
 	Utils::Logger::LogMessage( Utils::LogType::Error, debugMessage.c_str() );
-	//SB_CORE_ASSERT( false );
+	//SB_CORE_ASSERT(false);
 }
 
 namespace Graphics

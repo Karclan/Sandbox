@@ -17,7 +17,7 @@ namespace Graphics
 		static void DrawLine(glm::vec3 from, glm::vec3 to, glm::vec4 colour = Colours::White, float thickness = 1.f );
 		static void DrawAALine();
 
-		static void DrawCircle();
+		static void DrawCircle( glm::vec3 pos, float radius, glm::vec4 colour = glm::vec4( 1.f ), int pointCount = 3.f );
 		static void DrawWireCircle();
 
 		static void DrawQuad();

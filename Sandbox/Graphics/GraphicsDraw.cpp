@@ -21,9 +21,9 @@ namespace Graphics
 
 	}
 
-	void GraphicsDraw::DrawCircle()
+	void GraphicsDraw::DrawCircle( glm::vec3 pos, float radius, glm::vec4 colour /*= glm::vec4( 1.f )*/, int pointCount /*= 3.f*/ )
 	{
-
+		m_Renderer->DrawCircle( pos, radius, colour, pointCount );
 	}
 
 	void GraphicsDraw::DrawWireCircle()
