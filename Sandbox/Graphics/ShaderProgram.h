@@ -67,7 +67,7 @@ namespace Graphics
         ShaderProgram( std::string const & shaderName, Utils::EnumBitmask<Shader::Type> flags );
         ~ShaderProgram() = default;
 
-        unsigned int getId() const noexcept;
+        std::vector<Shader> const & GetPrograms() const { return m_shaders; }
 
         void useProgram() const noexcept;
 

@@ -19,119 +19,6 @@
 #include <iostream>
 #include <unordered_set>
 
-void APIENTRY glDebugOutput( GLenum source,
-	GLenum type,
-	unsigned int id,
-	GLenum severity,
-	[[maybe_unused]] GLsizei length,
-	const char * message,
-	[[maybe_unused]] const void * userParam )
-{
-	static std::unordered_set<int> const ignoredDebugOutput = {
-		131185 //131185 - Buffer detailed info
-	};
-
-	if ( ignoredDebugOutput.contains( id ) )
-	{
-		return; // ignore these non-significant error codes
-	}
-
-	if ( id == 131169 || id == 131218 || id == 131204 )
-	{
-		SB_CORE_WARN( "Previously ignored debugout {} discovered\n" , id);
-	}
-
-	std::string debugMessage = "--------------- \n";
-	debugMessage.append( "Debug message (" );
-	debugMessage.append( std::to_string( id ) );
-	debugMessage.append( "): " );
-	debugMessage.append( message );
-	debugMessage.append( "\n" );
-
-	debugMessage.append( "Source :" );
-	switch ( source )
-	{
-		case GL_DEBUG_SOURCE_API:
-			debugMessage.append( "API\n" );
-			break;
-		case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
-			debugMessage.append( "System\n" );
-			break;
-		case GL_DEBUG_SOURCE_SHADER_COMPILER:
-			debugMessage.append( "Compiler\n" );
-			break;
-		case GL_DEBUG_SOURCE_THIRD_PARTY:
-			debugMessage.append( "Third Party\n" );
-			break;
-		case GL_DEBUG_SOURCE_APPLICATION:
-			debugMessage.append( "Application\n" );
-			break;
-		case GL_DEBUG_SOURCE_OTHER:
-			debugMessage.append( "Other\n" );
-			break;
-		default:
-			debugMessage.append( "Unknown source\n" );
-			break;
-	}
-
-	debugMessage.append( "Type: " );
-	switch ( type )
-	{
-		case GL_DEBUG_TYPE_ERROR:
-			debugMessage.append( "Error\n" );
-			break;
-		case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
-			debugMessage.append( "Deprecated Behaviour\n" );
-			break;
-		case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
-			debugMessage.append( "Undefined Behaviour\n" );
-			break;
-		case GL_DEBUG_TYPE_PORTABILITY:
-			debugMessage.append( "Portability\n" );
-			break;
-		case GL_DEBUG_TYPE_PERFORMANCE:
-			debugMessage.append( "Performance\n" );
-			break;
-		case GL_DEBUG_TYPE_MARKER:
-			debugMessage.append( "Marker\n" );
-			break;
-		case GL_DEBUG_TYPE_PUSH_GROUP:
-			debugMessage.append( "Push Group\n" );
-			break;
-		case GL_DEBUG_TYPE_POP_GROUP:
-			debugMessage.append( "Pop Group\n" ); break;
-		case GL_DEBUG_TYPE_OTHER:
-			debugMessage.append( "Other\n" );
-			break;
-		default:
-			debugMessage.append( "Unknown type\n" );
-			break;
-	}
-
-	debugMessage.append( "Severity :" );
-	switch ( severity )
-	{
-		case GL_DEBUG_SEVERITY_HIGH:
-			debugMessage.append( "high\n" );
-			break;
-		case GL_DEBUG_SEVERITY_MEDIUM:
-			debugMessage.append( "medium\n" );
-			break;
-		case GL_DEBUG_SEVERITY_LOW:
-			debugMessage.append( "low\n" );
-			break;
-		case GL_DEBUG_SEVERITY_NOTIFICATION:
-			debugMessage.append( "notification\n" );
-			break;
-		default:
-			debugMessage.append( "Unknown severity\n" );
-			break;
-	}
-
-	Utils::Logger::LogMessage( Utils::LogType::Error, debugMessage.c_str() );
-	//SB_CORE_ASSERT(false);
-}
-
 namespace Graphics
 {
 	Window * Window::GLFWCallbackWrapper::s_window = nullptr;
@@ -212,16 +99,6 @@ namespace Graphics
 		{
 			Utils::Logger::LogMessage( Utils::LogType::Error, "Failed to initalize GLAD.\n" );
 			m_glfwWindow = nullptr;
-		}
-
-		// enable OpenGL debug context if context allows for debug context
-		int flags; glGetIntegerv( GL_CONTEXT_FLAGS, &flags );
-		if ( flags & GL_CONTEXT_FLAG_DEBUG_BIT )
-		{
-			glEnable( GL_DEBUG_OUTPUT );
-			glEnable( GL_DEBUG_OUTPUT_SYNCHRONOUS ); // makes sure errors are displayed synchronously
-			glDebugMessageCallback( glDebugOutput, NULL );
-			glDebugMessageControl( GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE/*GL_DEBUG_SEVERITY_NOTIFICATION*/, 0, nullptr, GL_TRUE );
 		}
 
 		m_glfwWindow = window;

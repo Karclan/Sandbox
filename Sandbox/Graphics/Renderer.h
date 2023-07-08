@@ -47,6 +47,8 @@ namespace Graphics
 		Renderer( Core::Registry & Registry, int width, int height );
 		~Renderer() = default;
 
+		void GLDebugOutput( GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char * message, const void * userParam );
+		
 		ShaderComponent	CreateShader( const std::string & name, Utils::EnumBitmask<Shader::Type> flags );
 		unsigned int CreateTexture( const std::string & textureName );
 
@@ -69,6 +71,7 @@ namespace Graphics
 		bool IsUsingFrameBufferObject() const { return m_useFrameBufferObject; }
 
 	private:
+
 		void UpdateCamera();
 		void UpdateTransform( TransformComponent & transform );
 		void UpdateTextures( TextureComponent & textureComponent );

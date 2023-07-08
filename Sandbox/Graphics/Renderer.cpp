@@ -24,10 +24,20 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
 
+#include "../magic_enum/magic_enum.hpp"
+
 #include <algorithm>
+#include <functional>
+#include <locale>
 
 namespace Graphics
 {
+	Renderer * s_RendererPtr = nullptr;
+	void GLAPIENTRY glDebugOutput( GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char * message, const void * userParam )
+	{
+		s_RendererPtr->GLDebugOutput( source, type, id, severity, length, message, userParam );
+	}
+
 	Renderer::Renderer( Core::Registry & Registry, int width, int height )
 		: m_registry( Registry )
 		, m_screenDimensions { width, height }
@@ -38,7 +48,171 @@ namespace Graphics
 
 		m_registry.ctx().emplace<RenderStats>( renderStats );
 
+		s_RendererPtr = this;
 		GraphicsDraw::Initalize( this );
+	}
+
+	void Renderer::GLDebugOutput( GLenum source,
+		GLenum type,
+		unsigned int id,
+		GLenum severity,
+		[[maybe_unused]] GLsizei length,
+		const char * message,
+		[[maybe_unused]] const void * userParam )
+	{
+		//#TODO_Shaders: Search message for shader program ID and instead add our shader name/sub program name into the string to help readabilitly
+		static std::unordered_set<int> const ignoredDebugOutput = {
+			131185 //131185 - Buffer detailed info
+		};
+
+		if ( ignoredDebugOutput.contains( id ) )
+		{
+			return; // ignore these non-significant error codes
+		}
+
+		if ( id == 131169 || id == 131218 || id == 131204 )
+		{
+			SB_CORE_WARN( "Previously ignored debugout {} discovered\n", id );
+		}
+
+		std::string openGLMessage = message;
+
+		bool const bShaderMessage = openGLMessage.find( "Program/shader" ) != std::string::npos;
+		if ( bShaderMessage )
+		{
+			static std::string const numberstring ( "0123456789" );
+
+			size_t const numberLocation = openGLMessage.find_first_of(numberstring);
+			size_t nextSpace = openGLMessage.find_first_of( " ", numberLocation );
+			int programId = std::stoi( openGLMessage.substr( numberLocation, nextSpace - numberLocation ));
+			int shaderId = -1;
+			int subShaderId = -1;
+			std::string ShaderName = "";
+			std::string SubProgramName = "";
+
+			for ( auto const & shader : m_shaderList )
+			{
+				shaderId = shader->GetShaderId();
+				ShaderName = shader->GetShaderName();
+				if ( shaderId == programId )
+				{
+					break;
+				}
+				else
+				{
+					auto const & programs = shader->GetPrograms();
+					for ( auto const & program : programs )
+					{
+						subShaderId = program.getId();
+						if ( subShaderId == programId )
+						{
+							SubProgramName = magic_enum::enum_name<Shader::Type>(program.getType());
+							break;
+						}
+					}
+				}
+			}
+			std::string insertString;
+			if ( SubProgramName.empty() )
+			{
+				insertString = " \"" + ShaderName + '\"';
+			}
+			else
+			{
+				insertString = " \"" + ShaderName + "\" - \"" + SubProgramName + '\"';
+			}
+			openGLMessage.insert( nextSpace, insertString );
+		}
+
+		std::string debugMessage = "--------------- \n";
+		debugMessage.append( "Debug message (" );
+		debugMessage.append( std::to_string( id ) );
+		debugMessage.append( "): " );
+		debugMessage.append( openGLMessage );
+		debugMessage.append( "\n" );
+
+		debugMessage.append( "Source :" );
+		switch ( source )
+		{
+			case GL_DEBUG_SOURCE_API:
+				debugMessage.append( "API\n" );
+				break;
+			case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
+				debugMessage.append( "System\n" );
+				break;
+			case GL_DEBUG_SOURCE_SHADER_COMPILER:
+				debugMessage.append( "Compiler\n" );
+				break;
+			case GL_DEBUG_SOURCE_THIRD_PARTY:
+				debugMessage.append( "Third Party\n" );
+				break;
+			case GL_DEBUG_SOURCE_APPLICATION:
+				debugMessage.append( "Application\n" );
+				break;
+			case GL_DEBUG_SOURCE_OTHER:
+				debugMessage.append( "Other\n" );
+				break;
+			default:
+				debugMessage.append( "Unknown source\n" );
+				break;
+		}
+
+		debugMessage.append( "Type: " );
+		switch ( type )
+		{
+			case GL_DEBUG_TYPE_ERROR:
+				debugMessage.append( "Error\n" );
+				break;
+			case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+				debugMessage.append( "Deprecated Behaviour\n" );
+				break;
+			case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+				debugMessage.append( "Undefined Behaviour\n" );
+				break;
+			case GL_DEBUG_TYPE_PORTABILITY:
+				debugMessage.append( "Portability\n" );
+				break;
+			case GL_DEBUG_TYPE_PERFORMANCE:
+				debugMessage.append( "Performance\n" );
+				break;
+			case GL_DEBUG_TYPE_MARKER:
+				debugMessage.append( "Marker\n" );
+				break;
+			case GL_DEBUG_TYPE_PUSH_GROUP:
+				debugMessage.append( "Push Group\n" );
+				break;
+			case GL_DEBUG_TYPE_POP_GROUP:
+				debugMessage.append( "Pop Group\n" ); break;
+			case GL_DEBUG_TYPE_OTHER:
+				debugMessage.append( "Other\n" );
+				break;
+			default:
+				debugMessage.append( "Unknown type\n" );
+				break;
+		}
+
+		debugMessage.append( "Severity :" );
+		switch ( severity )
+		{
+			case GL_DEBUG_SEVERITY_HIGH:
+				debugMessage.append( "high\n" );
+				break;
+			case GL_DEBUG_SEVERITY_MEDIUM:
+				debugMessage.append( "medium\n" );
+				break;
+			case GL_DEBUG_SEVERITY_LOW:
+				debugMessage.append( "low\n" );
+				break;
+			case GL_DEBUG_SEVERITY_NOTIFICATION:
+				debugMessage.append( "notification\n" );
+				break;
+			default:
+				debugMessage.append( "Unknown severity\n" );
+				break;
+		}
+
+		Utils::Logger::LogMessage( Utils::LogType::Error, debugMessage.c_str() );
+		//SB_CORE_ASSERT(false);
 	}
 
 	ShaderComponent Renderer::CreateShader( const std::string & name, Utils::EnumBitmask<Shader::Type> flags )
@@ -46,7 +220,7 @@ namespace Graphics
 		unsigned int ReturnId = 0;
 		//duplicate and valid
 		std::shared_ptr<ShaderProgram> shader = std::make_shared<ShaderProgram>( name.c_str(), flags );
-		ReturnId = shader->getId();
+		ReturnId = shader->GetShaderId();
 
 		m_shaderList.push_back( shader );
 
@@ -74,6 +248,17 @@ namespace Graphics
 
 	void Renderer::Init()
 	{
+		// enable OpenGL debug context if context allows for debug context
+		int flags = 0; 
+		glGetIntegerv( GL_CONTEXT_FLAGS, &flags );
+		if ( flags & GL_CONTEXT_FLAG_DEBUG_BIT )
+		{
+			glEnable( GL_DEBUG_OUTPUT );
+			glEnable( GL_DEBUG_OUTPUT_SYNCHRONOUS ); // makes sure errors are displayed synchronously
+			glDebugMessageCallback( glDebugOutput, NULL );
+			glDebugMessageControl( GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE/*GL_DEBUG_SEVERITY_NOTIFICATION*/, 0, nullptr, GL_TRUE );
+		}
+
 		//Line drawing and line shader setup
 		{
 			CreateShader( "line", { Shader::Type::Vertex, Shader::Type::Fragment } );
@@ -625,14 +810,14 @@ namespace Graphics
 		bool lookForShader = true;
 		if ( m_activeShader )
 		{
-			lookForShader = m_activeShader->getId() != shaderComponent.ShaderId;
+			lookForShader = m_activeShader->GetShaderId() != shaderComponent.ShaderId;
 		}
 
 		if ( lookForShader )
 		{
 			for ( auto & shaderPtr : m_shaderList )
 			{
-				if ( shaderComponent.ShaderId == shaderPtr->getId() )
+				if ( shaderComponent.ShaderId == shaderPtr->GetShaderId() )
 				{
 					m_activeShader = shaderPtr.get();
 					break;

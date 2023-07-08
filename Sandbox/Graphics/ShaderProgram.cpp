@@ -29,11 +29,6 @@ namespace Graphics
         
     }
 
-    unsigned int ShaderProgram::getId() const noexcept
-    {
-        return m_Id;
-    }
-
     bool ShaderProgram::attachShader( std::vector<Shader> const & shaders )
     {
         GLint success = GL_FALSE;
