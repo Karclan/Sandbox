@@ -59,7 +59,6 @@ namespace Game
 		extents.width = 2.f;
 		extents.height = 1.21f;
 		extents.offset = { 0.f, -0.40f };*/
-		collisionComponent.Shape = Physics::CollisionComponent::ShapeType::Circle;
 		Physics::CircleExtents & extents = m_registry.AddComponent<Physics::CircleExtents>( m_PlayerEntity );
 		extents.radius = 2.f;
 
@@ -79,12 +78,11 @@ namespace Game
 
 			auto & collisionComponent = m_registry.AddComponent<Physics::CollisionComponent>( entity );
 			collisionComponent.drawDebugLines = true;
-			/*auto & extents = m_registry.AddComponent<Physics::SquareExtents>( entity );
+			auto & extents = m_registry.AddComponent<Physics::SquareExtents>( entity );
 			extents.width = 4.f;
-			extents.height = 4.f;*/
-			collisionComponent.Shape = Physics::CollisionComponent::ShapeType::Circle;
-			Physics::CircleExtents & extents = m_registry.AddComponent<Physics::CircleExtents>( entity );
-			extents.radius = 1.f;
+			extents.height = 4.f;
+			/*Physics::CircleExtents & extents = m_registry.AddComponent<Physics::CircleExtents>( entity );
+			extents.radius = 1.f;*/
 		}
 	}
 
