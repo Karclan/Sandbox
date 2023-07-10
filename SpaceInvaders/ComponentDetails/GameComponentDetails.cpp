@@ -22,11 +22,6 @@ namespace Editor
 				ImGui::Separator();
 			}
 			ImGui::DragFloat( "Movement Speed", &inComponent.m_MovementSpeed, 0.1f );
-			
-			ImGui::DragFloat3( "CirclePos", &inComponent.CirclePos.x, 0.1f );
-			ImGui::DragFloat( "CircleRadius", &inComponent.CircleRadius, 0.1f );
-			ImGui::DragFloat4( "CircleColour", &inComponent.CircleColour.x, 0.1f );
-			ImGui::DragInt( "CirclePointCount", &inComponent.CirclePointCount, 1.f, 2, 360 );
 		}
 	}
 

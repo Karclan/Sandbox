@@ -172,8 +172,9 @@ namespace Core
 		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::CameraComponentDetails>() ) );
 
 		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::CollisionComponentDetails>() ) );
-		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::SquareExtentsDetails>() ) );
 		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::CircleExtentsDetails>() ) );
+		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::SquareExtentsDetails>() ) );
+		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::CircleExtentsDebugRenderComponentDetails>() ) );
 		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::SquareExtentsDebugRenderComponentDetails>() ) );
 
 		m_editorInspector.RegisterComponentDetailsView( std::move( std::make_unique<Editor::MeshComponentDetails>() ) );

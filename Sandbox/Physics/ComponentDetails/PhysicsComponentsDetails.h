@@ -8,6 +8,7 @@ namespace Physics
 	struct SquareExtents;
 	struct CircleExtents;
 	struct SquareExtentsDebugRenderComponent;
+	struct CircleExtentsDebugRenderComponent;
 }
 
 namespace Editor
@@ -34,5 +35,11 @@ namespace Editor
 	{
 	protected:
 		void BuildDetailsInternal( Physics::SquareExtentsDebugRenderComponent & inComponent ) const override;
+	};
+
+	class CircleExtentsDebugRenderComponentDetails : public TComponentDetails<Physics::CircleExtentsDebugRenderComponent>
+	{
+	protected:
+		void BuildDetailsInternal( Physics::CircleExtentsDebugRenderComponent & inComponent ) const override;
 	};
 }

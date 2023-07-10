@@ -16,11 +16,13 @@ namespace Physics
 		, m_window( window )
 	{
 		m_registry.on_construct<SquareExtents>().connect<&CollisionDetectionSystem::OnSquareExtentsConstruct>( this );
+		m_registry.on_construct<CircleExtents>().connect<&CollisionDetectionSystem::OnCircleExtentsConstruct>( this );
 	}
 
 	CollisionDetectionSystem::~CollisionDetectionSystem()
 	{
 		m_registry.on_construct<SquareExtents>().disconnect<&CollisionDetectionSystem::OnSquareExtentsConstruct>( this );
+		m_registry.on_construct<CircleExtents>().disconnect<&CollisionDetectionSystem::OnCircleExtentsConstruct>( this );
 	}
 
 	void CollisionDetectionSystem::FixedUpdate( double deltaTime )
@@ -82,6 +84,17 @@ namespace Physics
 					Graphics::GraphicsDraw::DrawLine( topLeft, bottomLeft, colour, 1.f );
 					Graphics::GraphicsDraw::DrawLine( topRight, bottomRight, colour, 1.f );
 					Graphics::GraphicsDraw::DrawLine( bottomRight, bottomLeft, colour, 1.f );
+				}
+			} );
+
+		m_registry.ForView<CollisionComponent const, CircleExtents const, CircleExtentsDebugRenderComponent, Graphics::TransformComponent const>( [] ( CollisionComponent const & collision, CircleExtents const & extents, CircleExtentsDebugRenderComponent & debugRender, Graphics::TransformComponent const & transform )
+			{
+				if(collision.drawDebugLines)
+				{ 
+					glm::vec3 const zPosMinus1 = transform.Position + glm::vec3(0.f,0.f, -1.f); //#TODO_Collision: For the purpose of rendering on top of whatever object we're rendering on. Though this doesn't work in 3d spaces, will need to figure this out with a proper render fix
+					debugRender = extents;
+					glm::vec4 const colour = collision.isColliding ? Graphics::Colours::Red : Graphics::Colours::White;
+					Graphics::GraphicsDraw::DrawCircle( zPosMinus1, debugRender.CachedRadius, colour, debugRender.PointCount );
 				}
 			} );
 	}
@@ -212,7 +225,14 @@ namespace Physics
 		CircleExtents const & secondExtents = m_registry.GetComponent<CircleExtents const>( second );
 		Graphics::TransformComponent const & secondTransform = m_registry.GetComponent<Graphics::TransformComponent const>( second );
 
-		return false;
+		glm::vec3 const SecondFirstVec = firstTransform.Position - secondTransform.Position;
+		float const RadiusSum = firstExtents.radius + secondExtents.radius;
+		float const RadiusSumSqrd = RadiusSum * RadiusSum;
+		float magSquared = glm::dot( SecondFirstVec, SecondFirstVec );
+
+		bool const intersecting = magSquared < RadiusSumSqrd;
+
+		return intersecting;
 	}
 
 	void CollisionDetectionSystem::OnSquareExtentsConstruct( entt::registry & registry, entt::entity entity )
@@ -235,6 +255,29 @@ namespace Physics
 		//Attach a debug render component
 		registry.emplace<SquareExtentsDebugRenderComponent>( entity );
 
+	}
+
+	void CollisionDetectionSystem::OnCircleExtentsConstruct( entt::registry & registry, entt::entity entity )
+	{
+		//Create a debug view of this so we can visualize
+		//We have circle drawing within the renderer so all we need to do set a radius and a point count (for accuracy of the circle shape)
+
+		/* Currently the way we render the circles is through the geometry shader
+		*  We specify the number of points we want to represent the circle, and the radius
+		*  so we then go through 2pi in intervals of 2pi / point count
+		*  then we scale these new positions by our radius amount
+		*
+		*        * * * *
+		*     *		^	  *
+		*   *		|		*
+		*  *		R		 *
+		*  *<----R|0,0|R---->*
+		*  *		R		 *
+		*	*		|		*
+		*     *		V	  *
+		*        * * * *
+		*/
+		registry.emplace<CircleExtentsDebugRenderComponent>( entity );
 	}
 
 }

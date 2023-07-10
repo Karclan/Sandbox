@@ -33,6 +33,7 @@ namespace Physics
 		bool CircleCircleCollision( Core::Entity first, CollisionComponent & firstCollision, Core::Entity second, CollisionComponent & secondCollision ) const;
 
 		void OnSquareExtentsConstruct(entt::registry & registry, entt::entity entity);
+		void OnCircleExtentsConstruct( entt::registry & registry, entt::entity entity );
 
 		Graphics::Window & m_window;
 	};

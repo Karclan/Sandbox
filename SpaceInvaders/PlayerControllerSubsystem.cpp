@@ -55,10 +55,13 @@ namespace Game
 		//Collision
 		Physics::CollisionComponent & collisionComponent = m_registry.AddComponent<Physics::CollisionComponent>( m_PlayerEntity );
 		collisionComponent.drawDebugLines = true;
-		Physics::SquareExtents & extents = m_registry.AddComponent<Physics::SquareExtents>( m_PlayerEntity );
+		/*Physics::SquareExtents & extents = m_registry.AddComponent<Physics::SquareExtents>( m_PlayerEntity );
 		extents.width = 2.f;
 		extents.height = 1.21f;
-		extents.offset = { 0.f, -0.40f };
+		extents.offset = { 0.f, -0.40f };*/
+		collisionComponent.Shape = Physics::CollisionComponent::ShapeType::Circle;
+		Physics::CircleExtents & extents = m_registry.AddComponent<Physics::CircleExtents>( m_PlayerEntity );
+		extents.radius = 2.f;
 
 		//Game components
 		m_registry.AddComponent<PlayerComponent>( m_PlayerEntity, PlayerComponent() );
@@ -76,9 +79,12 @@ namespace Game
 
 			auto & collisionComponent = m_registry.AddComponent<Physics::CollisionComponent>( entity );
 			collisionComponent.drawDebugLines = true;
-			auto & extents = m_registry.AddComponent<Physics::SquareExtents>( entity );
+			/*auto & extents = m_registry.AddComponent<Physics::SquareExtents>( entity );
 			extents.width = 4.f;
-			extents.height = 4.f;
+			extents.height = 4.f;*/
+			collisionComponent.Shape = Physics::CollisionComponent::ShapeType::Circle;
+			Physics::CircleExtents & extents = m_registry.AddComponent<Physics::CircleExtents>( entity );
+			extents.radius = 1.f;
 		}
 	}
 
@@ -106,11 +112,9 @@ namespace Game
 		UNUSED( deltaTime );
 		m_registry.ForView<Graphics::TransformComponent, PlayerComponent, PlayerTag>( [this] ( Graphics::TransformComponent & transform, PlayerComponent & player )
 			{
-				//glm::dvec3 mousePosition = m_inputSystem.GetMouseWorldPosition();
-				//transform.Position.x = static_cast< float >( mousePosition.x );
-				//transform.Position.y = static_cast< float >( mousePosition.y );
-
-				Graphics::GraphicsDraw::DrawCircle( transform.Position + player.CirclePos, player.CircleRadius, player.CircleColour, player.CirclePointCount );
+				glm::dvec3 mousePosition = m_inputSystem.GetMouseWorldPosition();
+				transform.Position.x = static_cast< float >( mousePosition.x );
+				transform.Position.y = static_cast< float >( mousePosition.y );
 			} );
 	}
 

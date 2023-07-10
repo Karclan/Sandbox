@@ -79,4 +79,26 @@ namespace Physics
 
 		bool recalculateDebugMesh { false };
 	};
+
+	struct CircleExtentsDebugRenderComponent
+	{
+		CircleExtentsDebugRenderComponent operator=( CircleExtents const & extents )
+		{
+			CachedRadius = extents.radius;
+			return *this;
+		}
+
+		bool operator==( CircleExtents const & extents ) const
+		{
+			return (CachedRadius == extents.radius );
+		}
+
+		bool operator!=( CircleExtents const & extents ) const
+		{
+			return !( *this == extents );
+		}
+
+		float CachedRadius { 0.f };
+		int PointCount { 24 };
+	};
 }

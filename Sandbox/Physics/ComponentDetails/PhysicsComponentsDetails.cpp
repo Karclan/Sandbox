@@ -95,4 +95,15 @@ namespace Editor
 		}
 	}
 
+	void CircleExtentsDebugRenderComponentDetails::BuildDetailsInternal( Physics::CircleExtentsDebugRenderComponent & inComponent ) const
+	{
+		if ( ImGui::CollapsingHeader( "Circle Debug Render Extents" ) )
+		{
+			ImGui::PushID( "##Details" );
+			ImGui::DragInt( "Point Count", &inComponent.PointCount, 1.f, 0, 360 );
+			ImGui::Text( fmt::format( "Cached Radius: {}", inComponent.CachedRadius).c_str() );
+			ImGui::PopID();
+		}
+	}
+
 }

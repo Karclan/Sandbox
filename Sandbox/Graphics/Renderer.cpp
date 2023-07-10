@@ -517,10 +517,10 @@ namespace Graphics
 
 	void Renderer::Render()
 	{
-		DrawCircle( glm::vec3( 0.f, 0.f, 0.f ), 15.f, Colours::White, 128 );
+		/*DrawCircle( glm::vec3( 0.f, 0.f, 0.f ), 15.f, Colours::White, 128 );
 		DrawCircle( glm::vec3( 1.f, 1.f, 0.f ), 0.5f, Colours::Red, 3 );
 		DrawCircle( glm::vec3( -1.f, -1.f, 0.f), 10.f, Colours::Green, 3 );
-		DrawCircle( glm::vec3( 2.f, 2.f, 0.f), 1.f, Colours::Blue, 3 );
+		DrawCircle( glm::vec3( 2.f, 2.f, 0.f), 1.f, Colours::Blue, 3 );*/
 
 		glUseProgram( 0 );
 
