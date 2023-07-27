@@ -19,14 +19,16 @@
 #include "Triangle.h"
 
 #include "RenderStats.h"
+#include "FrameBuffer.h"
+#include "ShaderResourceHandler.h"
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
 #include <memory>
 #include <vector>
+#include <map>
 #include <array>
-#include "FrameBuffer.h"
 
 namespace Core
 {
@@ -48,9 +50,9 @@ namespace Graphics
 		~Renderer() = default;
 
 		void GLDebugOutput( GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char * message, const void * userParam );
-		
-		ShaderComponent	CreateShader( const std::string & name, Utils::EnumBitmask<Shader::Type> flags );
-		unsigned int CreateTexture( const std::string & textureName );
+
+		ShaderComponent	GetOrCreateShader( std::string const & name, Utils::EnumBitmask<Shader::Type> flags );
+		unsigned int GetOrCreateTexture( std::string const & textureName );
 
 		MeshComponent GetMesh( PrimativeType type );
 
@@ -62,7 +64,7 @@ namespace Graphics
 
 		bool DrawLine( glm::vec3 A, glm::vec3 b, glm::vec4 colour = glm::vec4( 1.f ), float thickness = 1.f ) noexcept;
 		bool DrawCircle( glm::vec3 pos, float radius, glm::vec4 colour = glm::vec4( 1.f ), int pointCount = 3.f ) noexcept;
-		
+
 		void FramebufferSizeCallback( int width, int height );
 		void ScreenSizeCallback( int width, int height );
 
@@ -71,7 +73,6 @@ namespace Graphics
 		bool IsUsingFrameBufferObject() const { return m_useFrameBufferObject; }
 
 	private:
-
 		void UpdateCamera();
 		void UpdateTransform( TransformComponent & transform );
 		void UpdateTextures( TextureComponent & textureComponent );
@@ -171,7 +172,7 @@ namespace Graphics
 		bool m_useFrameBufferObject { true };
 		bool m_firstTimeRenderingSubWindow { m_useFrameBufferObject };
 
-		std::vector< std::shared_ptr<ShaderProgram> > m_shaderList;
+		TShaderResourceHandler m_shaderResourceHandler;
 
 		std::vector<GLuint> m_boundTextures {};
 	};

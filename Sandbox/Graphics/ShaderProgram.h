@@ -14,31 +14,12 @@
 
 namespace Graphics
 {
-    struct UniformValue
-    {
-        enum class Type
-        {
-            eBool,
-            eInt,
-            eFloat,
-            eGLuint,
-            eVec2,
-            eVec3,
-            eVec4,
-            eMat3,
-            eMat4,
-        };
-    };
-
-    struct TUniformValue
-    {
-
-    };
+    using ShaderId = unsigned int;
 
 	class IShaderHandle
 	{
     public:
-        virtual unsigned int GetShaderId() const = 0;
+        virtual ShaderId GetShaderId() const = 0;
 
         virtual std::string const & GetShaderName() const = 0;
 
@@ -88,7 +69,9 @@ namespace Graphics
 
         //Inherited Functions from IShaderHandle
         //---------------------------------------------------------------------//
-		unsigned int GetShaderId() const override;
+
+		ShaderId GetShaderId() const override { return m_Id; }
+
         std::string const & GetShaderName() const override; 
 
         std::string const & GetShaderPath( Shader::Type type ) const override;
@@ -113,7 +96,7 @@ namespace Graphics
         GLint  getUniformLocation( const char * name );
         const char * getTypeString( GLenum type ) const noexcept;
 
-        unsigned int m_Id {};
+        ShaderId m_Id {};
 
         std::string m_shaderName{};
         Utils::EnumBitmask<Shader::Type> m_shaderTypeFlags;

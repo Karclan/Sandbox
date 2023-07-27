@@ -346,6 +346,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ComponentDetails\GameComponentDetails.cpp" />
+    <ClCompile Include="EnemyControllerSubsystem.cpp" />
     <ClCompile Include="GameBindings.cpp" />
     <ClCompile Include="GameGridSubsystem.cpp" />
     <ClCompile Include="GameImpl.cpp" />
@@ -361,6 +362,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ComponentDetails\GameComponentDetails.h" />
+    <ClInclude Include="EnemyComponent.h" />
+    <ClInclude Include="EnemyControllerSubsystem.h" />
     <ClInclude Include="GameGridComponent.h" />
     <ClInclude Include="GameGridSubsystem.h" />
     <ClInclude Include="GameImpl.h" />
@@ -369,6 +372,7 @@
     <ClInclude Include="PlayerControllerSubsystem.h" />
     <ClInclude Include="GameBindings.h" />
     <ClInclude Include="GameInputActions.h" />
+    <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="TestingPrototypeSystems\Basic2DGameTestSubsystem.h" />
     <ClInclude Include="TestingPrototypeSystems\BasicMovementSubsystem.h" />
     <ClInclude Include="TestingPrototypeSystems\BasicSpriteTestSubsystem.h" />

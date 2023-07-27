@@ -427,6 +427,7 @@
     <ClCompile Include="Graphics\CameraComponent.cpp" />
     <ClCompile Include="Graphics\CameraInspector.cpp" />
     <ClCompile Include="Graphics\CameraSystem.cpp" />
+    <ClCompile Include="Graphics\ShaderResourceHandler.cpp" />
     <ClCompile Include="Graphics\ComponentDetails\GraphicsComponentsDetails.cpp" />
     <ClCompile Include="Graphics\Cube.cpp" />
     <ClCompile Include="Graphics\DataBuffer.cpp" />
@@ -472,7 +473,7 @@
     <ClInclude Include="Core\Entity.h" />
     <ClInclude Include="Core\GameClass.h" />
     <ClInclude Include="Core\ResourceManager.h" />
-    <ClInclude Include="Core\ResourceType.h" />
+    <ClInclude Include="Core\Sandbox.h" />
     <ClInclude Include="Core\Subsystem.h" />
     <ClInclude Include="Editor\ArcballBehaviour.h" />
     <ClInclude Include="Editor\ComponentDetails\ComponentDetailsBase.h" />
@@ -514,6 +515,7 @@
     <ClInclude Include="Graphics\Shader.h" />
     <ClInclude Include="Graphics\ShaderComponent.h" />
     <ClInclude Include="Graphics\ShaderProgram.h" />
+    <ClInclude Include="Graphics\ShaderResourceHandler.h" />
     <ClInclude Include="Graphics\Square.h" />
     <ClInclude Include="Graphics\Texture.h" />
     <ClInclude Include="Graphics\TextureComponent.h" />

@@ -2,6 +2,8 @@
 
 #include "CoreRegistry.h"
 
+#include "ResourceManager.h"
+
 #include "../Editor/EditorUtilities.h"
 #include "../Editor/EditorInspector.h"
 #include "../Editor/EditorHierarchyWindow.h"
@@ -130,6 +132,9 @@ namespace Core
 
 		//Registry
 		Core::Registry m_mainRegistry {};
+		
+		//Resource Manager
+		Core::ResourceManager m_resourceManager {};
 
 		//Editor
 		Editor::Utilities m_editorUtilities {};

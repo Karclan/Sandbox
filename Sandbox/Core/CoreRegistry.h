@@ -250,6 +250,12 @@ namespace Core
 			return m_registry.on_construct<Component>();
 		}
 
+		template<typename Component>
+		[[nodiscard]] auto on_destroy()
+		{
+			return m_registry.on_destroy<Component>();
+		}
+
 		//////////////////////////////////////////////////////////////////////////
 		//Context components
 		//////////////////////////////////////////////////////////////////////////

@@ -30,10 +30,10 @@ namespace Game
 	{
 		auto & renderer = windowRef.GetRenderer();
 		
-		Graphics::ShaderComponent textureEnabledShaderComp = renderer.CreateShader("basic", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment });
+		Graphics::ShaderComponent textureEnabledShaderComp = renderer.GetOrCreateShader("basic", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment });
 		//auto textureEnabledShaderId = renderer->createShader( "textureEnabled", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
 	   // auto rayShaderId = renderer->createShader( "ray", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment , Graphics::Shader::Type::Geometry } );
-		auto containerTextureId = renderer.CreateTexture("container.jpg");
+		auto containerTextureId = renderer.GetOrCreateTexture("container.jpg");
 
 		Graphics::TextureComponent containerTextureComp{ { containerTextureId } };
 

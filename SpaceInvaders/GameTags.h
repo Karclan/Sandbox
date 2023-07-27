@@ -7,4 +7,5 @@ namespace Game
 {
 	using namespace entt::literals;
 	using PlayerTag = entt::tag<"Player"_hs>;
+	using EnemyTag = entt::tag<"Enemy"_hs>;
 }

@@ -14,7 +14,7 @@ namespace Physics
 	class CollisionDetectionSystem : public Core::Subsystem
 	{
 	public:
-		CollisionDetectionSystem(Core::Registry & registry, Graphics::Window & window );
+		CollisionDetectionSystem( Core::Registry & registry, Graphics::Window & window );
 		virtual ~CollisionDetectionSystem();
 		CollisionDetectionSystem( CollisionDetectionSystem const & other ) = delete;
 		CollisionDetectionSystem( CollisionDetectionSystem && other ) = delete;
@@ -32,7 +32,7 @@ namespace Physics
 		bool SquareCircleCollision( Core::Entity first, CollisionComponent & firstCollision, Core::Entity second, CollisionComponent & secondCollision ) const;
 		bool CircleCircleCollision( Core::Entity first, CollisionComponent & firstCollision, Core::Entity second, CollisionComponent & secondCollision ) const;
 
-		void OnSquareExtentsConstruct(entt::registry & registry, entt::entity entity);
+		void OnSquareExtentsConstruct( entt::registry & registry, entt::entity entity );
 		void OnCircleExtentsConstruct( entt::registry & registry, entt::entity entity );
 
 		Graphics::Window & m_window;

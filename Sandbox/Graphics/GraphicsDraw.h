@@ -2,6 +2,8 @@
 
 #include "Colours.h"
 
+#include "../Core/CoreRegistry.h"
+
 #include "glm/fwd.hpp"
 
 namespace Graphics
@@ -17,11 +19,13 @@ namespace Graphics
 		static void DrawLine(glm::vec3 from, glm::vec3 to, glm::vec4 colour = Colours::White, float thickness = 1.f );
 		static void DrawAALine();
 
-		static void DrawCircle( glm::vec3 pos, float radius, glm::vec4 colour = glm::vec4( 1.f ), int pointCount = 3.f );
+		static void DrawCircle( glm::vec3 pos, float radius, glm::vec4 colour = Colours::White, int pointCount = 3.f );
 		static void DrawWireCircle();
 
 		static void DrawQuad();
-		static void DrawWireQuad();
+		static void DrawWireQuad(glm::vec3 pos, glm::vec2 dimensons, glm::vec4 colour = Colours::White, float thickness = 1.f );
+
+		static Core::Entity CreateSprite( Core::Registry & registry, char const * name, char const * texture );
 
 	private:
 		static Renderer * m_Renderer;

@@ -31,11 +31,11 @@ namespace Game
 	{
 		auto & renderer = windowRef.GetRenderer();
 
-		Graphics::ShaderComponent const textureEnabledShaderComp = renderer.CreateShader( "textureEnabled", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
-		Graphics::ShaderComponent const textureMixedShaderComp = renderer.CreateShader( "textureMixing", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
-		auto const containerTextureId = renderer.CreateTexture( "container.jpg" );
-		auto const awesomefaceTextureId = renderer.CreateTexture( "awesomeface.png" );
-		auto const playerTextureId = renderer.CreateTexture( "Player.png" );
+		Graphics::ShaderComponent const textureEnabledShaderComp = renderer.GetOrCreateShader( "textureEnabled", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
+		Graphics::ShaderComponent const textureMixedShaderComp = renderer.GetOrCreateShader( "textureMixing", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
+		auto const containerTextureId = renderer.GetOrCreateTexture( "container.jpg" );
+		auto const awesomefaceTextureId = renderer.GetOrCreateTexture( "awesomeface.png" );
+		auto const playerTextureId = renderer.GetOrCreateTexture( "Player.png" );
 
 		Graphics::TextureComponent const multiTextureComp { { containerTextureId, awesomefaceTextureId } };
 		Graphics::TextureComponent const playerTextureComp { { playerTextureId } };

@@ -90,8 +90,9 @@ namespace Graphics
 			std::string ShaderName = "";
 			std::string SubProgramName = "";
 
-			for ( auto const & shader : m_shaderList )
+			for ( auto const & shaderItr : m_shaderList )
 			{
+				auto const & shader = shaderItr.second;
 				shaderId = shader->GetShaderId();
 				ShaderName = shader->GetShaderName();
 				if ( shaderId == programId )
@@ -215,20 +216,24 @@ namespace Graphics
 		//SB_CORE_ASSERT(false);
 	}
 
-	ShaderComponent Renderer::CreateShader( const std::string & name, Utils::EnumBitmask<Shader::Type> flags )
+	ShaderComponent Renderer::GetOrCreateShader( std::string const & name, Utils::EnumBitmask<Shader::Type> flags )
 	{
-		unsigned int ReturnId = 0;
-		//duplicate and valid
-		std::shared_ptr<ShaderProgram> shader = std::make_shared<ShaderProgram>( name.c_str(), flags );
-		ReturnId = shader->GetShaderId();
+		ShaderComponent shaderComponent;
+		if ( ShaderMap::const_iterator FoundShader = m_shaderList.find( name ); FoundShader != m_shaderList.end() )
+		{
+			shaderComponent = { FoundShader->second->GetShaderId(), std::weak_ptr<IShaderHandle>( FoundShader->second ) };
+		}
+		else
+		{
+			std::shared_ptr<ShaderProgram> shader = std::make_shared<ShaderProgram>( name.c_str(), flags );
+			m_shaderList[name] = shader;
 
-		m_shaderList.push_back( shader );
-
-		ShaderComponent shaderComponent { ReturnId, std::weak_ptr<IShaderHandle>( shader ) };
+			shaderComponent = { shader->GetShaderId(), std::weak_ptr<IShaderHandle const>( shader ) };
+		}
 		return shaderComponent;
 	}
 
-	unsigned int Renderer::CreateTexture( const std::string & textureName )
+	unsigned int Renderer::GetOrCreateTexture( const std::string & textureName )
 	{
 		unsigned int ReturnId = 0;
 		//duplicate and valid
@@ -261,7 +266,7 @@ namespace Graphics
 
 		//Line drawing and line shader setup
 		{
-			CreateShader( "line", { Shader::Type::Vertex, Shader::Type::Fragment } );
+			GetOrCreateShader( "line", { Shader::Type::Vertex, Shader::Type::Fragment } );
 
 			m_lineShader = m_shaderList.back().get();
 
@@ -284,7 +289,7 @@ namespace Graphics
 		}
 
 		{
-			CreateShader( "wireCircle", { Shader::Type::Vertex, Shader::Type::Geometry, Shader::Type::Fragment } );
+			GetOrCreateShader( "wireCircle", { Shader::Type::Vertex, Shader::Type::Geometry, Shader::Type::Fragment } );
 
 			m_circleShader = m_shaderList.back().get();
 
@@ -334,7 +339,7 @@ namespace Graphics
 				} );
 			ScreenQuadVAO->AddVertexBuffer( ScreenQuadVBO );
 
-			CreateShader( "framebuffer_screen", { Shader::Type::Vertex, Shader::Type::Fragment } );
+			GetOrCreateShader( "framebuffer_screen", { Shader::Type::Vertex, Shader::Type::Fragment } );
 			m_screenShader = m_shaderList.back().get();
 			m_screenShader->useProgram();
 			m_screenShader->setUniform( "screenTexture", 0 );
@@ -815,11 +820,12 @@ namespace Graphics
 
 		if ( lookForShader )
 		{
-			for ( auto & shaderPtr : m_shaderList )
+			for ( auto & shaderItr : m_shaderList )
 			{
-				if ( shaderComponent.ShaderId == shaderPtr->GetShaderId() )
+				auto const & shader = shaderItr.second;
+				if ( shaderComponent.ShaderId == shader->GetShaderId() )
 				{
-					m_activeShader = shaderPtr.get();
+					m_activeShader = shader.get();
 					break;
 				}
 			}

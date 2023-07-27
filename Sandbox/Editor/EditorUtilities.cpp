@@ -44,7 +44,7 @@ namespace Editor
 			Registry.DestroyEntity( m_gridFloorEntity );
 		}
 
-		Renderer.CreateShader( "EditorGridFloor", { Graphics::Shader::Type::Vertex, Graphics::Shader::Type::Fragment } );
+		Renderer.GetOrCreateShader( "EditorGridFloor", { Graphics::Shader::Type::Vertex, Graphics::Shader::Type::Fragment } );
 
 		m_gridFloorEntity = Registry.CreateEntity();
 		

@@ -8,18 +8,23 @@ layout (location = 3) in vec2 aTexCoord;
 layout (std140, binding = 0) uniform Matrices
 {
     mat4 u_ViewProjection;
+    mat4 u_View;
+    mat4 u_Projection;
 };
 
 uniform mat4 model;
 
-out VS_Out
+struct VS_Out
 {
     vec3 VertColour;
     vec2 TexCoord;
     float TextureIndex;
     float TextureCount;
     float TilingFactor;
-} vs_out;
+	float TextureId;
+};
+
+layout (location=0) out VS_Out vs_out;
 
 void main()
 {

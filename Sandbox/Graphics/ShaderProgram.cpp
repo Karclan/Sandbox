@@ -17,16 +17,14 @@ namespace Graphics
         m_Id = glCreateProgram();
         create();
 
-        
-        m_boolUniforms[ "test" ] = true;
+        /*m_boolUniforms[ "test" ] = true;
         m_intUniforms[ "test" ] = 10;
         m_floatUniforms[ "test" ] = 1.23f;
         m_gluintUniforms[ "test" ] = 99u;
         m_vec2Uniforms[ "test" ] = glm::vec2( 1.f, 10.f ); 
         m_vec3Uniforms[ "test" ] = glm::vec3( 1.f, 10.f, 1.24f );
         m_vec4Uniforms[ "test" ] = glm::vec4( 1.f, 10.f, 1.24f, 0.345f );
-        m_mat3Uniforms[ "test" ] = glm::mat3( 1.24f );
-        
+        m_mat3Uniforms[ "test" ] = glm::mat3( 1.24f );*/
     }
 
     bool ShaderProgram::attachShader( std::vector<Shader> const & shaders )
@@ -313,11 +311,6 @@ namespace Graphics
         }
     }
 
-	unsigned int ShaderProgram::GetShaderId() const
-	{
-        return m_Id;
-	}
-
 	std::string const & ShaderProgram::GetShaderName() const
 	{
         return m_shaderName;
@@ -403,5 +396,4 @@ namespace Graphics
 	{
         return m_mat4Uniforms;
 	}
-
 }

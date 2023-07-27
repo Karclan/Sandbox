@@ -9,6 +9,6 @@ namespace Graphics
     struct ShaderComponent
     {
         unsigned int ShaderId { 0 };
-        std::weak_ptr<IShaderHandle> ShaderHandle { };
+        std::weak_ptr<IShaderHandle const> ShaderHandle { };
     };
 }
