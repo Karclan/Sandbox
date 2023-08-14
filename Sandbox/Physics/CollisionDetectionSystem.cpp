@@ -3,6 +3,7 @@
 
 #include "../Utils/UnusedMacro.h"
 #include "../Utils/format.h"
+#include "../Utils/customformatters.h"
 #include "../Utils/Logger.h"
 
 #include "../Graphics/TransformComponent.h"

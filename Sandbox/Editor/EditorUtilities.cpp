@@ -1,6 +1,7 @@
 #include "EditorUtilities.h"
 
 #include "../Core/CoreRegistry.h"
+#include "../Core/ResourceManager.h"
 
 #include "../Graphics/TransformComponent.h"
 #include "../Graphics/CameraComponent.h"
@@ -44,7 +45,7 @@ namespace Editor
 			Registry.DestroyEntity( m_gridFloorEntity );
 		}
 
-		Renderer.GetOrCreateShader( "EditorGridFloor", { Graphics::Shader::Type::Vertex, Graphics::Shader::Type::Fragment } );
+		Core::Resources::CreateOrLoadShader("EditorGridFloor");// , { Graphics::Shader::Type::Vertex, Graphics::Shader::Type::Fragment } );
 
 		m_gridFloorEntity = Registry.CreateEntity();
 		

@@ -21,6 +21,8 @@ namespace Core
 		SB::Shared<Graphics::ShaderProgram> resource = GetOrLoadResource<ResourceType::Shader, Graphics::ShaderProgram >( shaderName );
 		comp.ShaderHandle = SB::Weak<Graphics::IShaderHandle>( resource );
 		comp.ShaderId = resource->GetShaderId();
+
+		return comp;
 	}
 
 	Graphics::TextureComponent ResourceManager::CreateOrLoadTexture( char const * textureName )
@@ -46,19 +48,19 @@ namespace Core
 
 	void ResourceManager::AddResourceHandler( std::shared_ptr<ResourceTypeHandler> & Handler )
 	{
+		SB_CORE_ASSERT( Handler, "Passed an invalid handler ptr!" );
 		if ( Handler )
 		{
 			ResourceType const handledType = Handler->GetHandledResourceType();
 			if ( ResourceManagerMap::const_iterator HandlerIt = m_resourceHandlers.find( handledType ); HandlerIt == m_resourceHandlers.end() )
 			{
-				m_resourceHandlers[ handledType ] = Handler;
+				m_resourceHandlers[handledType] = Handler;
 			}
 			else
 			{
-				SB_CORE_ASSERT( false, fmt::format( "Duplicate Handler registration attempt! With type: {}", magic_enum::enum_name<ResourceType>( handledType ) ).c_str() );
+				SB_CORE_ASSERT( false, fmt::format( "Duplicate Handler registration attempt! With type: {}", std::string( magic_enum::enum_name<ResourceType>( handledType ) ).c_str() ) );
 			}
 		}
-		SB_CORE_ASSERT( false, "Passed an invalid handler ptr!" );
 	}
 
 	void ResourceManager::BuildWindow( double deltaTime )

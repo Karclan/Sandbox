@@ -17,9 +17,9 @@ namespace Graphics
 
     Shader::Shader( Type type, char const * filePath )
     {
-        std::string path = "../Sandbox/Resources/Shaders/";
-        path.append( filePath );
-        create( type, path.c_str() );
+        /*std::string path = "../Sandbox/Resources/Shaders/";
+        path.append( filePath );*/
+        create( type, filePath );
     }
 
     Shader::~Shader()
@@ -86,7 +86,7 @@ namespace Graphics
         shaderFile.exceptions( std::ifstream::failbit | std::ifstream::badbit );// ensure ifstream objects can throw exceptions:
         try
         {
-            switch( m_type )
+          /*  switch( m_type )
             {
             case Type::Vertex:
                 m_shaderFilePath.append( ".vert" );
@@ -99,7 +99,7 @@ namespace Graphics
             case Type::Invalid:
             default:
                 break;
-            }
+            }*/
 
             shaderFile.open( m_shaderFilePath );// open files
             std::stringstream vShaderStream;

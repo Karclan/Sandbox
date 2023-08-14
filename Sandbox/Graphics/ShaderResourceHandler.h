@@ -4,24 +4,13 @@
 
 #include "ShaderProgram.h"
 
-#include <vector>
+#include <unordered_map>
 
 namespace Graphics
 {
 	class TShaderResourceHandler : public Core::TResourceTypeHandler<Core::ResourceType::Shader, ShaderProgram>
 	{
 	public:
-		SB::Shared<ShaderProgram> GetOrLoadResource( char const * resourceName ) override;
-		SB::Shared<ShaderProgram> GetShader( ShaderComponent const & shaderComponent );
-
-		void BuildWindow() override;
-	private:
-
-		std::string GenerateShaderPaths( std::string const & shaderName );
-		std::string LoadShaderCode( std::string const & shaderPath );
-
-		SB::Shared<ShaderProgram> LoadShader( char const * resourceName );
-
 		struct ShaderResource
 		{
 			ShaderId Id;
@@ -48,8 +37,23 @@ namespace Graphics
 				return bSame;
 			}
 		};
-
 		using ShaderContainer = std::vector<ShaderResource>;
+
+		SB::Shared<ShaderProgram> GetOrLoadResource( char const * resourceName ) override;
+		SB::Shared<ShaderProgram> GetShader( ShaderComponent const & shaderComponent );
+		ShaderContainer const& GetShaders() const { return m_loadedShaders; }
+
+		void BuildWindow() override;
+
+	private:
+		using ShaderPathsList = std::unordered_map<Shader::Type, std::string>;
+		ShaderPathsList GenerateShaderPaths( std::string const & shaderName );
+		std::string LoadCodeFromFile( char const * filePath );
+		Shader LoadShaderCode( std::pair<Shader::Type, std::string > const & pair );
+		Shader LoadShaderCode( Shader::Type type, std::string const & shaderPath );
+
+		SB::Shared<ShaderProgram> LoadShader( char const * resourceName );
+		
 		ShaderContainer m_loadedShaders;
 	};
 }

@@ -10,12 +10,9 @@
 
 namespace Graphics
 {
-    ShaderProgram::ShaderProgram( std::string const & shaderName, Utils::EnumBitmask<Shader::Type> flags )
+    ShaderProgram::ShaderProgram( std::string const & shaderName )
         : m_shaderName(shaderName)
-        , m_shaderTypeFlags(flags)
     {
-        m_Id = glCreateProgram();
-        create();
 
         /*m_boolUniforms[ "test" ] = true;
         m_intUniforms[ "test" ] = 10;
@@ -27,7 +24,7 @@ namespace Graphics
         m_mat3Uniforms[ "test" ] = glm::mat3( 1.24f );*/
     }
 
-    bool ShaderProgram::attachShader( std::vector<Shader> const & shaders )
+    bool ShaderProgram::attachShaders( std::vector<Shader> const & shaders )
     {
         GLint success = GL_FALSE;
 
@@ -42,6 +39,7 @@ namespace Graphics
 
         for( auto & shader : m_shaders )
         {
+            m_shaderTypeFlags.set( shader.getType(), true );
             glAttachShader( m_Id, shader.getId() );
         }
         glLinkProgram( m_Id );
@@ -75,25 +73,11 @@ namespace Graphics
         return success == GL_TRUE;
     }
 
-    bool ShaderProgram::create()
+    bool ShaderProgram::create( std::vector<Shader> const & shaders )
     {
-        std::vector<Shader> shaders;
-        
-        size_t const setBits = m_shaderTypeFlags.count();
-        
-        for( size_t i = 0; i < setBits; ++i )
-        {
-            if( m_shaderTypeFlags.test( i ) )
-            {
-                Shader::Type const type = static_cast<Shader::Type>(i);
-                if( type < Shader::Type::Total && type != Shader::Type::Invalid )
-                {
-                    shaders.push_back( { type, m_shaderName.c_str() } );
-                }
-            }
-        }
+		m_Id = glCreateProgram();
 
-        return attachShader(shaders);
+        return attachShaders(shaders);
     }
 
     void ShaderProgram::useProgram() const noexcept

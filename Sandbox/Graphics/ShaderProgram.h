@@ -45,8 +45,10 @@ namespace Graphics
     {
     public:    
 
-        ShaderProgram( std::string const & shaderName, Utils::EnumBitmask<Shader::Type> flags );
+        ShaderProgram( std::string const & shaderName );
         ~ShaderProgram() = default;
+
+        [[nodiscard]] bool create( std::vector<Shader> const & shaders );
 
         std::vector<Shader> const & GetPrograms() const { return m_shaders; }
 
@@ -69,7 +71,6 @@ namespace Graphics
 
         //Inherited Functions from IShaderHandle
         //---------------------------------------------------------------------//
-
 		ShaderId GetShaderId() const override { return m_Id; }
 
         std::string const & GetShaderName() const override; 
@@ -90,8 +91,7 @@ namespace Graphics
 		std::map<std::string, glm::mat4> const & GetMat4Uniforms() const override;
         //---------------------------------------------------------------------//
     private:
-        bool create();
-        bool attachShader( std::vector<Shader> const & shaders );
+        bool attachShaders( std::vector<Shader> const & shaders );
 
         GLint  getUniformLocation( const char * name );
         const char * getTypeString( GLenum type ) const noexcept;

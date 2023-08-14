@@ -48,9 +48,9 @@ namespace Game
 		{
 			using namespace magic_enum::bitwise_operators;
 			//Move into system or at least out of here
-			Graphics::ShaderComponent basicShaderComp = renderer.GetOrCreateShader( "basic", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
-			Graphics::ShaderComponent colourShiftShaderComp = renderer.GetOrCreateShader( "colourShift", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
-			Graphics::ShaderComponent textureEnabledShaderComp = renderer.GetOrCreateShader( "textureEnabled", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
+			Graphics::ShaderComponent basicShaderComp = Core::Resources::CreateOrLoadShader("basic");// , { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
+			Graphics::ShaderComponent colourShiftShaderComp = Core::Resources::CreateOrLoadShader("colourShift");// , { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
+			Graphics::ShaderComponent textureEnabledShaderComp = Core::Resources::CreateOrLoadShader("textureEnabled");// , { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
 			auto containerTextureId = renderer.GetOrCreateTexture( "container.jpg" );
 			auto awesomefaceTextureId = renderer.GetOrCreateTexture( "awesomeface.png" );
 

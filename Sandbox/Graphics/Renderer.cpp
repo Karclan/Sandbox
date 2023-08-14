@@ -41,6 +41,7 @@ namespace Graphics
 	Renderer::Renderer( Core::Registry & Registry, int width, int height )
 		: m_registry( Registry )
 		, m_screenDimensions { width, height }
+		, m_shaderResourceHandler()
 	{
 		RenderStats renderStats;
 		renderStats.ScreenDimensions = m_screenDimensions;
@@ -50,6 +51,11 @@ namespace Graphics
 
 		s_RendererPtr = this;
 		GraphicsDraw::Initalize( this );
+		
+		SB::Shared<Core::ResourceTypeHandler> shaderResourceHandler = std::make_shared<TShaderResourceHandler>();
+		m_shaderResourceHandler = std::static_pointer_cast<TShaderResourceHandler>(shaderResourceHandler);
+
+		Core::Resources::AddResourceHandler( shaderResourceHandler );
 	}
 
 	void Renderer::GLDebugOutput( GLenum source,
@@ -90,9 +96,11 @@ namespace Graphics
 			std::string ShaderName = "";
 			std::string SubProgramName = "";
 
-			for ( auto const & shaderItr : m_shaderList )
+			auto const & shaderList = m_shaderResourceHandler->GetShaders();
+
+			for ( auto const & shaderItr : shaderList )
 			{
-				auto const & shader = shaderItr.second;
+				auto const & shader = shaderItr.Resource;
 				shaderId = shader->GetShaderId();
 				ShaderName = shader->GetShaderName();
 				if ( shaderId == programId )
@@ -216,22 +224,22 @@ namespace Graphics
 		//SB_CORE_ASSERT(false);
 	}
 
-	ShaderComponent Renderer::GetOrCreateShader( std::string const & name, Utils::EnumBitmask<Shader::Type> flags )
-	{
-		ShaderComponent shaderComponent;
-		if ( ShaderMap::const_iterator FoundShader = m_shaderList.find( name ); FoundShader != m_shaderList.end() )
-		{
-			shaderComponent = { FoundShader->second->GetShaderId(), std::weak_ptr<IShaderHandle>( FoundShader->second ) };
-		}
-		else
-		{
-			std::shared_ptr<ShaderProgram> shader = std::make_shared<ShaderProgram>( name.c_str(), flags );
-			m_shaderList[name] = shader;
+	//ShaderComponent Renderer::GetOrCreateShader( std::string const & name, Utils::EnumBitmask<Shader::Type> flags )
+	//{
+	//	ShaderComponent shaderComponent;
+	//	if ( ShaderMap::const_iterator FoundShader = m_shaderList.find( name ); FoundShader != m_shaderList.end() )
+	//	{
+	//		shaderComponent = { FoundShader->second->GetShaderId(), std::weak_ptr<IShaderHandle>( FoundShader->second ) };
+	//	}
+	//	else
+	//	{
+	//		std::shared_ptr<ShaderProgram> shader = std::make_shared<ShaderProgram>( name.c_str(), flags );
+	//		m_shaderList[name] = shader;
 
-			shaderComponent = { shader->GetShaderId(), std::weak_ptr<IShaderHandle const>( shader ) };
-		}
-		return shaderComponent;
-	}
+	//		shaderComponent = { shader->GetShaderId(), std::weak_ptr<IShaderHandle const>( shader ) };
+	//	}
+	//	return shaderComponent;
+	//}
 
 	unsigned int Renderer::GetOrCreateTexture( const std::string & textureName )
 	{
@@ -266,10 +274,8 @@ namespace Graphics
 
 		//Line drawing and line shader setup
 		{
-			GetOrCreateShader( "line", { Shader::Type::Vertex, Shader::Type::Fragment } );
-
-			m_lineShader = m_shaderList.back().get();
-
+			m_lineShader = m_shaderResourceHandler->GetOrLoadResource("line");
+			
 			m_lineVao = VertexArrayObject::Create();
 			m_lineVao->Bind();
 
@@ -289,9 +295,7 @@ namespace Graphics
 		}
 
 		{
-			GetOrCreateShader( "wireCircle", { Shader::Type::Vertex, Shader::Type::Geometry, Shader::Type::Fragment } );
-
-			m_circleShader = m_shaderList.back().get();
+			m_circleShader = m_shaderResourceHandler->GetOrLoadResource("wireCircle");
 
 			m_circleVao = VertexArrayObject::Create();
 			m_circleVao->Bind();
@@ -339,8 +343,8 @@ namespace Graphics
 				} );
 			ScreenQuadVAO->AddVertexBuffer( ScreenQuadVBO );
 
-			GetOrCreateShader( "framebuffer_screen", { Shader::Type::Vertex, Shader::Type::Fragment } );
-			m_screenShader = m_shaderList.back().get();
+
+			m_screenShader = m_shaderResourceHandler->GetOrLoadResource("framebuffer_screen");
 			m_screenShader->useProgram();
 			m_screenShader->setUniform( "screenTexture", 0 );
 			glUseProgram( 0 );
@@ -820,14 +824,9 @@ namespace Graphics
 
 		if ( lookForShader )
 		{
-			for ( auto & shaderItr : m_shaderList )
+			if (auto const & shader = m_shaderResourceHandler->GetShader(shaderComponent))
 			{
-				auto const & shader = shaderItr.second;
-				if ( shaderComponent.ShaderId == shader->GetShaderId() )
-				{
-					m_activeShader = shader.get();
-					break;
-				}
+				m_activeShader = shader;
 			}
 		}
 

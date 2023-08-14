@@ -1,6 +1,7 @@
 #include "VectorMathExampleSubsystem.h"
 
 #include "Core/CoreRegistry.h"
+#include "Core/ResourceManager.h"
 
 #include "Graphics/Window.h"
 #include "Graphics/TransformComponent.h"
@@ -25,7 +26,7 @@ namespace Game
 		m_window = &window;
 		Graphics::Renderer & renderer = window.GetRenderer();
 		using namespace magic_enum::bitwise_operators;
-		Graphics::ShaderComponent basicShaderComp = renderer.GetOrCreateShader( "basic", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );;
+		Graphics::ShaderComponent basicShaderComp = Core::Resources::CreateOrLoadShader("basic");// { Graphics::Shader::Type::Vertex, Graphics::Shader::Type::Fragment } );;
 		auto containerTextureId = renderer.GetOrCreateTexture("container.jpg");
 		Graphics::TextureComponent containerTextureComp{ { containerTextureId } };
 

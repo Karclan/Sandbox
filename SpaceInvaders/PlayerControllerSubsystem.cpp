@@ -1,5 +1,7 @@
 #include "PlayerControllerSubsystem.h"
 
+#include "Core/ResourceManager.h"
+
 #include "Utils/UnusedMacro.h"
 
 #include "Graphics/Window.h"
@@ -31,8 +33,8 @@ namespace Game
 	{
 		auto & renderer = windowRef.GetRenderer();
 
-		Graphics::ShaderComponent const textureEnabledShaderComp = renderer.GetOrCreateShader( "textureEnabled", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
-		Graphics::ShaderComponent const textureMixedShaderComp = renderer.GetOrCreateShader( "textureMixing", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
+		Graphics::ShaderComponent const textureEnabledShaderComp = Core::Resources::CreateOrLoadShader("textureEnabled");
+		Graphics::ShaderComponent const textureMixedShaderComp = Core::Resources::CreateOrLoadShader("textureMixing");
 		auto const containerTextureId = renderer.GetOrCreateTexture( "container.jpg" );
 		auto const awesomefaceTextureId = renderer.GetOrCreateTexture( "awesomeface.png" );
 		auto const playerTextureId = renderer.GetOrCreateTexture( "Player.png" );

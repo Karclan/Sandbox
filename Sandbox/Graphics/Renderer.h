@@ -51,7 +51,7 @@ namespace Graphics
 
 		void GLDebugOutput( GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char * message, const void * userParam );
 
-		ShaderComponent	GetOrCreateShader( std::string const & name, Utils::EnumBitmask<Shader::Type> flags );
+		/*ShaderComponent	GetOrCreateShader( std::string const & name, Utils::EnumBitmask<Shader::Type> flags );*/
 		unsigned int GetOrCreateTexture( std::string const & textureName );
 
 		MeshComponent GetMesh( PrimativeType type );
@@ -89,7 +89,7 @@ namespace Graphics
 		Square m_squareMesh {};
 		Cube m_cubeMesh {};
 
-		ShaderProgram * m_activeShader { nullptr };
+		SB::Shared<ShaderProgram> m_activeShader { nullptr };
 		PrimativeType m_activeMeshType { PrimativeType::Invalid };
 
 		size_t m_boundTexturesSize {};
@@ -99,7 +99,7 @@ namespace Graphics
 		//Line Shader
 		//////////////////////////////////////////////////////////////////////////
 
-		ShaderProgram * m_lineShader { nullptr };
+		SB::Shared<ShaderProgram> m_lineShader { nullptr };
 		unsigned int m_lineDrawCallCount { 0 };
 		std::shared_ptr<VertexBuffer> m_lineVbo { nullptr };
 		std::shared_ptr<VertexArrayObject> m_lineVao { nullptr };
@@ -122,7 +122,7 @@ namespace Graphics
 		//Circle Shader
 		//////////////////////////////////////////////////////////////////////////
 
-		ShaderProgram * m_circleShader { nullptr };
+		SB::Shared<ShaderProgram> m_circleShader { nullptr };
 		unsigned int m_circleDrawCallCount { 0 };
 		std::shared_ptr<VertexBuffer> m_circleVbo { nullptr };
 		std::shared_ptr<VertexArrayObject> m_circleVao { nullptr };
@@ -163,7 +163,7 @@ namespace Graphics
 
 		bool m_showTextureWindow { false };
 
-		ShaderProgram * m_screenShader { nullptr };
+		SB::Shared<ShaderProgram> m_screenShader { nullptr };
 
 		std::shared_ptr<VertexArrayObject> ScreenQuadVAO { nullptr };
 		std::shared_ptr<VertexBuffer> ScreenQuadVBO { nullptr };
@@ -172,7 +172,7 @@ namespace Graphics
 		bool m_useFrameBufferObject { true };
 		bool m_firstTimeRenderingSubWindow { m_useFrameBufferObject };
 
-		TShaderResourceHandler m_shaderResourceHandler;
+		SB::Shared<TShaderResourceHandler> m_shaderResourceHandler;
 
 		std::vector<GLuint> m_boundTextures {};
 	};
