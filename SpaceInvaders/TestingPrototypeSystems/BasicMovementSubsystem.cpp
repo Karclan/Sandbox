@@ -38,15 +38,13 @@ namespace Game
 
 			using namespace magic_enum::bitwise_operators;
 			//Move into system or at least out of here
-			Graphics::ShaderComponent basicShaderComp = Core::Resources::CreateOrLoadShader("basic");// , { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
-			Graphics::ShaderComponent colourShiftShaderComp = Core::Resources::CreateOrLoadShader("colourShift");// , { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
-			Graphics::ShaderComponent textureEnabledShaderComp = Core::Resources::CreateOrLoadShader("textureEnabled");// , { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
-			auto containerTextureId = renderer.GetOrCreateTexture( "container.jpg" );
-			auto awesomefaceTextureId = renderer.GetOrCreateTexture( "awesomeface.png" );
+			Graphics::ShaderComponent basicShaderComp = Core::Resources::CreateOrLoadShader( "basic" );// , { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
+			Graphics::ShaderComponent colourShiftShaderComp = Core::Resources::CreateOrLoadShader( "colourShift" );// , { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
+			Graphics::ShaderComponent textureEnabledShaderComp = Core::Resources::CreateOrLoadShader( "textureEnabled" );// , { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
 
-			Graphics::TextureComponent containerTextureComp { { containerTextureId } };
-			Graphics::TextureComponent awesomeFaceTextureComp { { awesomefaceTextureId } };
-			Graphics::TextureComponent multiTextureComp { { containerTextureId, awesomefaceTextureId } };
+			Graphics::TextureComponent containerTextureComp = Core::Resources::CreateOrLoadTexture( { "container.jpg" } );
+			Graphics::TextureComponent awesomeFaceTextureComp = Core::Resources::CreateOrLoadTexture( { "awesomeface.png" } );
+			Graphics::TextureComponent multiTextureComp = Core::Resources::CreateOrLoadTexture( { "container.jpg" ,"awesomeface.png" } );
 
 			//Triangle
 			{
@@ -91,7 +89,7 @@ namespace Game
 			{
 				{
 					Graphics::TransformComponent randomTransform;
-					randomTransform.Position = { i, i/2, 0.f };
+					randomTransform.Position = { i, i / 2, 0.f };
 
 					auto entity = m_registry.CreateEntity( fmt::format( "Cube-{}", i ) );
 					m_registry.AddComponent<Graphics::TransformComponent>( entity, randomTransform );
@@ -110,8 +108,8 @@ namespace Game
 
 		//Test movement code
 		movementStruct.m_angle += movementStruct.speed * static_cast< float >( deltaTime );
-		if ( movementStruct.m_angle > static_cast< float >( TAU ) ) 
-		{ 
+		if ( movementStruct.m_angle > static_cast< float >( TAU ) )
+		{
 			movementStruct.m_angle -= static_cast< float >( TAU );
 		}
 		movementStruct.m_xy.x = glm::sin( movementStruct.m_angle );

@@ -442,6 +442,7 @@
     <ClCompile Include="Graphics\RendererAPI.cpp" />
     <ClCompile Include="Graphics\Texture.cpp" />
     <ClCompile Include="Graphics\TextureLoader.cpp" />
+    <ClCompile Include="Graphics\TextureResourceHandler.cpp" />
     <ClCompile Include="Graphics\TransformComponent.cpp" />
     <ClCompile Include="Graphics\UniformBufferObject.cpp" />
     <ClCompile Include="Graphics\VertexArrayObject.cpp" />
@@ -520,6 +521,7 @@
     <ClInclude Include="Graphics\Texture.h" />
     <ClInclude Include="Graphics\TextureComponent.h" />
     <ClInclude Include="Graphics\TextureLoader.h" />
+    <ClInclude Include="Graphics\TextureResourceHandler.h" />
     <ClInclude Include="Graphics\TransformComponent.h" />
     <ClInclude Include="Graphics\Triangle.h" />
     <ClInclude Include="Graphics\UniformBufferObject.h" />

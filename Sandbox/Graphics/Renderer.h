@@ -21,6 +21,7 @@
 #include "RenderStats.h"
 #include "FrameBuffer.h"
 #include "ShaderResourceHandler.h"
+#include "TextureResourceHandler.h"
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -52,7 +53,7 @@ namespace Graphics
 		void GLDebugOutput( GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char * message, const void * userParam );
 
 		/*ShaderComponent	GetOrCreateShader( std::string const & name, Utils::EnumBitmask<Shader::Type> flags );*/
-		unsigned int GetOrCreateTexture( std::string const & textureName );
+		/*unsigned int GetOrCreateTexture( std::string const & textureName );*/
 
 		MeshComponent GetMesh( PrimativeType type );
 
@@ -83,7 +84,7 @@ namespace Graphics
 
 		Core::Registry & m_registry;
 
-		TextureLoader m_textureLoader {};
+		//TextureLoader m_textureLoader {};
 
 		Triangle m_triangleMesh {};
 		Square m_squareMesh {};
@@ -173,6 +174,7 @@ namespace Graphics
 		bool m_firstTimeRenderingSubWindow { m_useFrameBufferObject };
 
 		SB::Shared<TShaderResourceHandler> m_shaderResourceHandler;
+		SB::Shared<TTextureResourceHandler> m_textureResourceHandler;
 
 		std::vector<GLuint> m_boundTextures {};
 	};

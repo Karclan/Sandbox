@@ -5,6 +5,8 @@
 
 namespace Graphics
 {
+    using TextureId = unsigned int;
+
     // Texture Class
     // 
     //
@@ -23,7 +25,7 @@ namespace Graphics
             int m_height { 0 };
             int m_width { 0 };
             int m_numChannels { 0 };
-            GLuint m_textureId { 0 };
+            TextureId m_textureId { 0 };
 
             Format m_format { Format::UNKNOWN };
         };
@@ -32,7 +34,7 @@ namespace Graphics
 
         ~Texture();
 
-        GLuint GetTextureID() const;
+        TextureId GetTextureID() const;
 
         int GetHeight() const;
         int GetWidth() const;
@@ -45,5 +47,5 @@ namespace Graphics
 
     // Using declaration for const pointer to texture
     using TexturePtr = Texture const *;
-
+    using TextureRef = Texture const &;
 }

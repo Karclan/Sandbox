@@ -18,17 +18,23 @@ namespace Core
 	{
 		Graphics::ShaderComponent comp;
 
-		SB::Shared<Graphics::ShaderProgram> resource = GetOrLoadResource<ResourceType::Shader, Graphics::ShaderProgram >( shaderName );
+		SB::Shared<Graphics::ShaderProgram> resource = GetOrLoadResource<ResourceType::Shader, SB::Shared<Graphics::ShaderProgram> >( shaderName );
 		comp.ShaderHandle = SB::Weak<Graphics::IShaderHandle>( resource );
 		comp.ShaderId = resource->GetShaderId();
 
 		return comp;
 	}
 
-	Graphics::TextureComponent ResourceManager::CreateOrLoadTexture( char const * textureName )
+	Graphics::TextureComponent ResourceManager::CreateOrLoadTexture( std::initializer_list<char const *> textureNames )
 	{
 		Graphics::TextureComponent component;
-		//GetOrLoadResource<ResourceType::Texture, Graphics::TextureComponent>( textureName );
+		for ( auto name : textureNames )
+		{
+			SB::Shared<Graphics::Texture> Texture = GetOrLoadResource<ResourceType::Texture, SB::Shared<Graphics::Texture>>( name );
+			component.TextureList.push_back( Texture->GetTextureID() );
+
+		}
+		
 		return component;
 	}
 
@@ -46,7 +52,7 @@ namespace Core
 		return component;
 	}
 
-	void ResourceManager::AddResourceHandler( std::shared_ptr<ResourceTypeHandler> & Handler )
+	void ResourceManager::AddResourceHandler( SB::Shared<ResourceTypeHandler> & Handler )
 	{
 		SB_CORE_ASSERT( Handler, "Passed an invalid handler ptr!" );
 		if ( Handler )
@@ -54,7 +60,7 @@ namespace Core
 			ResourceType const handledType = Handler->GetHandledResourceType();
 			if ( ResourceManagerMap::const_iterator HandlerIt = m_resourceHandlers.find( handledType ); HandlerIt == m_resourceHandlers.end() )
 			{
-				m_resourceHandlers[handledType] = Handler;
+				m_resourceHandlers[ handledType ] = Handler;
 			}
 			else
 			{
@@ -87,10 +93,11 @@ namespace Core
 		return s_ResourceManager->CreateOrLoadShader( shaderName );
 	}
 
-	Graphics::TextureComponent Resources::CreateOrLoadTexture( char const * textureName )
+	Graphics::TextureComponent Resources::CreateOrLoadTexture( std::initializer_list<char const *> textureNames )
 	{
+		
 		SB_CORE_ASSERT( s_ResourceManager, "Resource Manager not assigned!" );
-		return s_ResourceManager->CreateOrLoadTexture( textureName );
+		return s_ResourceManager->CreateOrLoadTexture( textureNames );
 	}
 
 	Graphics::MeshComponent Resources::CreateOrLoadMesh( char const * meshName )

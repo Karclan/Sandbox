@@ -42,6 +42,7 @@ namespace Graphics
 		: m_registry( Registry )
 		, m_screenDimensions { width, height }
 		, m_shaderResourceHandler()
+		, m_textureResourceHandler()
 	{
 		RenderStats renderStats;
 		renderStats.ScreenDimensions = m_screenDimensions;
@@ -54,8 +55,12 @@ namespace Graphics
 		
 		SB::Shared<Core::ResourceTypeHandler> shaderResourceHandler = std::make_shared<TShaderResourceHandler>();
 		m_shaderResourceHandler = std::static_pointer_cast<TShaderResourceHandler>(shaderResourceHandler);
-
 		Core::Resources::AddResourceHandler( shaderResourceHandler );
+
+		SB::Shared<Core::ResourceTypeHandler> textureResourceHandler = std::make_shared<TTextureResourceHandler>();
+		m_textureResourceHandler = std::static_pointer_cast< TTextureResourceHandler >( textureResourceHandler );
+		Core::Resources::AddResourceHandler( textureResourceHandler );
+
 	}
 
 	void Renderer::GLDebugOutput( GLenum source,
@@ -241,15 +246,15 @@ namespace Graphics
 	//	return shaderComponent;
 	//}
 
-	unsigned int Renderer::GetOrCreateTexture( const std::string & textureName )
-	{
-		unsigned int ReturnId = 0;
-		//duplicate and valid
-		Graphics::TexturePtr texture = m_textureLoader.getTexture( textureName.c_str() );
-		ReturnId = texture->GetTextureID();
+	//unsigned int Renderer::GetOrCreateTexture( const std::string & textureName )
+	//{
+	//	unsigned int ReturnId = 0;
+	//	//duplicate and valid
+	//	Graphics::TexturePtr texture = m_textureLoader.GetTexture( textureName.c_str() );
+	//	ReturnId = texture->GetTextureID();
 
-		return ReturnId;
-	}
+	//	return ReturnId;
+	//}
 
 	MeshComponent Renderer::GetMesh( PrimativeType type )
 	{
@@ -468,7 +473,7 @@ namespace Graphics
 		{
 			if ( ImGui::Begin( "Graphics" ) )
 			{
-				Graphics::TextureLoader::TextureMap const & textures = m_textureLoader.getLoadedTextures();
+				Graphics::TTextureResourceHandler::TextureMap const & textures = m_textureResourceHandler->GetLoadedTextures();
 
 				//static ImGuiComboFlags flags = 0;
 				//ImGui::CheckboxFlags( "ImGuiComboFlags_PopupAlignLeft", ( unsigned int * ) &flags, ImGuiComboFlags_PopupAlignLeft );
@@ -510,12 +515,12 @@ namespace Graphics
 					auto const texIt = textures.find( names[ item_current_idx ] );
 					if ( texIt != textures.end() )
 					{
-						Texture const tex = texIt->second;
+						SB::Shared<Texture> const tex = texIt->second;
 						//glActiveTexture(GL_TEXTURE0);
 						//glBindTexture(GL_TEXTURE_2D, tex.GetTextureID());
-						ImGui::Text( "pointer = %p", tex.GetTextureID() );
-						ImGui::Text( "size = %d x %d", tex.GetWidth(), tex.GetHeight() );
-						ImGui::Image( static_cast< ImTextureID >( tex.GetTextureID() ), ImVec2( 64, 64 ) );
+						ImGui::Text( "pointer = %p", tex->GetTextureID() );
+						ImGui::Text( "size = %d x %d", tex->GetWidth(), tex->GetHeight() );
+						ImGui::Image( static_cast< ImTextureID >( tex->GetTextureID() ), ImVec2( 64, 64 ) );
 					}
 				}
 			}

@@ -51,13 +51,10 @@ namespace Game
 			Graphics::ShaderComponent basicShaderComp = Core::Resources::CreateOrLoadShader("basic");// , { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
 			Graphics::ShaderComponent colourShiftShaderComp = Core::Resources::CreateOrLoadShader("colourShift");// , { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
 			Graphics::ShaderComponent textureEnabledShaderComp = Core::Resources::CreateOrLoadShader("textureEnabled");// , { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
-			auto containerTextureId = renderer.GetOrCreateTexture( "container.jpg" );
-			auto awesomefaceTextureId = renderer.GetOrCreateTexture( "awesomeface.png" );
-
-			Graphics::TextureComponent containerTextureComp { { containerTextureId } };
-			Graphics::TextureComponent awesomeFaceTextureComp { { awesomefaceTextureId } };
-			Graphics::TextureComponent multiTextureComp { { containerTextureId, awesomefaceTextureId } };
-
+			
+			Graphics::TextureComponent containerTextureComp = Core::Resources::CreateOrLoadTexture( {"container.jpg"} );
+			Graphics::TextureComponent awesomeFaceTextureComp = Core::Resources::CreateOrLoadTexture( {"awesomeface.png"} );
+			Graphics::TextureComponent multiTextureComp = Core::Resources::CreateOrLoadTexture( {"container.jpg","awesomeface.png" } );
 			//Triangle
 			{
 				Graphics::TransformComponent triangleTransform;

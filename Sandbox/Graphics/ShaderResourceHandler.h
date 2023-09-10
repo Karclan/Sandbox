@@ -8,7 +8,7 @@
 
 namespace Graphics
 {
-	class TShaderResourceHandler : public Core::TResourceTypeHandler<Core::ResourceType::Shader, ShaderProgram>
+	class TShaderResourceHandler : public Core::TResourceTypeHandler<Core::ResourceType::Shader, SB::Shared<ShaderProgram>>
 	{
 	public:
 		struct ShaderResource

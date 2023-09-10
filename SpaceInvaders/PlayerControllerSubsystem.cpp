@@ -33,18 +33,15 @@ namespace Game
 	{
 		auto & renderer = windowRef.GetRenderer();
 
-		Graphics::ShaderComponent const textureEnabledShaderComp = Core::Resources::CreateOrLoadShader("textureEnabled");
-		Graphics::ShaderComponent const textureMixedShaderComp = Core::Resources::CreateOrLoadShader("textureMixing");
-		auto const containerTextureId = renderer.GetOrCreateTexture( "container.jpg" );
-		auto const awesomefaceTextureId = renderer.GetOrCreateTexture( "awesomeface.png" );
-		auto const playerTextureId = renderer.GetOrCreateTexture( "Player.png" );
+		Graphics::ShaderComponent const textureEnabledShaderComp = Core::Resources::CreateOrLoadShader( "textureEnabled" );
+		Graphics::ShaderComponent const textureMixedShaderComp = Core::Resources::CreateOrLoadShader( "textureMixing" );
 
-		Graphics::TextureComponent const multiTextureComp { { containerTextureId, awesomefaceTextureId } };
-		Graphics::TextureComponent const playerTextureComp { { playerTextureId } };
+		Graphics::TextureComponent const multiTextureComp = Core::Resources::CreateOrLoadTexture( { "container.jpg", "awesomeface.png" } );;
+		Graphics::TextureComponent const playerTextureComp = Core::Resources::CreateOrLoadTexture( { "Player.png" } );
 
 		//Player Entity
 		m_PlayerEntity = m_registry.CreateEntity( "Player" );
-		
+
 		//Transform
 		Graphics::TransformComponent & transformComponent = m_registry.AddComponent<Graphics::TransformComponent>( m_PlayerEntity, Graphics::TransformComponent() );
 		transformComponent.Scale = glm::vec3( 2.f, 2.f, 1.f );
@@ -92,7 +89,7 @@ namespace Game
 	{
 		UNUSED( deltaTime );
 
-		m_registry.ForView<Graphics::TransformComponent, PlayerComponent, PlayerTag>( [this, &deltaTime] ( Graphics::TransformComponent & transform, PlayerComponent & player)
+		m_registry.ForView<Graphics::TransformComponent, PlayerComponent, PlayerTag>( [this, &deltaTime] ( Graphics::TransformComponent & transform, PlayerComponent & player )
 			{
 				if ( m_inputSystem.IsPressesd( PlayerInputActions::MoveLeft ) || m_inputSystem.IsHeld( PlayerInputActions::MoveLeft ) )
 				{
@@ -101,7 +98,7 @@ namespace Game
 
 				if ( m_inputSystem.IsPressesd( PlayerInputActions::MoveRight ) || m_inputSystem.IsHeld( PlayerInputActions::MoveRight ) )
 				{
-					transform.Position.x -= player.m_MovementSpeed * static_cast<float>(deltaTime);
+					transform.Position.x -= player.m_MovementSpeed * static_cast< float >( deltaTime );
 				}
 			} );
 

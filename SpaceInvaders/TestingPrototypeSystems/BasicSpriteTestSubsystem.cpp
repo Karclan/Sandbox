@@ -35,9 +35,8 @@ namespace Game
 		Graphics::ShaderComponent textureEnabledShaderComp = Core::Resources::CreateOrLoadShader("basic");// { Graphics::Shader::Type::Vertex, Graphics::Shader::Type::Fragment });
 		//auto textureEnabledShaderId = renderer->createShader( "textureEnabled", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment } );
 	   // auto rayShaderId = renderer->createShader( "ray", { Graphics::Shader::Type::Vertex , Graphics::Shader::Type::Fragment , Graphics::Shader::Type::Geometry } );
-		auto containerTextureId = renderer.GetOrCreateTexture("container.jpg");
 
-		Graphics::TextureComponent containerTextureComp{ { containerTextureId } };
+		Graphics::TextureComponent containerTextureComp = Core::Resources::CreateOrLoadTexture( {"container.jpg" });
 
 		/*for( unsigned int i = 0; i < 1; ++i )
 		{*/

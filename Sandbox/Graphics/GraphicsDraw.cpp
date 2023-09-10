@@ -80,7 +80,7 @@ namespace Graphics
 			);
 
 		registry.AddComponent<Graphics::TextureComponent>( entity,
-			Core::Resources::CreateOrLoadTexture( texture )
+			Core::Resources::CreateOrLoadTexture( { texture } )
 			);
 
 		return entity;

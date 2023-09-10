@@ -255,6 +255,9 @@
     <ClCompile Include="Graphics\ShaderResourceHandler.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\TextureResourceHandler.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\ShaderProgram.h">
@@ -541,6 +544,9 @@
     </ClInclude>
     <ClInclude Include="Core\Sandbox.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\TextureResourceHandler.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

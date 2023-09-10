@@ -4,6 +4,8 @@
 
 #include "Subsystem.h"
 
+#include "../Graphics/Texture.h"
+
 #include "../magic_enum/magic_enum_format.hpp"
 
 #include <map>
@@ -41,7 +43,7 @@ namespace Core
 	{
 	public:
 		ResourceType HandledType = Type;
-		using ReturnTypeClass = SB::Shared<HandledObject>;
+		using ReturnTypeClass = HandledObject;
 
 		ResourceType GetHandledResourceType() const override { return HandledType; }
 		virtual ReturnTypeClass GetOrLoadResource( char const * resourceName ) = 0;
@@ -56,12 +58,13 @@ namespace Core
 		virtual ~ResourceManager() = default;
 
 		Graphics::ShaderComponent CreateOrLoadShader( char const * shaderName );
-		Graphics::TextureComponent CreateOrLoadTexture( char const * textureName );
+		Graphics::TextureComponent CreateOrLoadTexture( std::initializer_list<char const *> textureNames );
+		//Graphics::TextureComponent CreateOrLoadTexture( char const * textureName );
 		Graphics::MeshComponent CreateOrLoadMesh( char const * meshName );
 		Graphics::MeshComponent CreateOrLoadMesh( Graphics::PrimativeType type );
 
 		template<ResourceType Type, typename ReturnType>
-		SB::Shared<ReturnType> GetOrLoadResource( char const * resourceName )
+		ReturnType GetOrLoadResource( char const * resourceName )
 		{
 			//Try find our resource type handler for type
 			ResourceManagerMap::iterator itr = m_resourceHandlers.find( Type );
@@ -95,7 +98,7 @@ namespace Core
 		friend ResourceManager;
 
 		static Graphics::ShaderComponent CreateOrLoadShader( char const * shaderName );
-		static Graphics::TextureComponent CreateOrLoadTexture( char const * textureName );
+		static Graphics::TextureComponent CreateOrLoadTexture( std::initializer_list<char const *> textureNames );
 		static Graphics::MeshComponent CreateOrLoadMesh( char const * meshName );
 		static Graphics::MeshComponent CreateOrLoadMesh( Graphics::PrimativeType type );
 

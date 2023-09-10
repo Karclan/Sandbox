@@ -10,8 +10,8 @@ int main( [[maybe_unused]] int argc, [[maybe_unused]] char * argv[] )
 	Game.EditorInit();
 	Game.Init();
 
-	
-	
+
+
 	while ( !Game.ShouldClose() )
 	{
 		Game.Run();
