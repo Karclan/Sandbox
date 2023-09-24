@@ -427,6 +427,7 @@
     <ClCompile Include="Graphics\CameraComponent.cpp" />
     <ClCompile Include="Graphics\CameraInspector.cpp" />
     <ClCompile Include="Graphics\CameraSystem.cpp" />
+    <ClCompile Include="Graphics\MeshResourceHandler.cpp" />
     <ClCompile Include="Graphics\ShaderResourceHandler.cpp" />
     <ClCompile Include="Graphics\ComponentDetails\GraphicsComponentsDetails.cpp" />
     <ClCompile Include="Graphics\Cube.cpp" />
@@ -506,6 +507,7 @@
     <ClInclude Include="Graphics\Mesh.h" />
     <ClInclude Include="Graphics\MeshComponent.h" />
     <ClInclude Include="Graphics\MeshLoader.h" />
+    <ClInclude Include="Graphics\MeshResourceHandler.h" />
     <ClInclude Include="Graphics\Platform\OpenGL\OpenGLDataBuffer.h" />
     <ClInclude Include="Graphics\Platform\OpenGL\OpenGLFramebuffer.h" />
     <ClInclude Include="Graphics\Platform\OpenGL\OpenGLUniformBufferObject.h" />

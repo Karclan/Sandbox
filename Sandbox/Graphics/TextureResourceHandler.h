@@ -24,7 +24,7 @@ namespace Graphics
 
 	private:
 		bool LoadTexture( const std::string & texturePath, SB::Shared<Texture> & outTexture );
-		bool FindTexture( const std::string & texturePath, SB::Shared<Texture> outTexture );
+		bool FindTexture( const std::string & texturePath, SB::Shared<Texture> & outTexture );
 
 		bool m_showTextureWindow { false };
 

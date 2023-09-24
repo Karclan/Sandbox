@@ -101,7 +101,7 @@ bool Graphics::TTextureResourceHandler::LoadTexture( const std::string & texture
 	return true;
 }
 
-bool Graphics::TTextureResourceHandler::FindTexture( const std::string & texturePath, SB::Shared<Texture> outTexture )
+bool Graphics::TTextureResourceHandler::FindTexture( const std::string & texturePath, SB::Shared<Texture> & outTexture )
 {
 	TextureMap::iterator findResult = m_loadedTextures.find( texturePath );
 	if ( findResult != m_loadedTextures.end() )

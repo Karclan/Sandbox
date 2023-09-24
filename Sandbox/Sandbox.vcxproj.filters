@@ -258,6 +258,9 @@
     <ClCompile Include="Graphics\TextureResourceHandler.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\MeshResourceHandler.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics\ShaderProgram.h">
@@ -546,6 +549,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\TextureResourceHandler.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\MeshResourceHandler.h">
       <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
