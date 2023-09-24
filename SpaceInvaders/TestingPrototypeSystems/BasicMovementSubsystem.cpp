@@ -54,7 +54,7 @@ namespace Game
 
 				auto entity = m_registry.CreateEntity( "Triangle" );
 				m_registry.AddComponent<Graphics::TransformComponent>( entity, triangleTransform );
-				m_registry.AddComponent<Graphics::MeshComponent>( entity, renderer.GetMesh( Graphics::PrimativeType::Triangle ) );
+				m_registry.AddComponent<Graphics::MeshComponent>( entity, Core::Resources::CreateOrLoadMesh( Graphics::PrimativeType::Triangle ) );
 				m_registry.AddComponent<Graphics::TextureComponent>( entity, containerTextureComp );
 				m_registry.AddComponent<Graphics::ShaderComponent>( entity, textureEnabledShaderComp );
 				m_registry.AddComponent<EntityTag>( entity );
@@ -67,7 +67,7 @@ namespace Game
 
 				auto entity = m_registry.CreateEntity( "Square" );
 				m_registry.AddComponent<Graphics::TransformComponent>( entity, squareTransform );
-				m_registry.AddComponent<Graphics::MeshComponent>( entity, renderer.GetMesh( Graphics::PrimativeType::Square ) );
+				m_registry.AddComponent<Graphics::MeshComponent>( entity, Core::Resources::CreateOrLoadMesh( Graphics::PrimativeType::Square ) );
 				m_registry.AddComponent<Graphics::TextureComponent>( entity, awesomeFaceTextureComp );
 				m_registry.AddComponent<Graphics::ShaderComponent>( entity, textureEnabledShaderComp );
 				m_registry.AddComponent<EntityTag>( entity );
@@ -79,7 +79,7 @@ namespace Game
 
 				auto entity = m_registry.CreateEntity( "Cube" );
 				m_registry.AddComponent<Graphics::TransformComponent>( entity, cubeTransform );
-				m_registry.AddComponent<Graphics::MeshComponent>( entity, renderer.GetMesh( Graphics::PrimativeType::Cube ) );
+				m_registry.AddComponent<Graphics::MeshComponent>( entity, Core::Resources::CreateOrLoadMesh( Graphics::PrimativeType::Cube ) );
 				m_registry.AddComponent<Graphics::TextureComponent>( entity, multiTextureComp );
 				m_registry.AddComponent<Graphics::ShaderComponent>( entity, textureEnabledShaderComp );
 				m_registry.AddComponent<EntityTag>( entity );
@@ -93,7 +93,7 @@ namespace Game
 
 					auto entity = m_registry.CreateEntity( fmt::format( "Cube-{}", i ) );
 					m_registry.AddComponent<Graphics::TransformComponent>( entity, randomTransform );
-					m_registry.AddComponent<Graphics::MeshComponent>( entity, renderer.GetMesh( Graphics::PrimativeType::Cube ) );
+					m_registry.AddComponent<Graphics::MeshComponent>( entity, Core::Resources::CreateOrLoadMesh( Graphics::PrimativeType::Cube ) );
 					m_registry.AddComponent<Graphics::TextureComponent>( entity, multiTextureComp );
 					m_registry.AddComponent<Graphics::ShaderComponent>( entity, textureEnabledShaderComp );
 					m_registry.AddComponent<EntityTag>( entity );

@@ -47,7 +47,7 @@ namespace Game
 		transformComponent.Scale = glm::vec3( 2.f, 2.f, 1.f );
 
 		//Mesh - Ideally we should short hand this to "Sprite Component" which automatically makes all the sub components needed
-		m_registry.AddComponent<Graphics::MeshComponent>( m_PlayerEntity, renderer.GetMesh( Graphics::PrimativeType::Cube ) );
+		m_registry.AddComponent<Graphics::MeshComponent>( m_PlayerEntity, Core::Resources::CreateOrLoadMesh( Graphics::PrimativeType::Cube ) );
 		m_registry.AddComponent<Graphics::TextureComponent>( m_PlayerEntity, playerTextureComp );
 		m_registry.AddComponent<Graphics::ShaderComponent>( m_PlayerEntity, textureEnabledShaderComp );
 
@@ -71,7 +71,7 @@ namespace Game
 			transformComponent.Position = glm::vec3( 7.f, 0.f, 0.f );
 			transformComponent.Scale = glm::vec3( 4.f, 4.f, 1.f );
 
-			m_registry.AddComponent<Graphics::MeshComponent>( entity, renderer.GetMesh( Graphics::PrimativeType::Cube ) );
+			m_registry.AddComponent<Graphics::MeshComponent>( entity, Core::Resources::CreateOrLoadMesh( Graphics::PrimativeType::Cube ) );
 			m_registry.AddComponent<Graphics::TextureComponent>( entity, multiTextureComp );
 			m_registry.AddComponent<Graphics::ShaderComponent>( entity, textureMixedShaderComp );
 

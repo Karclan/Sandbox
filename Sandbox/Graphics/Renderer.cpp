@@ -61,6 +61,13 @@ namespace Graphics
 		m_textureResourceHandler = std::static_pointer_cast< TTextureResourceHandler >( textureResourceHandler );
 		Core::Resources::AddResourceHandler( textureResourceHandler );
 
+		SB::Shared<Core::ResourceTypeHandler> meshResourceHandler = std::make_shared<TMeshResourceHandler>();
+		m_meshResourceHandler = std::static_pointer_cast< TMeshResourceHandler >( meshResourceHandler );
+		Core::Resources::AddResourceHandler( meshResourceHandler );
+
+		m_triangleMesh = m_meshResourceHandler->GetMesh( PrimativeType::Triangle );
+		m_squareMesh = m_meshResourceHandler->GetMesh( PrimativeType::Square );
+		m_cubeMesh = m_meshResourceHandler->GetMesh( PrimativeType::Cube );
 	}
 
 	void Renderer::GLDebugOutput( GLenum source,
@@ -71,7 +78,7 @@ namespace Graphics
 		const char * message,
 		[[maybe_unused]] const void * userParam )
 	{
-		//#TODO_Shaders: Search message for shader program ID and instead add our shader name/sub program name into the string to help readabilitly
+		//#TODO_Shaders: Search message for shader program ID and instead add our shader name/sub program name into the string to help readability
 		static std::unordered_set<int> const ignoredDebugOutput = {
 			131185 //131185 - Buffer detailed info
 		};
@@ -227,41 +234,6 @@ namespace Graphics
 
 		Utils::Logger::LogMessage( Utils::LogType::Error, debugMessage.c_str() );
 		//SB_CORE_ASSERT(false);
-	}
-
-	//ShaderComponent Renderer::GetOrCreateShader( std::string const & name, Utils::EnumBitmask<Shader::Type> flags )
-	//{
-	//	ShaderComponent shaderComponent;
-	//	if ( ShaderMap::const_iterator FoundShader = m_shaderList.find( name ); FoundShader != m_shaderList.end() )
-	//	{
-	//		shaderComponent = { FoundShader->second->GetShaderId(), std::weak_ptr<IShaderHandle>( FoundShader->second ) };
-	//	}
-	//	else
-	//	{
-	//		std::shared_ptr<ShaderProgram> shader = std::make_shared<ShaderProgram>( name.c_str(), flags );
-	//		m_shaderList[name] = shader;
-
-	//		shaderComponent = { shader->GetShaderId(), std::weak_ptr<IShaderHandle const>( shader ) };
-	//	}
-	//	return shaderComponent;
-	//}
-
-	//unsigned int Renderer::GetOrCreateTexture( const std::string & textureName )
-	//{
-	//	unsigned int ReturnId = 0;
-	//	//duplicate and valid
-	//	Graphics::TexturePtr texture = m_textureLoader.GetTexture( textureName.c_str() );
-	//	ReturnId = texture->GetTextureID();
-
-	//	return ReturnId;
-	//}
-
-	MeshComponent Renderer::GetMesh( PrimativeType type )
-	{
-		MeshComponent comp;
-		comp.Type = type;
-		comp.MeshId = static_cast< MeshIdType >( type );
-		return comp;
 	}
 
 	void Renderer::Init()
@@ -584,13 +556,13 @@ namespace Graphics
 				switch ( m_activeMeshType )
 				{
 					case Graphics::PrimativeType::Square:
-						VAO = m_squareMesh.GetVAO().get();
+						VAO = m_squareMesh->GetVAO().get();
 						break;
 					case Graphics::PrimativeType::Triangle:
-						VAO = m_triangleMesh.GetVAO().get();
+						VAO = m_triangleMesh->GetVAO().get();
 						break;
 					case Graphics::PrimativeType::Cube:
-						VAO = m_cubeMesh.GetVAO().get();
+						VAO = m_cubeMesh->GetVAO().get();
 						break;
 					default:
 						break;
@@ -862,13 +834,13 @@ namespace Graphics
 			switch ( meshComponent.Type )
 			{
 				case Graphics::PrimativeType::Square:
-					m_squareMesh.Bind();
+					m_squareMesh->Bind();
 					break;
 				case Graphics::PrimativeType::Triangle:
-					m_triangleMesh.Bind();
+					m_triangleMesh->Bind();
 					break;
 				case Graphics::PrimativeType::Cube:
-					m_cubeMesh.Bind();
+					m_cubeMesh->Bind();
 					break;
 				default:
 					break;

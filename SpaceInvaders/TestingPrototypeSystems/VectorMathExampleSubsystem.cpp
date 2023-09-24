@@ -36,7 +36,7 @@ namespace Game
 			Graphics::TransformComponent const transform{ PointA };
 			auto const Entity = PointAEntity;
 			m_registry.AddComponent<Graphics::TransformComponent>(Entity, transform);
-			m_registry.AddComponent<Graphics::MeshComponent>(Entity, renderer.GetMesh(Graphics::PrimativeType::Cube));
+			m_registry.AddComponent<Graphics::MeshComponent>(Entity, Core::Resources::CreateOrLoadMesh(Graphics::PrimativeType::Cube));
 			m_registry.AddComponent<Graphics::ShaderComponent>(Entity, basicShaderComp);
 			m_registry.AddComponent<Graphics::TextureComponent>(Entity, containerTextureComp);
 			m_registry.AddComponent<VectorMathExampleSubsystem::EntityTag>(Entity);
@@ -48,7 +48,7 @@ namespace Game
 			auto const Entity = PointBEntity;
 			Graphics::TransformComponent const transform{ PointB };
 			m_registry.AddComponent<Graphics::TransformComponent>(Entity, transform);
-			m_registry.AddComponent<Graphics::MeshComponent>(Entity, renderer.GetMesh(Graphics::PrimativeType::Square));
+			m_registry.AddComponent<Graphics::MeshComponent>(Entity, Core::Resources::CreateOrLoadMesh(Graphics::PrimativeType::Square));
 			m_registry.AddComponent<Graphics::ShaderComponent>(Entity, basicShaderComp);
 			m_registry.AddComponent<Graphics::TextureComponent>(Entity, containerTextureComp);
 			m_registry.AddComponent<VectorMathExampleSubsystem::EntityTag>(Entity);
@@ -60,7 +60,7 @@ namespace Game
 			auto const Entity = PointCEntity;
 			Graphics::TransformComponent const transform{ PointC };
 			m_registry.AddComponent<Graphics::TransformComponent>(Entity, transform);
-			m_registry.AddComponent<Graphics::MeshComponent>(Entity, renderer.GetMesh(Graphics::PrimativeType::Triangle));
+			m_registry.AddComponent<Graphics::MeshComponent>(Entity, Core::Resources::CreateOrLoadMesh(Graphics::PrimativeType::Triangle));
 			m_registry.AddComponent<Graphics::ShaderComponent>(Entity, basicShaderComp);
 			m_registry.AddComponent<Graphics::TextureComponent>(Entity, containerTextureComp);
 			m_registry.AddComponent<VectorMathExampleSubsystem::EntityTag>(Entity);

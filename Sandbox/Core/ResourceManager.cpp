@@ -3,6 +3,9 @@
 #include "../Graphics/ShaderComponent.h"
 #include "../Graphics/TextureComponent.h"
 #include "../Graphics/MeshComponent.h"
+#include "../Graphics/Mesh.h"
+
+#include "../Graphics/MeshResourceHandler.h"
 
 #include "../Utils/UnusedMacro.h"
 #include "../Utils/format.h"
@@ -32,23 +35,32 @@ namespace Core
 		{
 			SB::Shared<Graphics::Texture> Texture = GetOrLoadResource<ResourceType::Texture, SB::Shared<Graphics::Texture>>( name );
 			component.TextureList.push_back( Texture->GetTextureID() );
-
 		}
-		
+
 		return component;
 	}
 
 	Graphics::MeshComponent ResourceManager::CreateOrLoadMesh( char const * meshName )
 	{
 		Graphics::MeshComponent component;
-		//GetOrLoadResource<ResourceType::Mesh, Graphics::MeshComponent>( meshName );
+		SB::Shared<Graphics::Mesh> Mesh = GetOrLoadResource<ResourceType::Mesh, SB::Shared<Graphics::Mesh>>( meshName );
 		return component;
 	}
 
 	Graphics::MeshComponent ResourceManager::CreateOrLoadMesh( Graphics::PrimativeType type )
 	{
 		Graphics::MeshComponent component;
-		//GetOrLoadResource<ResourceType::Mesh, Graphics::MeshComponent>( std::string( magic_enum::enum_name<Graphics::PrimativeType>( type ) ).c_str() );
+
+		if ( auto & handlerIt = m_resourceHandlers[ ResourceType::Mesh ] )
+		{
+			if ( auto castedHandler = std::static_pointer_cast< Graphics::TMeshResourceHandler >( handlerIt ) )
+			{
+				SB::Shared<Graphics::Mesh> Mesh = castedHandler->GetMesh( type );
+				component.Type = type;
+				component.MeshId = static_cast< Graphics::MeshIdType >( type );
+			}
+		}
+
 		return component;
 	}
 
@@ -95,7 +107,6 @@ namespace Core
 
 	Graphics::TextureComponent Resources::CreateOrLoadTexture( std::initializer_list<char const *> textureNames )
 	{
-		
 		SB_CORE_ASSERT( s_ResourceManager, "Resource Manager not assigned!" );
 		return s_ResourceManager->CreateOrLoadTexture( textureNames );
 	}

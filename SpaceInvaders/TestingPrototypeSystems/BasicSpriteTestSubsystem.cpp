@@ -45,7 +45,7 @@ namespace Game
 
 		m_entity = Subsystem::m_registry.CreateEntity();
 		Subsystem::m_registry.AddComponent<Graphics::TransformComponent>(m_entity, triangleTransform);
-		Subsystem::m_registry.AddComponent<Graphics::MeshComponent>(m_entity, renderer.GetMesh(Graphics::PrimativeType::Cube));
+		Subsystem::m_registry.AddComponent<Graphics::MeshComponent>(m_entity, Core::Resources::CreateOrLoadMesh( Graphics::PrimativeType::Cube));
 		Subsystem::m_registry.AddComponent<Graphics::TextureComponent>(m_entity, containerTextureComp);
 		Subsystem::m_registry.AddComponent<Graphics::ShaderComponent>(m_entity, textureEnabledShaderComp);
 		//}

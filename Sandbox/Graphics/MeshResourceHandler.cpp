@@ -25,7 +25,7 @@ namespace Graphics
 		}
 		else
 		{
-
+			LoadMesh( resourceName, MeshPtr );
 		}
 
 		return MeshPtr;

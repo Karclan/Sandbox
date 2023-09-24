@@ -22,6 +22,7 @@
 #include "FrameBuffer.h"
 #include "ShaderResourceHandler.h"
 #include "TextureResourceHandler.h"
+#include "MeshResourceHandler.h"
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -55,7 +56,7 @@ namespace Graphics
 		/*ShaderComponent	GetOrCreateShader( std::string const & name, Utils::EnumBitmask<Shader::Type> flags );*/
 		/*unsigned int GetOrCreateTexture( std::string const & textureName );*/
 
-		MeshComponent GetMesh( PrimativeType type );
+		//MeshComponent GetMesh( PrimativeType type );
 
 		void Init();// makes window
 
@@ -86,9 +87,9 @@ namespace Graphics
 
 		//TextureLoader m_textureLoader {};
 
-		Triangle m_triangleMesh {};
-		Square m_squareMesh {};
-		Cube m_cubeMesh {};
+		SB::Shared<Mesh> m_triangleMesh {};
+		SB::Shared<Mesh> m_squareMesh {};
+		SB::Shared<Mesh> m_cubeMesh {};
 
 		SB::Shared<ShaderProgram> m_activeShader { nullptr };
 		PrimativeType m_activeMeshType { PrimativeType::Invalid };
@@ -175,6 +176,7 @@ namespace Graphics
 
 		SB::Shared<TShaderResourceHandler> m_shaderResourceHandler;
 		SB::Shared<TTextureResourceHandler> m_textureResourceHandler;
+		SB::Shared<TMeshResourceHandler> m_meshResourceHandler; 
 
 		std::vector<GLuint> m_boundTextures {};
 	};
