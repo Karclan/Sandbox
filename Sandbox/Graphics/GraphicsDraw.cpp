@@ -68,6 +68,11 @@ namespace Graphics
 		m_Renderer->DrawLine( bottomRight, bottomLeft, colour, 1.f );
 	}
 
+	void GraphicsDraw::DrawPoint( glm::vec3 pos, float size /*= 1.f*/, glm::vec4 colour /*= Colours::White */ )
+	{
+		m_Renderer->DrawPoint( pos, size, colour );
+	}
+
 	Core::Entity GraphicsDraw::CreateSprite( Core::Registry & registry, char const * name, char const * texture )
 	{
 		Core::Entity const entity = registry.CreateEntity( name );

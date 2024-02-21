@@ -212,11 +212,12 @@ namespace Graphics
 				break;
 		}
 
-		debugMessage.append( "Severity :" );
+		debugMessage.append( "Severity: " );
 		switch ( severity )
 		{
 			case GL_DEBUG_SEVERITY_HIGH:
 				debugMessage.append( "high\n" );
+				SB_CORE_ASSERT( false, "High severity error!" );
 				break;
 			case GL_DEBUG_SEVERITY_MEDIUM:
 				debugMessage.append( "medium\n" );
@@ -271,6 +272,7 @@ namespace Graphics
 			m_lineDrawItr = m_lineDrawBegin;
 		}
 
+		//Circle drawing and circle shader setup
 		{
 			m_circleShader = m_shaderResourceHandler->GetOrLoadResource("wireCircle");
 
@@ -290,6 +292,27 @@ namespace Graphics
 
 			m_circleDrawBegin = m_circleDrawCallList.begin();
 			m_circleDrawItr = m_circleDrawBegin;
+		}
+
+		//Point drawing and point shader setup
+		{
+			m_pointShader = m_shaderResourceHandler->GetOrLoadResource( "point" );
+
+			m_pointVao = VertexArrayObject::Create();
+			m_pointVao->Bind();
+
+			m_pointVbo = VertexBuffer::Create( m_maxPointsPerRender * sizeof( PointVertex ) );
+			m_pointVbo->SetLayout(
+				{
+					BufferElement::Create( ShaderDataType::Float3, "aPos" ),
+					BufferElement::Create( ShaderDataType::Float4, "aColor" ),
+					BufferElement::Create( ShaderDataType::Float, "aSize" ) //unused for now but maybe later
+				} );
+
+			m_pointVao->AddVertexBuffer( m_pointVbo );
+
+			m_pointDrawBegin = m_pointDrawCallList.begin();
+			m_pointDrawItr = m_pointDrawBegin;
 		}
 
 		//Framebuffer setup
@@ -503,11 +526,6 @@ namespace Graphics
 
 	void Renderer::Render()
 	{
-		/*DrawCircle( glm::vec3( 0.f, 0.f, 0.f ), 15.f, Colours::White, 128 );
-		DrawCircle( glm::vec3( 1.f, 1.f, 0.f ), 0.5f, Colours::Red, 3 );
-		DrawCircle( glm::vec3( -1.f, -1.f, 0.f), 10.f, Colours::Green, 3 );
-		DrawCircle( glm::vec3( 2.f, 2.f, 0.f), 1.f, Colours::Blue, 3 );*/
-
 		glUseProgram( 0 );
 
 		glEnable( GL_DEPTH_TEST );
@@ -536,13 +554,13 @@ namespace Graphics
 		glClearColor( m_clearColour.x, m_clearColour.g, m_clearColour.b, m_clearColour.a );
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
+		UpdateCamera();
+
 		//Grab the components from the registry here!
 		m_registry.ForView<TransformComponent, MeshComponent, ShaderComponent, TextureComponent>(
 			[this] ( TransformComponent & transform, MeshComponent & meshComponent, ShaderComponent & shaderComponent, TextureComponent & textureComponent )
 			{
 				UpdateShader( shaderComponent );
-
-				UpdateCamera();
 
 				UpdateTextures( textureComponent );
 
@@ -587,6 +605,8 @@ namespace Graphics
 
 			} );
 
+		bool bRebindShader = false;
+
 		if ( m_lineDrawCallCount > 0 )
 		{
 			m_lineShader->useProgram();
@@ -608,7 +628,7 @@ namespace Graphics
 			m_lineDrawCallCount = 0;
 			m_lineDrawItr = m_lineDrawBegin;
 
-			m_activeShader->useProgram();
+			bRebindShader = true;
 		}
 
 		if ( m_circleDrawCallCount > 0 )
@@ -631,6 +651,35 @@ namespace Graphics
 			m_circleDrawCallCount = 0;
 			m_circleDrawItr = m_circleDrawBegin;
 
+			bRebindShader = true;
+		}
+
+		if ( m_pointDrawCallCount > 0 )
+		{
+			m_pointShader->useProgram();
+			m_pointShader->setUniform( "model", glm::mat4( 1.f ) );
+
+			uint32_t const dataSize = static_cast< uint32_t >( reinterpret_cast< uint8_t * >( &( *m_pointDrawItr ) ) - reinterpret_cast< uint8_t * >( &( *m_pointDrawBegin ) ) );
+			m_pointVbo->SetData( &( *m_pointDrawBegin ), dataSize );
+
+			m_pointVao->Bind();
+			for ( unsigned int i = 0; i <= m_pointDrawCallCount; ++i )
+			{
+				PointVertex const & call = m_pointDrawCallList[i];
+				glPointSize( call.Size );
+				glDrawArrays( GL_POINTS, i, 1 );
+			}
+			m_pointVbo->UnBind();
+
+			m_pointDrawCallCount = 0;
+			m_pointDrawItr = m_pointDrawBegin;
+
+			glPointSize( 1.f );
+			bRebindShader = true;
+		}
+
+		if ( bRebindShader && m_activeShader )
+		{
 			m_activeShader->useProgram();
 		}
 
@@ -652,7 +701,7 @@ namespace Graphics
 
 	bool Renderer::DrawLine( glm::vec3 A, glm::vec3 B, glm::vec4 colour, float thickness ) noexcept
 	{
-		if ( m_lineDrawCallCount + 2 <= m_maxLinesPerRender )
+		if ( m_lineDrawCallCount + 2 < m_maxLinesPerRender )
 		{
 			m_lineDrawItr->Position = A;
 			m_lineDrawItr->Colour = colour;
@@ -672,7 +721,7 @@ namespace Graphics
 
 	bool Renderer::DrawCircle( glm::vec3 pos, float radius, glm::vec4 colour /*= glm::vec4( 1.f )*/, int pointCount /*= 3.f */ ) noexcept
 	{
-		if ( m_circleDrawCallCount + 1 <= m_maxCirclesPerRender )
+		if ( m_circleDrawCallCount + 1 < m_maxCirclesPerRender )
 		{
 			m_circleDrawItr->Position = pos;
 			m_circleDrawItr->Colour = colour;
@@ -681,6 +730,21 @@ namespace Graphics
 			m_circleDrawItr++;
 
 			++m_circleDrawCallCount;
+			return true;
+		}
+		return false;
+	}
+
+	bool Renderer::DrawPoint( glm::vec3 pos, float size, glm::vec4 colour /*= Colours::White */ ) noexcept
+	{
+		if ( m_pointDrawCallCount + 1 < m_maxPointsPerRender )
+		{
+			m_pointDrawItr->Position = pos;
+			m_pointDrawItr->Colour = colour;
+			m_pointDrawItr->Size = size;
+			m_pointDrawItr++;
+
+			++m_pointDrawCallCount;
 			return true;
 		}
 		return false;

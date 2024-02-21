@@ -26,8 +26,11 @@ namespace Core
 		Subsystem operator=( Subsystem && other ) = delete;
 		virtual ~Subsystem() = default;
 
+		//Pre-render updates
 		virtual void FixedUpdate( [[maybe_unused]] double deltaTime ) {};
 		virtual void Update( [[maybe_unused]] double deltaTime ) {};
+		//Post-render updates
+		virtual void PostUpdate( [[maybe_unused]] double deltaTime ){};
 
 	protected:
 		Core::Registry & m_registry;

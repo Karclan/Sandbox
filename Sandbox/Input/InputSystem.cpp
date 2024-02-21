@@ -83,28 +83,44 @@ namespace Input
 		//////////////////////////////////////////////////////////////////////////
 		//Input actions
 		//////////////////////////////////////////////////////////////////////////
+	}
 
+	void InputSystem::PostUpdate( double deltaTime ) noexcept
+	{
+		//Age mouse inputs
+		DeviceId constexpr deviceId = { 1, DeviceType::Mouse };
+		KeyCodeActionIdMap const & keyCodeActionIdMap = GetDeviceBinding( deviceId ).GetKeyCodeActionIdBinding();
+		for ( auto const & keyCodeIterator : keyCodeActionIdMap )
+		{
+			ActionId const & actionId = keyCodeIterator.second;
+			switch ( m_actionStates[actionId].State )
+			{
+				case ActionState::Pressed:
+					m_actionStates[actionId].State = ActionState::Repeat;
+					break;
+				case ActionState::Released:
+					m_actionStates[actionId].State = ActionState::Unknown;
+					break;
+			}
+		}
 	}
 
 	void InputSystem::KeyAction( KeyCode key, int scancode, ActionState action, int mods )
 	{
-		DeviceId constexpr keyboardId = { 0, DeviceType::Keyboard };
-		//Key values are 1 or 0 if the key is released or not.
-		SetActionInternal( keyboardId, key, { action, ( action != ActionState::Released ) ? 1.0f : 0.f } );
+		Utils::Logger::LogMessage( Utils::LogType::Info, fmt::format( "KeyAction {}, Action State {}\n", key, static_cast< int >( action ) ) );
 
-		/*DeviceTypeKeyCodePair DeviceKey{ DeviceType::Keyboard, key };
-		m_keyCodeMapping[DeviceKey] = { action, ( action != ActionState::Released ) ? 1.0f : 0.f };*/
+		DeviceId constexpr deviceId = { 0, DeviceType::Keyboard };
+		//Key values are 1 or 0 if the key is released or not.
+		SetActionInternal( deviceId, key, { action, ( action != ActionState::Released ) ? 1.0f : 0.f } );
 	}
 
 	void InputSystem::MouseAction( KeyCode button, ActionState action, int mods )
 	{
 		//Mouse buttons are 1 or 0 if pressed or released
-		DeviceId constexpr keyboardId = { 1, DeviceType::Mouse };
+		DeviceId constexpr deviceId = { 1, DeviceType::Mouse };
 		//Key values are 1 or 0 if the key is released or not.
-		SetActionInternal( keyboardId, button, { action, ( action != ActionState::Released ) ? 1.0f : 0.f } );
-
-		/*DeviceTypeKeyCodePair DeviceKey { DeviceType::Mouse, button };
-		m_keyCodeMapping[ DeviceKey ] = { action, ( action != ActionState::Released ) ? 1.0f : 0.f };*/
+		Utils::Logger::LogMessage( Utils::LogType::Info, fmt::format( "Mouse button {}, Action State {}\n", button, static_cast<int>(action) ) );
+		SetActionInternal( deviceId, button, { action, ( action != ActionState::Released ) ? 1.0f : 0.f } );
 	}
 
 	void InputSystem::UpdateCursorPosition( double xPosition, double yPosition )
@@ -249,4 +265,17 @@ namespace Input
 		}
 		return false;
 	}
+
+	InputState InputSystem::GetActionStateInternal( DeviceId const & deviceId, KeyCode key )
+	{
+		KeyCodeActionIdMap const & keyCodeActionIdMap = GetDeviceBinding( deviceId ).GetKeyCodeActionIdBinding();
+		KeyCodeActionIdMap::const_iterator const keyCodeIterator = keyCodeActionIdMap.find( key );
+		if ( keyCodeIterator != keyCodeActionIdMap.end() )
+		{
+			ActionId const & actionId = keyCodeIterator->second;
+			return m_actionStates[actionId];
+		}
+		return {};
+	}
+
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Subsystem.h"
+#include "glm/fwd.hpp"
 
 namespace Input
 {
@@ -26,5 +27,7 @@ namespace Game
 
 		Core::Entity m_PlayerEntity = Core::NullEntity;
 		Input::InputSystem const & m_inputSystem;
+
+		std::vector<glm::vec3> m_mousePositions;
 	};
 }

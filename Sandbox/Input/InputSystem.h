@@ -22,6 +22,7 @@ namespace Input
 
 		void FixedUpdate( double deltaTime ) noexcept override;
 		void Update( double deltaTime ) noexcept override;
+		void PostUpdate( double deltaTime ) noexcept override;
 		void BuildWindow( double deltaTime ) override;
 
 		//Functions which set various keycode states
@@ -51,6 +52,7 @@ namespace Input
 		DeviceBindings const & GetDeviceBinding( DeviceId const & keyboardId ) const;
 
 		bool SetActionInternal( DeviceId const & deviceId, KeyCode key, InputState const & state );
+		InputState GetActionStateInternal( DeviceId const & deviceId, KeyCode key );
 
 		MouseState m_oldMouseState {};
 		MouseState m_deltaMouseState {};

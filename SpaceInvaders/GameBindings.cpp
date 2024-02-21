@@ -8,6 +8,7 @@ namespace Game
 {
 	void GameMouseBindings::SetupBindings()
 	{
+		m_keycodeActionIdMap.emplace( static_cast< Input::KeyCode >( GLFW_MOUSE_BUTTON_1 ), PlayerInputActions::AddSand );
 	}
 
 	void GameKeyboardBindings::SetupBindings()

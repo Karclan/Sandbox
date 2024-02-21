@@ -25,6 +25,8 @@ namespace Graphics
 		static void DrawQuad();
 		static void DrawWireQuad(glm::vec3 pos, glm::vec2 dimensons, glm::vec4 colour = Colours::White, float thickness = 1.f );
 
+		static void DrawPoint( glm::vec3 pos, float size = 1.f, glm::vec4 colour = Colours::White );
+
 		static Core::Entity CreateSprite( Core::Registry & registry, char const * name, char const * texture );
 
 	private:

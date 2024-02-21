@@ -10,6 +10,7 @@
 
 #include <sstream>
 #include <fstream>
+#include <filesystem>
 
 namespace Graphics
 {
@@ -120,7 +121,10 @@ namespace Graphics
 			if ( !shaderFileExtension.empty() )
 			{
 				fullshaderName.append( shaderFileExtension );
-				paths.insert( { enumVal, fullshaderName } );
+				if ( std::filesystem::exists( ( fullshaderName ) ) )
+				{
+					paths.insert( { enumVal, fullshaderName } );
+				}
 			}
 		}
 

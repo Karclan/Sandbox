@@ -9,6 +9,7 @@ namespace Game
 		static Input::ActionId const MoveLeft;
 		static Input::ActionId const MoveRight;
 		static Input::ActionId const FireGun;
+		static Input::ActionId const AddSand;
 	};
 
 	struct MenuInputActions

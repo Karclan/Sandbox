@@ -66,6 +66,7 @@ namespace Graphics
 
 		bool DrawLine( glm::vec3 A, glm::vec3 b, glm::vec4 colour = glm::vec4( 1.f ), float thickness = 1.f ) noexcept;
 		bool DrawCircle( glm::vec3 pos, float radius, glm::vec4 colour = glm::vec4( 1.f ), int pointCount = 3.f ) noexcept;
+		bool DrawPoint( glm::vec3 pos, float size, glm::vec4 colour = Colours::White ) noexcept;
 
 		void FramebufferSizeCallback( int width, int height );
 		void ScreenSizeCallback( int width, int height );
@@ -143,6 +144,29 @@ namespace Graphics
 		std::array<CircleVertex, m_maxCirclesPerRender> m_circleDrawCallList; //Just a way of having stack allocated data we can mess around with.
 		CircleDrawCallArray::iterator m_circleDrawBegin;
 		CircleDrawCallArray::iterator m_circleDrawItr;
+
+		//////////////////////////////////////////////////////////////////////////
+		//Point Shader
+		//////////////////////////////////////////////////////////////////////////
+
+		SB::Shared<ShaderProgram> m_pointShader { nullptr };
+		unsigned int m_pointDrawCallCount { 0 };
+		std::shared_ptr<VertexBuffer> m_pointVbo { nullptr };
+		std::shared_ptr<VertexArrayObject> m_pointVao { nullptr };
+
+		static constexpr unsigned int m_maxPointsPerRender = 10000;
+
+		struct PointVertex
+		{
+			glm::vec3 Position { 0.f };
+			glm::vec4 Colour { Colours::White };
+			float Size { 1.f };
+		};
+
+		using PointDrawCallArray = std::array<PointVertex, m_maxPointsPerRender>;
+		std::array<PointVertex, m_maxPointsPerRender> m_pointDrawCallList; //Just a way of having stack allocated data we can mess around with.
+		PointDrawCallArray::iterator m_pointDrawBegin;
+		PointDrawCallArray::iterator m_pointDrawItr;
 
 		//////////////////////////////////////////////////////////////////////////
 

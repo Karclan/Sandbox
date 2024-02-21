@@ -162,6 +162,11 @@ namespace Core
 		}
 
 		m_window.Render();
+
+		for ( auto & subSystem : m_subsystems )
+		{
+			subSystem->PostUpdate( frameTime );
+		}
 	}
 
 	void GameClass::RegisterComponentDetails()

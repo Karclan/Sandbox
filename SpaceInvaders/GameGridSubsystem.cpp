@@ -22,9 +22,9 @@ namespace Game
 	void GameGridSubsystem::CreateComponents()
 	{
 		//Construction of our grid entity, the player and enemies will refer to this for their movement behaviour
-		Core::Entity GridEntity = m_registry.CreateEntity( "Grid" );
+	/*	Core::Entity GridEntity = m_registry.CreateEntity( "Grid" );
 		m_registry.AddComponent<GameGridComponent>( GridEntity );
-		m_registry.AddComponent<Graphics::TransformComponent>( GridEntity );
+		m_registry.AddComponent<Graphics::TransformComponent>( GridEntity );*/
 	}
 
 	void GameGridSubsystem::FixedUpdate( double deltaTime )
