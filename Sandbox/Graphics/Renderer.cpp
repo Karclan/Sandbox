@@ -426,7 +426,7 @@ namespace Graphics
 
 				renderStats.m_renderingSubwindow = true;
 
-				if ( ImGui::IsItemHovered() )
+				//if ( ImGui::IsItemHovered() )
 				{
 					Input::InputStatsComponent & inputStats = m_registry.ctx().get<Input::InputStatsComponent>();
 					ImVec2 const imguiIOMousePos = ImGui::GetMousePos();

@@ -31,6 +31,8 @@ namespace Input
 		void UpdateCursorPosition( double xPosition, double yPosition );
 		void ScrollAction( double xOffset, double yOffset );
 
+		void OnCursorEntered( bool Entered );
+
 		//Input state querying functions
 		bool IsPressesd( ActionId const actionId ) const;
 		bool IsHeld( ActionId const actionId ) const;
@@ -58,6 +60,10 @@ namespace Input
 		MouseState m_deltaMouseState {};
 		MouseState m_lerpedMouseState {};
 		MouseState m_newMouseState {};
+
+		//Monitor states, positions relative to the monitor and not specifically to the screen/window/imgui window
+		MouseState m_newMonitorMouseState {};
+		MouseState m_oldMonitorMouseState {};
 
 		//All of our current action states we have "activated"
 		ActionIdInputState m_actionStates;

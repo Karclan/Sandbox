@@ -90,6 +90,7 @@ namespace Graphics
 		glfwSetMouseButtonCallback( window, GLFWCallbackWrapper::MouseButtonCallback );
 		glfwSetScrollCallback( window, GLFWCallbackWrapper::ScrollCallback );
 		glfwSetCursorPosCallback( window, GLFWCallbackWrapper::CursorPositionCallback );
+		glfwSetCursorEnterCallback( window, GLFWCallbackWrapper::OnCursorEnter );
 		// tell GLFW to capture our mouse
 	   // glfwSetInputMode( window, GLFW_CURSOR, GLFW_CURSOR_DISABLED );
 		glfwSwapInterval( 0 );
@@ -103,9 +104,9 @@ namespace Graphics
 
 		m_glfwWindow = window;
 
+		glfwGetWindowPos( m_glfwWindow, &m_windowPosition.x, &m_windowPosition.y );
+		m_windowPositionChanged = true;
 		InitImgui();
-
-
 	}
 
 	void Window::PollInput()
@@ -323,6 +324,11 @@ namespace Graphics
 		m_inputSystem.ScrollAction( xOffset, yOffset );
 	}
 
+	void Window::OnCursorEnter( GLFWwindow * window, int entered )
+	{
+		m_inputSystem.OnCursorEntered( entered == GLFW_TRUE );
+	}
+
 	//////////////////////////////////////////////////////////////////////////
 
 	void Window::ProcessInput()
@@ -457,6 +463,11 @@ namespace Graphics
 	void Window::GLFWCallbackWrapper::ScrollCallback( GLFWwindow * window, double xOffset, double yOffset )
 	{
 		s_window->ScrollCallback( window, xOffset, yOffset );
+	}
+
+	void Window::GLFWCallbackWrapper::OnCursorEnter( GLFWwindow * window, int entered )
+	{
+		s_window->OnCursorEnter( window, entered );
 	}
 
 	void Window::GLFWCallbackWrapper::SetApplication( Window * window )

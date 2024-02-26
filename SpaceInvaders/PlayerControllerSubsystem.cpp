@@ -114,7 +114,9 @@ namespace Game
 
 		if ( m_inputSystem.IsPressesd(PlayerInputActions::AddSand) )
 		{
-			auto const mousePos = m_inputSystem.GetMouseWorldPosition();
+
+			glm::vec3 const mousePos = m_inputSystem.GetMouseWorldPosition();
+
 			m_mousePositions.emplace_back( glm::vec3(mousePos.x, mousePos.y, 0.f) );
 		}
 

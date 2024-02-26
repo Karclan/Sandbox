@@ -35,5 +35,7 @@ namespace Input
 		glm::dvec2 m_scroll { 0.f };
 
 		glm::dvec3 m_worldPosition { 0.f }; //World position of mouse based on current active camera
+		bool m_IsInViewport = false;
+		bool m_IsInWindow = false;
 	};
 }

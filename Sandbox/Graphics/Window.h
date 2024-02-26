@@ -85,6 +85,7 @@ namespace Graphics
 			static void MouseButtonCallback( GLFWwindow * window, int button, int action, int mods );
 			static void CursorPositionCallback( GLFWwindow * window, double xPosition, double yPosition );
 			static void ScrollCallback( GLFWwindow * window, double xOffset, double yOffset );
+			static void OnCursorEnter( GLFWwindow * window, int entered );
 
 			static void SetApplication( Window * application );
 		private:
@@ -107,6 +108,7 @@ namespace Graphics
 		void MouseButtonCallback( GLFWwindow * window, int button, int action, int mods );
 		void CursorPositionCallback( GLFWwindow * window, double xPosition, double yPosition );
 		void ScrollCallback( GLFWwindow * window, double xOffset, double yOffset );
+		void OnCursorEnter( GLFWwindow * window, int entered );
 
 		void ProcessInput();
 		void InitImgui();
