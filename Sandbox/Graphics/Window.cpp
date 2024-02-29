@@ -123,7 +123,7 @@ namespace Graphics
 		if ( m_windowPositionChanged )
 		{
 			RenderStats & renderStats = m_registry.ctx().get< RenderStats >();
-			renderStats.ScreenStartingPosition = m_windowPosition;
+			renderStats.WindowPosition = m_windowPosition;
 			m_windowPositionChanged = false;
 		}
 

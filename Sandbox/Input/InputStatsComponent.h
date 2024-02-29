@@ -14,5 +14,8 @@ namespace Input
 		MouseState m_deltaMouseState {};
 		MouseState m_lerpedMouseState {};
 		MouseState m_newMouseState {};
+		
+		MouseState m_newMonitorMouseState {};
+		MouseState m_oldMonitorMouseState {};
 	};
 }

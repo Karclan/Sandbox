@@ -112,7 +112,7 @@ namespace Game
 				transform.Position.y = static_cast< float >( mousePosition.y );
 			} );
 
-		if ( m_inputSystem.IsPressesd(PlayerInputActions::AddSand) )
+		if ( m_inputSystem.IsPressesd(PlayerInputActions::AddSand) && m_inputSystem.IsMouseWithinViewport() )
 		{
 
 			glm::vec3 const mousePos = m_inputSystem.GetMouseWorldPosition();

@@ -41,10 +41,15 @@ namespace Input
 		//Ugly but I want to change this to something like axis value or w.e
 
 		glm::dvec2 GetMousePosition() const;
+		glm::dvec2 GetMousePositionAbsolute() const;
 		glm::dvec3 GetMouseWorldPosition() const;
 		glm::dvec3 GetOldMouseWorldPosition() const;
 		glm::dvec3 GetDeltaMouseWorldPosition() const;
 		glm::dvec3 GetLerpedMouseWorldPosition() const;
+		
+
+		bool IsMouseWithInWindow() const;
+		bool IsMouseWithinViewport() const;
 
 		void AddBinding( std::shared_ptr<DeviceBindings> & Mapping );
 
@@ -55,6 +60,8 @@ namespace Input
 
 		bool SetActionInternal( DeviceId const & deviceId, KeyCode key, InputState const & state );
 		InputState GetActionStateInternal( DeviceId const & deviceId, KeyCode key );
+
+		glm::ivec2 m_cachedScreenPosition = {0,0};
 
 		MouseState m_oldMouseState {};
 		MouseState m_deltaMouseState {};

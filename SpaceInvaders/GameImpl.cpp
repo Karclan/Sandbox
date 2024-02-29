@@ -39,9 +39,12 @@ namespace Game
 		cameraComponent.m_orthoAspectScale = 20.f;
 		
 		Graphics::TransformComponent & transformComponent = m_mainRegistry.GetComponent<Graphics::TransformComponent>( CameraEntity );
-		transformComponent.Position.x = 10.f;
-		transformComponent.Position.x = 10.f;
+		transformComponent.Position.x = 30.f;
+		transformComponent.Position.y = 20.f;
 		transformComponent.Position.z = -10.f; //For the sake of switching between ortho and perspective
+
+		glm::vec3 rotationEuler = glm::vec3( 0.f, 0.f, 180.f );
+		transformComponent.RotationQuat = glm::radians( rotationEuler );
 		GameClass::EditorInit();
 	}
 

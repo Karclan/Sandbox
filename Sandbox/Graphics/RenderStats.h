@@ -13,7 +13,7 @@ namespace Graphics
 		glm::ivec2 ScreenDimensions { 0 };
 		glm::ivec2 FrameBufferDimensions { 0 };
 
-		glm::ivec2 ScreenStartingPosition { 0 };
+		glm::ivec2 WindowPosition { 0 };
 		glm::ivec2 FramebufferStartingPosition { 0 };
 
 		glm::ivec2 ViewportDimensions { 0 }; //The current dimensions we're using whether that be screen size or Framebuffer size (sub window rendering in editor)

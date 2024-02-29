@@ -40,30 +40,21 @@ namespace Input
 
 		if ( ImGui::Begin( "Input System" ) )
 		{
-			if ( ImGui::CollapsingHeader( "Peepeepoopoo" ) )
+			if ( ImGui::CollapsingHeader( "Mouse Input" ) )
 			{
 				Graphics::RenderStats const renderStats = m_registry.ctx().get<Graphics::RenderStats const>();
 
 				if ( renderStats.m_renderingSubwindow )
 				{
 					InputStatsComponent const inputStats = m_registry.ctx().get<InputStatsComponent const>();
-					m_newMouseState.m_position.x = inputStats.ViewPortCursorPos.x;
-					m_newMouseState.m_position.y = inputStats.ViewPortCursorPos.y;
-
-					glm::ivec2 const & minPos = renderStats.ViewportStartingPosition;
-					glm::ivec2 const & maxPos = minPos + renderStats.ViewportDimensions;
-					glm::dvec2 const & pos = m_newMouseState.m_position;
-					m_newMouseState.m_IsInViewport = ( pos.x >= minPos.x && pos.x <= maxPos.x ) && ( pos.y >= minPos.y && pos.y <= maxPos.y );
-				}
-				else
-				{
-					glm::ivec2 const & minPos = renderStats.ScreenStartingPosition;
-					glm::ivec2 const & maxPos = minPos + renderStats.ScreenDimensions;
-					glm::dvec2 const & pos = m_newMouseState.m_position;
-					m_newMouseState.m_IsInViewport = ( pos.x >= minPos.x && pos.x <= maxPos.x ) && ( pos.y >= minPos.y && pos.y <= maxPos.y );
+					m_newMouseState.m_position.x = static_cast<int>(inputStats.ViewPortCursorPos.x);
+					m_newMouseState.m_position.y = static_cast<int>(inputStats.ViewPortCursorPos.y);
 				}
 
-
+				glm::ivec2 const & minPos = renderStats.WindowPosition;
+				glm::ivec2 const & maxPos = minPos + renderStats.ScreenDimensions;
+				glm::dvec2 const & pos = m_newMonitorMouseState.m_position;
+				m_newMonitorMouseState.m_IsInViewport = ( pos.x >= minPos.x && pos.x <= maxPos.x ) && ( pos.y >= minPos.y && pos.y <= maxPos.y );
 
 				Input::InputStatsComponent const & inputStats = m_registry.ctx().get<Input::InputStatsComponent const>();
 				ImGui::Text( fmt::format( "Viewport Cursor Pos: {}, {}", inputStats.ViewPortCursorPos.x, inputStats.ViewPortCursorPos.y ).c_str() );
@@ -84,6 +75,12 @@ namespace Input
 				mouseStateDetails( "New Mouse", inputStats.m_newMouseState );
 				ImGui::Separator();
 				mouseStateDetails( "Old Mouse", inputStats.m_oldMouseState );
+				ImGui::Separator();
+
+				ImGui::Separator();
+				mouseStateDetails( "New Monitor Mouse", inputStats.m_newMonitorMouseState );
+				ImGui::Separator();
+				mouseStateDetails( "old Monitor Mouse", inputStats.m_oldMonitorMouseState );
 			}
 		}
 		ImGui::End();
@@ -92,11 +89,13 @@ namespace Input
 
 	void InputSystem::FixedUpdate( double deltaTime ) noexcept
 	{
-		auto lerp = [] ( auto a, auto b, double t )
+		auto lerp = [] ( auto a, auto b, double t ) -> int
 		{
+			float aCasted = static_cast< float >( a );
+			float bCasted = static_cast< float >( b );
 			//Linear interpolation formula
 			//a + (b - a) * t
-			return a + ( b - a ) * t;
+			return static_cast<int>(aCasted + ( bCasted - aCasted ) * t);
 		};
 		m_lerpedMouseState.m_position.x = lerp( m_newMouseState.m_position.x, m_oldMouseState.m_position.x, deltaTime );
 		m_lerpedMouseState.m_position.y = lerp( m_newMouseState.m_position.y, m_oldMouseState.m_position.y, deltaTime );
@@ -115,24 +114,21 @@ namespace Input
 		//////////////////////////////////////////////////////////////////////////
 		Graphics::RenderStats const renderStats = m_registry.ctx().get<Graphics::RenderStats const>();
 
-		//if ( renderStats.m_renderingSubwindow )
-		//{
-		//	InputStatsComponent const inputStats = m_registry.ctx().get<InputStatsComponent const>();
-		//	m_newMouseState.m_position.x = inputStats.ViewPortCursorPos.x;
-		//	m_newMouseState.m_position.y = inputStats.ViewPortCursorPos.y;
+		m_cachedScreenPosition = renderStats.WindowPosition;
 
-		//	glm::ivec2 const & minPos = renderStats.ViewportStartingPosition;
-		//	glm::ivec2 const & maxPos = minPos + renderStats.ViewportDimensions;
-		//	glm::dvec2 const & pos = m_newMouseState.m_position;
-		//	m_newMouseState.m_IsInViewport = ( pos.x >= minPos.x && pos.x <= maxPos.x ) && ( pos.y >= minPos.y && pos.y <= maxPos.y );
-		//}
-		//else
-		//{
-		//	glm::ivec2 const & minPos = renderStats.ScreenStartingPosition;
-		//	glm::ivec2 const & maxPos = minPos + renderStats.ScreenDimensions;
-		//	glm::dvec2 const & pos = m_newMouseState.m_position;
-		//	m_newMouseState.m_IsInViewport = ( pos.x >= minPos.x && pos.x <= maxPos.x ) && ( pos.y >= minPos.y && pos.y <= maxPos.y );
-		//}
+		if ( renderStats.m_renderingSubwindow )
+		{
+			InputStatsComponent const inputStats = m_registry.ctx().get<InputStatsComponent const>();
+			m_newMouseState.m_position.x = static_cast<int>(inputStats.ViewPortCursorPos.x);
+			m_newMouseState.m_position.y = static_cast<int>(inputStats.ViewPortCursorPos.y);
+		}
+
+		{
+			glm::ivec2 const & minPos = renderStats.ViewportStartingPosition;
+			glm::ivec2 const & maxPos = minPos + renderStats.ViewportDimensions;
+			glm::dvec2 const & pos = m_newMonitorMouseState.m_position;
+			m_newMonitorMouseState.m_IsInViewport = ( pos.x >= minPos.x && pos.x <= maxPos.x ) && ( pos.y >= minPos.y && pos.y <= maxPos.y );
+		}
 
 		m_newMouseState.m_worldPosition = ScreenToWorldSpace( m_newMouseState.m_position );
 
@@ -141,12 +137,15 @@ namespace Input
 		m_deltaMouseState.m_worldPosition = m_newMouseState.m_worldPosition - m_oldMouseState.m_worldPosition;
 
 		m_oldMouseState = m_newMouseState;
+		m_oldMonitorMouseState = m_newMonitorMouseState;
 
 		InputStatsComponent & inputStats = m_registry.ctx().get<InputStatsComponent>();
 		inputStats.m_newMouseState = m_newMouseState;
 		inputStats.m_oldMouseState = m_oldMouseState;
 		inputStats.m_lerpedMouseState = m_lerpedMouseState;
 		inputStats.m_deltaMouseState = m_deltaMouseState;
+		inputStats.m_newMonitorMouseState = m_newMonitorMouseState;
+		inputStats.m_oldMonitorMouseState = m_oldMonitorMouseState;
 		//////////////////////////////////////////////////////////////////////////
 		//Input actions
 		//////////////////////////////////////////////////////////////////////////
@@ -192,21 +191,23 @@ namespace Input
 
 	void InputSystem::UpdateCursorPosition( double xPosition, double yPosition )
 	{
-		m_newMouseState.m_position = { xPosition, yPosition };
+		m_newMouseState.m_position = { glm::floor(xPosition), glm::floor(yPosition) };
 
 		Graphics::RenderStats const renderStats = m_registry.ctx().get<Graphics::RenderStats const>();
 
-		m_newMonitorMouseState.m_position = m_newMouseState.m_position + static_cast<glm::dvec2>(renderStats.ViewportStartingPosition);
+		m_newMonitorMouseState.m_position = m_newMouseState.m_position  + ( m_cachedScreenPosition /*+ renderStats.ViewportStartingPosition*/ );
 	}
 
 	void InputSystem::ScrollAction( double xOffset, double yOffset )
 	{
 		m_newMouseState.m_scroll = { xOffset, yOffset };
+		m_newMonitorMouseState.m_scroll = { xOffset, yOffset };
 	}
 
 	void InputSystem::OnCursorEntered( bool Entered )
 	{
 		m_newMouseState.m_IsInWindow = Entered;
+		m_newMonitorMouseState.m_IsInWindow = Entered;
 	}
 
 	bool InputSystem::IsPressesd( ActionId const actionId ) const
@@ -238,6 +239,11 @@ namespace Input
 		return m_newMouseState.m_position;
 	}
 
+	glm::dvec2 InputSystem::GetMousePositionAbsolute() const
+	{
+		return m_newMonitorMouseState.m_position;
+	}
+
 	glm::dvec3 InputSystem::GetMouseWorldPosition() const
 	{
 		return m_newMouseState.m_worldPosition;
@@ -256,6 +262,16 @@ namespace Input
 	glm::dvec3 InputSystem::GetLerpedMouseWorldPosition() const
 	{
 		return m_lerpedMouseState.m_worldPosition;
+	}
+
+	bool InputSystem::IsMouseWithInWindow() const
+	{
+		return m_newMonitorMouseState.m_IsInWindow;
+	}
+
+	bool InputSystem::IsMouseWithinViewport() const
+	{
+		return m_newMonitorMouseState.m_IsInViewport;
 	}
 
 	void InputSystem::AddBinding( std::shared_ptr<DeviceBindings> & Mapping )
