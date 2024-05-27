@@ -347,6 +347,7 @@
   <ItemGroup>
     <ClCompile Include="ComponentDetails\GameComponentDetails.cpp" />
     <ClCompile Include="EnemyControllerSubsystem.cpp" />
+    <ClCompile Include="FallingSandSubsystem.cpp" />
     <ClCompile Include="GameBindings.cpp" />
     <ClCompile Include="GameGridSubsystem.cpp" />
     <ClCompile Include="GameImpl.cpp" />
@@ -364,6 +365,8 @@
     <ClInclude Include="ComponentDetails\GameComponentDetails.h" />
     <ClInclude Include="EnemyComponent.h" />
     <ClInclude Include="EnemyControllerSubsystem.h" />
+    <ClInclude Include="FallingSandSimulationComponent.h" />
+    <ClInclude Include="FallingSandSubsystem.h" />
     <ClInclude Include="GameGridComponent.h" />
     <ClInclude Include="GameGridSubsystem.h" />
     <ClInclude Include="GameImpl.h" />

@@ -64,9 +64,11 @@ namespace Graphics
 
 		void Render();
 
-		bool DrawLine( glm::vec3 A, glm::vec3 b, glm::vec4 colour = glm::vec4( 1.f ), float thickness = 1.f ) noexcept;
+		bool DrawScreenLine( glm::vec2 A, glm::vec3 b, glm::vec4 colour = glm::vec4( 1.f ), float thickness = 1.f ) noexcept;
+		bool DrawWorldLine( glm::vec3 A, glm::vec3 b, glm::vec4 colour = glm::vec4( 1.f ), float thickness = 1.f ) noexcept;
 		bool DrawCircle( glm::vec3 pos, float radius, glm::vec4 colour = glm::vec4( 1.f ), int pointCount = 3.f ) noexcept;
-		bool DrawPoint( glm::vec3 pos, float size, glm::vec4 colour = Colours::White ) noexcept;
+		bool DrawWorldPoint( glm::vec3 pos, float size, glm::vec4 colour = Colours::White ) noexcept;
+		bool DrawScreenPoint( glm::vec2 pos, float size, glm::vec4 colour = Colours::White ) noexcept;
 
 		void FramebufferSizeCallback( int width, int height );
 		void ScreenSizeCallback( int width, int height );
@@ -98,28 +100,52 @@ namespace Graphics
 		size_t m_boundTexturesSize {};
 		std::string m_currentImGuiTexture { "unset" };
 
+
 		//////////////////////////////////////////////////////////////////////////
-		//Line Shader
+		//Screen Line Shader
 		//////////////////////////////////////////////////////////////////////////
 
-		SB::Shared<ShaderProgram> m_lineShader { nullptr };
-		unsigned int m_lineDrawCallCount { 0 };
-		std::shared_ptr<VertexBuffer> m_lineVbo { nullptr };
-		std::shared_ptr<VertexArrayObject> m_lineVao { nullptr };
+		SB::Shared<ShaderProgram> m_screenLineShader { nullptr };
+		unsigned int m_screenLineDrawCallCount { 0 };
+		std::shared_ptr<VertexBuffer> m_screenLineVbo { nullptr };
+		std::shared_ptr<VertexArrayObject> m_screenLineVao { nullptr };
 
-		static constexpr unsigned int m_maxLinesPerRender = 2000;
+		static constexpr unsigned int m_maxScreenLinesPerRender = 2000;
 
-		struct LineVertex
+		struct ScreenLineVertex
+		{
+			glm::vec2 Position { 0.f };
+			glm::vec4 Colour { Colours::White };
+			float Thickness { 1.f };
+		};
+
+		using ScreenLineDrawCallArray = std::array<ScreenLineVertex, m_maxScreenLinesPerRender>;
+		std::array<ScreenLineVertex, m_maxScreenLinesPerRender> m_screenLineDrawCallList; //Just a way of having stack allocated data we can mess around with.
+		ScreenLineDrawCallArray::iterator m_screenLineDrawBegin;
+		ScreenLineDrawCallArray::iterator m_screenLineDrawItr;
+
+		//////////////////////////////////////////////////////////////////////////
+		//World Line Shader
+		//////////////////////////////////////////////////////////////////////////
+
+		SB::Shared<ShaderProgram> m_worldLineShader { nullptr };
+		unsigned int m_worldLineDrawCallCount { 0 };
+		std::shared_ptr<VertexBuffer> m_worldLineVbo { nullptr };
+		std::shared_ptr<VertexArrayObject> m_worldLineVao { nullptr };
+
+		static constexpr unsigned int m_maxWorldLinesPerRender = 2000;
+
+		struct WorldLineVertex
 		{
 			glm::vec3 Position { 0.f };
 			glm::vec4 Colour { Colours::White };
 			float Thickness { 1.f };
 		};
 
-		using LineDrawCallArray = std::array<LineVertex, m_maxLinesPerRender>;
-		std::array<LineVertex, m_maxLinesPerRender> m_lineDrawCallList; //Just a way of having stack allocated data we can mess around with.
-		LineDrawCallArray::iterator m_lineDrawBegin;
-		LineDrawCallArray::iterator m_lineDrawItr;
+		using WorldLineDrawCallArray = std::array<WorldLineVertex, m_maxWorldLinesPerRender>;
+		std::array<WorldLineVertex, m_maxWorldLinesPerRender> m_worldLineDrawCallList; //Just a way of having stack allocated data we can mess around with.
+		WorldLineDrawCallArray::iterator m_worldLineDrawBegin;
+		WorldLineDrawCallArray::iterator m_worldLineDrawItr;
 
 		//////////////////////////////////////////////////////////////////////////
 		//Circle Shader
@@ -146,27 +172,50 @@ namespace Graphics
 		CircleDrawCallArray::iterator m_circleDrawItr;
 
 		//////////////////////////////////////////////////////////////////////////
-		//Point Shader
+		//Screen Point Shader
 		//////////////////////////////////////////////////////////////////////////
 
-		SB::Shared<ShaderProgram> m_pointShader { nullptr };
-		unsigned int m_pointDrawCallCount { 0 };
-		std::shared_ptr<VertexBuffer> m_pointVbo { nullptr };
-		std::shared_ptr<VertexArrayObject> m_pointVao { nullptr };
+		SB::Shared<ShaderProgram> m_screenPointShader { nullptr };
+		unsigned int m_screenPointDrawCallCount { 0 };
+		std::shared_ptr<VertexBuffer> m_screenPointVbo { nullptr };
+		std::shared_ptr<VertexArrayObject> m_screenPointVao { nullptr };
 
-		static constexpr unsigned int m_maxPointsPerRender = 10000;
+		static constexpr unsigned int m_maxScreenPointsPerRender = 10000;
 
-		struct PointVertex
+		struct ScreenPointVertex
+		{
+			glm::vec2 Position { 0.f };
+			glm::vec4 Colour { Colours::White };
+			float Size { 1.f };
+		};
+
+		using ScreenPointDrawCallArray = std::array<ScreenPointVertex, m_maxScreenPointsPerRender>;
+		std::array<ScreenPointVertex, m_maxScreenPointsPerRender> m_screenPointDrawCallList; //Just a way of having stack allocated data we can mess around with.
+		ScreenPointDrawCallArray::iterator m_screenPointDrawBegin;
+		ScreenPointDrawCallArray::iterator m_screenPointDrawItr;
+
+		//////////////////////////////////////////////////////////////////////////
+		//World Point Shader
+		//////////////////////////////////////////////////////////////////////////
+
+		SB::Shared<ShaderProgram> m_worldPointShader { nullptr };
+		unsigned int m_worldPointDrawCallCount { 0 };
+		std::shared_ptr<VertexBuffer> m_worldPointVbo { nullptr };
+		std::shared_ptr<VertexArrayObject> m_worldPointVao { nullptr };
+
+		static constexpr unsigned int m_maxWorldPointsPerRender = 10000;
+
+		struct WorldPointVertex
 		{
 			glm::vec3 Position { 0.f };
 			glm::vec4 Colour { Colours::White };
 			float Size { 1.f };
 		};
 
-		using PointDrawCallArray = std::array<PointVertex, m_maxPointsPerRender>;
-		std::array<PointVertex, m_maxPointsPerRender> m_pointDrawCallList; //Just a way of having stack allocated data we can mess around with.
-		PointDrawCallArray::iterator m_pointDrawBegin;
-		PointDrawCallArray::iterator m_pointDrawItr;
+		using WorldPointDrawCallArray = std::array<WorldPointVertex, m_maxWorldPointsPerRender>;
+		std::array<WorldPointVertex, m_maxWorldPointsPerRender> m_worldPointDrawCallList; //Just a way of having stack allocated data we can mess around with.
+		WorldPointDrawCallArray::iterator m_worldPointDrawBegin;
+		WorldPointDrawCallArray::iterator m_worldPointDrawItr;
 
 		//////////////////////////////////////////////////////////////////////////
 

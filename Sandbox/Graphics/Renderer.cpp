@@ -250,26 +250,46 @@ namespace Graphics
 			glDebugMessageControl( GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE/*GL_DEBUG_SEVERITY_NOTIFICATION*/, 0, nullptr, GL_TRUE );
 		}
 
-		//Line drawing and line shader setup
+		//Screen Line drawing and Screen line shader setup
 		{
-			m_lineShader = m_shaderResourceHandler->GetOrLoadResource("line");
-			
-			m_lineVao = VertexArrayObject::Create();
-			m_lineVao->Bind();
+			m_screenLineShader = m_shaderResourceHandler->GetOrLoadResource( "screenLine" );
 
-			;
-			m_lineVbo = VertexBuffer::Create( m_maxLinesPerRender * sizeof( LineVertex ) );
-			m_lineVbo->SetLayout(
+			m_screenLineVao = VertexArrayObject::Create();
+			m_screenLineVao->Bind();
+
+			m_screenLineVbo = VertexBuffer::Create( m_maxScreenLinesPerRender * sizeof( ScreenLineVertex ) );
+			m_screenLineVbo->SetLayout(
+				{
+					BufferElement::Create( ShaderDataType::Float2, "aPos" ),
+					BufferElement::Create( ShaderDataType::Float4, "aColor" ),
+					BufferElement::Create( ShaderDataType::Float, "aThickness" ) //unused for now but maybe later
+				} );
+
+			m_screenLineVao->AddVertexBuffer( m_screenLineVbo );
+
+			m_screenLineDrawBegin = m_screenLineDrawCallList.begin();
+			m_screenLineDrawItr = m_screenLineDrawBegin;
+		}
+
+		//World Line drawing and World line shader setup
+		{
+			m_worldLineShader = m_shaderResourceHandler->GetOrLoadResource("worldLine");
+			
+			m_worldLineVao = VertexArrayObject::Create();
+			m_worldLineVao->Bind();
+
+			m_worldLineVbo = VertexBuffer::Create( m_maxWorldLinesPerRender * sizeof( WorldLineVertex ) );
+			m_worldLineVbo->SetLayout(
 				{
 					BufferElement::Create( ShaderDataType::Float3, "aPos" ),
 					BufferElement::Create( ShaderDataType::Float4, "aColor" ),
 					BufferElement::Create( ShaderDataType::Float, "aThickness" ) //unused for now but maybe later
 				} );
 
-			m_lineVao->AddVertexBuffer( m_lineVbo );
+			m_worldLineVao->AddVertexBuffer( m_worldLineVbo );
 
-			m_lineDrawBegin = m_lineDrawCallList.begin();
-			m_lineDrawItr = m_lineDrawBegin;
+			m_worldLineDrawBegin = m_worldLineDrawCallList.begin();
+			m_worldLineDrawItr = m_worldLineDrawBegin;
 		}
 
 		//Circle drawing and circle shader setup
@@ -296,23 +316,44 @@ namespace Graphics
 
 		//Point drawing and point shader setup
 		{
-			m_pointShader = m_shaderResourceHandler->GetOrLoadResource( "point" );
+			m_screenPointShader = m_shaderResourceHandler->GetOrLoadResource( "screenPoint" );
 
-			m_pointVao = VertexArrayObject::Create();
-			m_pointVao->Bind();
+			m_screenPointVao = VertexArrayObject::Create();
+			m_screenPointVao->Bind();
 
-			m_pointVbo = VertexBuffer::Create( m_maxPointsPerRender * sizeof( PointVertex ) );
-			m_pointVbo->SetLayout(
+			m_screenPointVbo = VertexBuffer::Create( m_maxScreenPointsPerRender * sizeof( ScreenPointVertex ) );
+			m_screenPointVbo->SetLayout(
+				{
+					BufferElement::Create( ShaderDataType::Float2, "aPos" ),
+					BufferElement::Create( ShaderDataType::Float4, "aColor" ),
+					BufferElement::Create( ShaderDataType::Float, "aSize" ) //unused for now but maybe later
+				} );
+
+			m_screenPointVao->AddVertexBuffer( m_screenPointVbo );
+
+			m_screenPointDrawBegin = m_screenPointDrawCallList.begin();
+			m_screenPointDrawItr = m_screenPointDrawBegin;
+		}
+
+		//Point drawing and point shader setup
+		{
+			m_worldPointShader = m_shaderResourceHandler->GetOrLoadResource( "worldPoint" );
+
+			m_worldPointVao = VertexArrayObject::Create();
+			m_worldPointVao->Bind();
+
+			m_worldPointVbo = VertexBuffer::Create( m_maxWorldPointsPerRender * sizeof( WorldPointVertex ) );
+			m_worldPointVbo->SetLayout(
 				{
 					BufferElement::Create( ShaderDataType::Float3, "aPos" ),
 					BufferElement::Create( ShaderDataType::Float4, "aColor" ),
 					BufferElement::Create( ShaderDataType::Float, "aSize" ) //unused for now but maybe later
 				} );
 
-			m_pointVao->AddVertexBuffer( m_pointVbo );
+			m_worldPointVao->AddVertexBuffer( m_worldPointVbo );
 
-			m_pointDrawBegin = m_pointDrawCallList.begin();
-			m_pointDrawItr = m_pointDrawBegin;
+			m_worldPointDrawBegin = m_worldPointDrawCallList.begin();
+			m_worldPointDrawItr = m_worldPointDrawBegin;
 		}
 
 		//Framebuffer setup
@@ -607,26 +648,50 @@ namespace Graphics
 
 		bool bRebindShader = false;
 
-		if ( m_lineDrawCallCount > 0 )
+		if ( m_screenLineDrawCallCount > 0 )
 		{
-			m_lineShader->useProgram();
-			m_lineShader->setUniform( "model", glm::mat4( 1.f ) );
+			m_screenLineShader->useProgram();
+			m_screenLineShader->setUniform( "model", glm::mat4( 1.f ) );
 
 			//Update the buffer
-			uint32_t const dataSize = static_cast< uint32_t >( reinterpret_cast< uint8_t * >( &( *m_lineDrawItr ) ) - reinterpret_cast< uint8_t * >( &( *m_lineDrawBegin ) ) );
-			m_lineVbo->SetData( &( *m_lineDrawBegin ), dataSize );
+			uint32_t const dataSize = static_cast< uint32_t >( reinterpret_cast< uint8_t * >( &( *m_screenLineDrawItr ) ) - reinterpret_cast< uint8_t * >( &( *m_screenLineDrawBegin ) ) );
+			m_screenLineVbo->SetData( &( *m_screenLineDrawBegin ), dataSize );
 
-			m_lineVao->Bind();
-			for ( unsigned int i = 0; i <= m_lineDrawCallCount; ++i )
+			m_screenLineVao->Bind();
+			for ( unsigned int i = 0; i <= m_screenLineDrawCallCount; ++i )
 			{
-				LineVertex const & call = m_lineDrawCallList[ i ];
+				ScreenLineVertex const & call = m_screenLineDrawCallList[i];
 				glLineWidth( call.Thickness );
 				glDrawArrays( GL_LINES, i * 2, 2 );
 			}
-			m_lineVao->UnBind();
+			m_screenLineVao->UnBind();
 
-			m_lineDrawCallCount = 0;
-			m_lineDrawItr = m_lineDrawBegin;
+			m_screenLineDrawCallCount = 0;
+			m_screenLineDrawItr = m_screenLineDrawBegin;
+
+			bRebindShader = true;
+		}
+
+		if ( m_worldLineDrawCallCount > 0 )
+		{
+			m_worldLineShader->useProgram();
+			m_worldLineShader->setUniform( "model", glm::mat4( 1.f ) );
+
+			//Update the buffer
+			uint32_t const dataSize = static_cast< uint32_t >( reinterpret_cast< uint8_t * >( &( *m_worldLineDrawItr ) ) - reinterpret_cast< uint8_t * >( &( *m_worldLineDrawBegin ) ) );
+			m_worldLineVbo->SetData( &( *m_worldLineDrawBegin ), dataSize );
+
+			m_worldLineVao->Bind();
+			for ( unsigned int i = 0; i <= m_worldLineDrawCallCount; ++i )
+			{
+				WorldLineVertex const & call = m_worldLineDrawCallList[ i ];
+				glLineWidth( call.Thickness );
+				glDrawArrays( GL_LINES, i * 2, 2 );
+			}
+			m_worldLineVao->UnBind();
+
+			m_worldLineDrawCallCount = 0;
+			m_worldLineDrawItr = m_worldLineDrawBegin;
 
 			bRebindShader = true;
 		}
@@ -654,25 +719,49 @@ namespace Graphics
 			bRebindShader = true;
 		}
 
-		if ( m_pointDrawCallCount > 0 )
+		if ( m_screenPointDrawCallCount > 0 )
 		{
-			m_pointShader->useProgram();
-			m_pointShader->setUniform( "model", glm::mat4( 1.f ) );
+			m_screenPointShader->useProgram();
+			m_screenPointShader->setUniform( "model", glm::mat4( 1.f ) );
 
-			uint32_t const dataSize = static_cast< uint32_t >( reinterpret_cast< uint8_t * >( &( *m_pointDrawItr ) ) - reinterpret_cast< uint8_t * >( &( *m_pointDrawBegin ) ) );
-			m_pointVbo->SetData( &( *m_pointDrawBegin ), dataSize );
+			uint32_t const dataSize = static_cast< uint32_t >( reinterpret_cast< uint8_t * >( &( *m_screenPointDrawItr ) ) - reinterpret_cast< uint8_t * >( &( *m_screenPointDrawBegin ) ) );
+			m_screenPointVbo->SetData( &( *m_screenPointDrawBegin ), dataSize );
 
-			m_pointVao->Bind();
-			for ( unsigned int i = 0; i <= m_pointDrawCallCount; ++i )
+			m_screenPointVao->Bind();
+			for ( unsigned int i = 0; i <= m_screenPointDrawCallCount; ++i )
 			{
-				PointVertex const & call = m_pointDrawCallList[i];
+				ScreenPointVertex const & call = m_screenPointDrawCallList[i];
 				glPointSize( call.Size );
 				glDrawArrays( GL_POINTS, i, 1 );
 			}
-			m_pointVbo->UnBind();
+			m_screenPointVbo->UnBind();
 
-			m_pointDrawCallCount = 0;
-			m_pointDrawItr = m_pointDrawBegin;
+			m_screenPointDrawCallCount = 0;
+			m_screenPointDrawItr = m_screenPointDrawBegin;
+
+			glPointSize( 1.f );
+			bRebindShader = true;
+		}
+
+		if ( m_worldPointDrawCallCount > 0 )
+		{
+			m_worldPointShader->useProgram();
+			m_worldPointShader->setUniform( "model", glm::mat4( 1.f ) );
+
+			uint32_t const dataSize = static_cast< uint32_t >( reinterpret_cast< uint8_t * >( &( *m_worldPointDrawItr ) ) - reinterpret_cast< uint8_t * >( &( *m_worldPointDrawBegin ) ) );
+			m_worldPointVbo->SetData( &( *m_worldPointDrawBegin ), dataSize );
+
+			m_worldPointVao->Bind();
+			for ( unsigned int i = 0; i <= m_worldPointDrawCallCount; ++i )
+			{
+				WorldPointVertex const & call = m_worldPointDrawCallList[i];
+				glPointSize( call.Size );
+				glDrawArrays( GL_POINTS, i, 1 );
+			}
+			m_worldPointVbo->UnBind();
+
+			m_worldPointDrawCallCount = 0;
+			m_worldPointDrawItr = m_worldPointDrawBegin;
 
 			glPointSize( 1.f );
 			bRebindShader = true;
@@ -699,21 +788,41 @@ namespace Graphics
 		glDrawArrays( GL_TRIANGLES, 0, 6 );
 	}
 
-	bool Renderer::DrawLine( glm::vec3 A, glm::vec3 B, glm::vec4 colour, float thickness ) noexcept
+	bool Renderer::DrawScreenLine( glm::vec2 A, glm::vec3 B, glm::vec4 colour, float thickness ) noexcept
 	{
-		if ( m_lineDrawCallCount + 2 < m_maxLinesPerRender )
+		if ( m_screenLineDrawCallCount + 2 < m_maxScreenLinesPerRender )
 		{
-			m_lineDrawItr->Position = A;
-			m_lineDrawItr->Colour = colour;
-			m_lineDrawItr->Thickness = thickness;
-			m_lineDrawItr++;
+			m_screenLineDrawItr->Position = A;
+			m_screenLineDrawItr->Colour = colour;
+			m_screenLineDrawItr->Thickness = thickness;
+			m_screenLineDrawItr++;
 
-			m_lineDrawItr->Position = B;
-			m_lineDrawItr->Colour = colour;
-			m_lineDrawItr->Thickness = thickness;
-			m_lineDrawItr++;
+			m_screenLineDrawItr->Position = B;
+			m_screenLineDrawItr->Colour = colour;
+			m_screenLineDrawItr->Thickness = thickness;
+			m_screenLineDrawItr++;
 
-			m_lineDrawCallCount += 2;
+			m_screenLineDrawCallCount += 2;
+			return true;
+		}
+		return false;
+	}
+
+	bool Renderer::DrawWorldLine( glm::vec3 A, glm::vec3 B, glm::vec4 colour, float thickness ) noexcept
+	{
+		if ( m_worldLineDrawCallCount + 2 < m_maxWorldLinesPerRender )
+		{
+			m_worldLineDrawItr->Position = A;
+			m_worldLineDrawItr->Colour = colour;
+			m_worldLineDrawItr->Thickness = thickness;
+			m_worldLineDrawItr++;
+
+			m_worldLineDrawItr->Position = B;
+			m_worldLineDrawItr->Colour = colour;
+			m_worldLineDrawItr->Thickness = thickness;
+			m_worldLineDrawItr++;
+
+			m_worldLineDrawCallCount += 2;
 			return true;
 		}
 		return false;
@@ -735,16 +844,31 @@ namespace Graphics
 		return false;
 	}
 
-	bool Renderer::DrawPoint( glm::vec3 pos, float size, glm::vec4 colour /*= Colours::White */ ) noexcept
+	bool Renderer::DrawWorldPoint( glm::vec3 pos, float size, glm::vec4 colour /*= Colours::White */ ) noexcept
 	{
-		if ( m_pointDrawCallCount + 1 < m_maxPointsPerRender )
+		if ( m_worldPointDrawCallCount + 1 < m_maxWorldPointsPerRender )
 		{
-			m_pointDrawItr->Position = pos;
-			m_pointDrawItr->Colour = colour;
-			m_pointDrawItr->Size = size;
-			m_pointDrawItr++;
+			m_worldPointDrawItr->Position = pos;
+			m_worldPointDrawItr->Colour = colour;
+			m_worldPointDrawItr->Size = size;
+			m_worldPointDrawItr++;
 
-			++m_pointDrawCallCount;
+			++m_worldPointDrawCallCount;
+			return true;
+		}
+		return false;
+	}
+
+	bool Renderer::DrawScreenPoint( glm::vec2 pos, float size, glm::vec4 colour /*= Colours::White */ ) noexcept
+	{
+		if ( m_screenPointDrawCallCount + 1 < m_maxScreenPointsPerRender )
+		{
+			m_screenPointDrawItr->Position = pos;
+			m_screenPointDrawItr->Colour = colour;
+			m_screenPointDrawItr->Size = size;
+			m_screenPointDrawItr++;
+
+			++m_screenPointDrawCallCount;
 			return true;
 		}
 		return false;

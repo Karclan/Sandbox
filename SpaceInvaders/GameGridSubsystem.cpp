@@ -37,7 +37,7 @@ namespace Game
 	void GameGridSubsystem::Update( double deltaTime )
 	{
 		UNUSED( deltaTime );
-		m_registry.ForView<GameGridComponent, Graphics::TransformComponent>( [this] ( GameGridComponent & gridComponent, Graphics::TransformComponent & transform )
+		/*m_registry.ForView<GameGridComponent, Graphics::TransformComponent>( [this] ( GameGridComponent & gridComponent, Graphics::TransformComponent & transform )
 			{
 				if ( gridComponent.DimensionsChanged )
 				{
@@ -66,6 +66,6 @@ namespace Game
 				Graphics::GraphicsDraw::DrawLine( glm::vec3( 0.f, -100.f, 0.f ), glm::vec3( 0.f, 100.f, 0.f ), Graphics::Colours::Blue );
 				Graphics::GraphicsDraw::DrawLine( glm::vec3( 0.f, 0.f, -100.f ), glm::vec3( 0.f, 0.f, 100.f ), Graphics::Colours::Green );
 
-			} );
+			} );*/
 	}
 }

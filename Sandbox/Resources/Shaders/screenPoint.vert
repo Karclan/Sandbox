@@ -1,6 +1,6 @@
 #version 450
 
-layout (location=0) in vec3 aPos;
+layout (location=0) in vec2 aPos;
 layout (location=1) in vec4 aColour;
 layout (location=2) in float aSize;
 
@@ -17,11 +17,11 @@ out VS_Out
 {
     vec4 Colour;
     float Size;
-} VS_out;
+} vs_out;
 
 void main()
 {
-    gl_Position = u_ViewProjection * model* vec4(aPos, 1.0);
-    VS_out.Size = aSize; 
-    VS_out.Colour = aColour;
+    vs_out.Size = aSize; 
+    vs_out.Colour = aColour;
+    gl_Position = u_View * model* vec4(aPos, 0.0, 1.0);
 }

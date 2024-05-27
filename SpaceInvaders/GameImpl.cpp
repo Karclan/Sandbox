@@ -10,6 +10,7 @@ namespace Game
 	SpaceInvadersGame::SpaceInvadersGame()
 		: m_PlayerControllerSubsytem( GetRegistry(), GetWindow(), GetInputSystem() )
 		, m_GridSubsystem( GetRegistry(), GetWindow() )
+		, m_FallingSandSubsystem( GetRegistry(), GetInputSystem()  )
 	{
 
 	}
@@ -20,6 +21,7 @@ namespace Game
 
 		RegisterSubsystem( &m_PlayerControllerSubsytem );
 		RegisterSubsystem( &m_GridSubsystem );
+		RegisterSubsystem( &m_FallingSandSubsystem );
 
 		MouseBindings = std::make_shared<GameMouseBindings>();
 		KeyboardBindings = std::make_shared<GameKeyboardBindings>();
@@ -39,11 +41,11 @@ namespace Game
 		cameraComponent.m_orthoAspectScale = 20.f;
 		
 		Graphics::TransformComponent & transformComponent = m_mainRegistry.GetComponent<Graphics::TransformComponent>( CameraEntity );
-		transformComponent.Position.x = 30.f;
-		transformComponent.Position.y = 20.f;
-		transformComponent.Position.z = -10.f; //For the sake of switching between ortho and perspective
+		transformComponent.Position.x = 20.f;
+		transformComponent.Position.y = 19.f;
+		transformComponent.Position.z = 10.f; //For the sake of switching between ortho and perspective
 
-		glm::vec3 rotationEuler = glm::vec3( 0.f, 0.f, 180.f );
+		glm::vec3 rotationEuler = glm::vec3( 180.f, 0.f, 180.f );
 		transformComponent.RotationQuat = glm::radians( rotationEuler );
 		GameClass::EditorInit();
 	}
@@ -57,6 +59,7 @@ namespace Game
 	{
 		DeregisterSubsystem( &m_GridSubsystem );
 		DeregisterSubsystem( &m_PlayerControllerSubsytem );
+		DeregisterSubsystem( &m_FallingSandSubsystem );
 		GameClass::DeInit();
 	}
 

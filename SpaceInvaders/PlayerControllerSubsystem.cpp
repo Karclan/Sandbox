@@ -87,7 +87,7 @@ namespace Game
 	{
 		UNUSED( deltaTime );
 
-		m_registry.ForView<Graphics::TransformComponent, PlayerComponent, PlayerTag>( [this, &deltaTime] ( Graphics::TransformComponent & transform, PlayerComponent & player )
+		/*m_registry.ForView<Graphics::TransformComponent, PlayerComponent, PlayerTag>( [this, &deltaTime] ( Graphics::TransformComponent & transform, PlayerComponent & player )
 			{
 				if ( m_inputSystem.IsPressesd( PlayerInputActions::MoveLeft ) || m_inputSystem.IsHeld( PlayerInputActions::MoveLeft ) )
 				{
@@ -98,14 +98,14 @@ namespace Game
 				{
 					transform.Position.x -= player.m_MovementSpeed * static_cast< float >( deltaTime );
 				}
-			} );
+			} );*/
 
 	}
 
 	void PlayerControllerSubsystem::Update( double deltaTime )
 	{
 		UNUSED( deltaTime );
-		m_registry.ForView<Graphics::TransformComponent, PlayerComponent, PlayerTag>( [this] ( Graphics::TransformComponent & transform, PlayerComponent & player )
+		/*m_registry.ForView<Graphics::TransformComponent, PlayerComponent, PlayerTag>( [this] ( Graphics::TransformComponent & transform, PlayerComponent & player )
 			{
 				glm::dvec3 mousePosition = m_inputSystem.GetMouseWorldPosition();
 				transform.Position.x = static_cast< float >( mousePosition.x );
@@ -123,7 +123,7 @@ namespace Game
 		for ( auto const & pos : m_mousePositions )
 		{
 			Graphics::GraphicsDraw::DrawPoint( pos, 10.f, Graphics::Colours::Green );
-		}
+		}*/
 	}
 
 	void PlayerControllerSubsystem::BuildWindow( double deltaTime )

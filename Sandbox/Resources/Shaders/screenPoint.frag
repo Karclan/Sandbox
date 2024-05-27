@@ -4,11 +4,11 @@ in VS_Out
 {
     vec4 Colour;
     float Size;
-} fr_In;
+} fs_in;
 
 layout(location=0) out vec4 FragColour;
 
 void main()
 {
-    FragColour = fr_In.Colour;
+    FragColour = fs_in.Colour;
 }

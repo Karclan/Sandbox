@@ -60,14 +60,14 @@ namespace Game
 	void BasicSpriteTestSubsystem::Update(double deltaTime) noexcept
 	{
 		UNUSED(deltaTime);
-		Graphics::GraphicsDraw::DrawLine(AStart, AEnd, { 1.f, 1.f, 0.f, 1.f }, 1.f);
-		Graphics::GraphicsDraw::DrawLine(BStart, BEnd, { 1.f, 1.f, 0.f, 1.f }, 1.f);
+		Graphics::GraphicsDraw::DrawWorldLine(AStart, AEnd, { 1.f, 1.f, 0.f, 1.f }, 1.f);
+		Graphics::GraphicsDraw::DrawWorldLine(BStart, BEnd, { 1.f, 1.f, 0.f, 1.f }, 1.f);
 
 		//XYZ widgets
 		//Should really draw these on bottom left of screen
-		Graphics::GraphicsDraw::DrawLine({ 0.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, { 1.f, 0.f, 0.f, 1.f }, 1.f);
-		Graphics::GraphicsDraw::DrawLine({ 0.f, 0.f, 0.f }, { 0.f, 1.f, 0.f }, { 0.f, 1.f, 0.f, 1.f }, 1.f);
-		Graphics::GraphicsDraw::DrawLine({ 0.f, 0.f, 0.f }, { 0.f, 0.f, -1.f }, { 0.f, 0.f, 1.f, 1.f }, 1.f);
+		Graphics::GraphicsDraw::DrawWorldLine({ 0.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, { 1.f, 0.f, 0.f, 1.f }, 1.f);
+		Graphics::GraphicsDraw::DrawWorldLine({ 0.f, 0.f, 0.f }, { 0.f, 1.f, 0.f }, { 0.f, 1.f, 0.f, 1.f }, 1.f);
+		Graphics::GraphicsDraw::DrawWorldLine({ 0.f, 0.f, 0.f }, { 0.f, 0.f, -1.f }, { 0.f, 0.f, 1.f, 1.f }, 1.f);
 	}
 
 	void BasicSpriteTestSubsystem::BuildWindow(double deltaTime)

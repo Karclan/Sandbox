@@ -18,9 +18,14 @@ namespace Graphics
 		m_Renderer = inRenderer;
 	}
 
-	void GraphicsDraw::DrawLine( glm::vec3 from, glm::vec3 to, glm::vec4 colour, float thickness )
+	void GraphicsDraw::DrawWorldLine( glm::vec3 from, glm::vec3 to, glm::vec4 colour, float thickness )
 	{
-		m_Renderer->DrawLine( from, to, colour, thickness );
+		m_Renderer->DrawWorldLine( from, to, colour, thickness );
+	}
+
+	void GraphicsDraw::DrawScreenLine( glm::vec2 from, glm::vec3 to, glm::vec4 colour /*= Colours::White*/, float thickness /*= 1.f */ )
+	{
+		m_Renderer->DrawScreenLine( from, to, colour, thickness );
 	}
 
 	void GraphicsDraw::DrawAALine()
@@ -62,15 +67,20 @@ namespace Graphics
 									  pos.y - halfDimensons.y,
 									  pos.z };
 
-		m_Renderer->DrawLine( topLeft, topRight, colour, 1.f );
-		m_Renderer->DrawLine( topLeft, bottomLeft, colour, 1.f );
-		m_Renderer->DrawLine( topRight, bottomRight, colour, 1.f );
-		m_Renderer->DrawLine( bottomRight, bottomLeft, colour, 1.f );
+		m_Renderer->DrawWorldLine( topLeft, topRight, colour, 1.f );
+		m_Renderer->DrawWorldLine( topLeft, bottomLeft, colour, 1.f );
+		m_Renderer->DrawWorldLine( topRight, bottomRight, colour, 1.f );
+		m_Renderer->DrawWorldLine( bottomRight, bottomLeft, colour, 1.f );
 	}
 
-	void GraphicsDraw::DrawPoint( glm::vec3 pos, float size /*= 1.f*/, glm::vec4 colour /*= Colours::White */ )
+	void GraphicsDraw::DrawWorldPoint( glm::vec3 pos, float size /*= 1.f*/, glm::vec4 colour /*= Colours::White */ )
 	{
-		m_Renderer->DrawPoint( pos, size, colour );
+		m_Renderer->DrawWorldPoint( pos, size, colour );
+	}
+
+	void GraphicsDraw::DrawScreenPoint( glm::vec2 pos, float size /*= 1.f*/, glm::vec4 colour /*= Colours::White */ )
+	{
+		m_Renderer->DrawScreenPoint( pos, size, colour );
 	}
 
 	Core::Entity GraphicsDraw::CreateSprite( Core::Registry & registry, char const * name, char const * texture )

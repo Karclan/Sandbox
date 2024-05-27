@@ -5,6 +5,7 @@
 #include "PlayerControllerSubsystem.h"
 #include "GameGridSubsystem.h"
 #include "GameBindings.h"
+#include "FallingSandSubsystem.h"
 
 #include <memory>
 
@@ -28,6 +29,8 @@ namespace Game
 	private:
 		Game::PlayerControllerSubsystem m_PlayerControllerSubsytem;
 		Game::GameGridSubsystem m_GridSubsystem;
+		Game::FallingSandSubsystem m_FallingSandSubsystem;
+
 
 		std::shared_ptr<Input::DeviceBindings> KeyboardBindings;
 		std::shared_ptr<Input::DeviceBindings> MouseBindings;

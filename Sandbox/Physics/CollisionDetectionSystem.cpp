@@ -81,10 +81,10 @@ namespace Physics
 					glm::vec3 const topRight = glm::vec3( debugRender.cachedTopLeft.x + debugRender.cachedWidth, debugRender.cachedTopLeft.y, zPosMinus1 );
 					glm::vec3 const bottomLeft = glm::vec3( debugRender.cachedBottomRight.x - debugRender.cachedWidth, debugRender.cachedBottomRight.y, zPosMinus1 );
 					glm::vec3 const bottomRight = glm::vec3( debugRender.cachedBottomRight, zPosMinus1 );
-					Graphics::GraphicsDraw::DrawLine( topLeft, topRight, colour, 1.f );
-					Graphics::GraphicsDraw::DrawLine( topLeft, bottomLeft, colour, 1.f );
-					Graphics::GraphicsDraw::DrawLine( topRight, bottomRight, colour, 1.f );
-					Graphics::GraphicsDraw::DrawLine( bottomRight, bottomLeft, colour, 1.f );
+					Graphics::GraphicsDraw::DrawWorldLine( topLeft, topRight, colour, 1.f );
+					Graphics::GraphicsDraw::DrawWorldLine( topLeft, bottomLeft, colour, 1.f );
+					Graphics::GraphicsDraw::DrawWorldLine( topRight, bottomRight, colour, 1.f );
+					Graphics::GraphicsDraw::DrawWorldLine( bottomRight, bottomLeft, colour, 1.f );
 				}
 			} );
 
