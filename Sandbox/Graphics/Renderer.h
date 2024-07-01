@@ -231,6 +231,7 @@ namespace Graphics
 			glm::mat4 ViewProjectionMatrix { 0.f };
 			glm::mat4 ViewMatrix { 0.f };
 			glm::mat4 ProjectionMatrix { 0.f };
+			glm::vec2 ViewPortSize { 0.f };
 		};
 
 		CameraData m_cameraData {};

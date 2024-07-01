@@ -724,6 +724,8 @@ namespace Graphics
 			m_screenPointShader->useProgram();
 			m_screenPointShader->setUniform( "model", glm::mat4( 1.f ) );
 
+			glEnable( GL_PROGRAM_POINT_SIZE );
+
 			uint32_t const dataSize = static_cast< uint32_t >( reinterpret_cast< uint8_t * >( &( *m_screenPointDrawItr ) ) - reinterpret_cast< uint8_t * >( &( *m_screenPointDrawBegin ) ) );
 			m_screenPointVbo->SetData( &( *m_screenPointDrawBegin ), dataSize );
 
@@ -731,7 +733,7 @@ namespace Graphics
 			for ( unsigned int i = 0; i <= m_screenPointDrawCallCount; ++i )
 			{
 				ScreenPointVertex const & call = m_screenPointDrawCallList[i];
-				glPointSize( call.Size );
+				//glPointSize( call.Size );
 				glDrawArrays( GL_POINTS, i, 1 );
 			}
 			m_screenPointVbo->UnBind();
@@ -748,6 +750,8 @@ namespace Graphics
 			m_worldPointShader->useProgram();
 			m_worldPointShader->setUniform( "model", glm::mat4( 1.f ) );
 
+			glEnable( GL_PROGRAM_POINT_SIZE );
+
 			uint32_t const dataSize = static_cast< uint32_t >( reinterpret_cast< uint8_t * >( &( *m_worldPointDrawItr ) ) - reinterpret_cast< uint8_t * >( &( *m_worldPointDrawBegin ) ) );
 			m_worldPointVbo->SetData( &( *m_worldPointDrawBegin ), dataSize );
 
@@ -755,7 +759,7 @@ namespace Graphics
 			for ( unsigned int i = 0; i <= m_worldPointDrawCallCount; ++i )
 			{
 				WorldPointVertex const & call = m_worldPointDrawCallList[i];
-				glPointSize( call.Size );
+				//glPointSize( call.Size );
 				glDrawArrays( GL_POINTS, i, 1 );
 			}
 			m_worldPointVbo->UnBind();
@@ -944,6 +948,7 @@ namespace Graphics
 				m_cameraData.ViewProjectionMatrix = cameraComponent.m_projectionMatrix * cameraComponent.m_viewMatrix;
 				m_cameraData.ViewMatrix = cameraComponent.m_viewMatrix;
 				m_cameraData.ProjectionMatrix = cameraComponent.m_projectionMatrix;
+				m_cameraData.ViewPortSize = { cameraComponent.m_viewPortWidth, cameraComponent.m_viewPortHeight };
 				m_cameraUBO->SetData( &m_cameraData, sizeof( CameraData ) );
 			} );
 	}

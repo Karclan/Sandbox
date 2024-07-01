@@ -9,6 +9,7 @@ layout (std140, binding = 0) uniform Matrices
     mat4 u_ViewProjection;
     mat4 u_View;
     mat4 u_Projection;
+    uniform vec2 u_ViewportSize;
 };
 
 uniform mat4 model;
@@ -24,4 +25,5 @@ void main()
     vs_out.Size = aSize; 
     vs_out.Colour = aColour;
     gl_Position = u_ViewProjection * model * vec4(aPos, 1.0);
+    gl_PointSize =  u_ViewportSize.y * u_Projection[1][1] * aSize / gl_Position.w;
 }

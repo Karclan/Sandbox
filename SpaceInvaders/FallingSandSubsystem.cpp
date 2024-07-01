@@ -18,8 +18,9 @@ namespace Game
 	*/
 
 
-	//Points seem to draw at size which is fixed based on something unrelated to camera position to z=0 where grid lays
-
+	//Points are screen sized drawn.. Not world sized, we could do some fancy conversion to go from the grid Z position, the size of the cells and then figure it out for each sand pixel.. ORRRR we could just draw squares at a Z value and it'll work better, though we need to make a new "draw square" function, which also positions the square center of the coord we provide
+	//https://stackoverflow.com/questions/25780145/gl-pointsize-corresponding-to-world-space-size - This is the fix for drawing points scaled WITHIN the vertex shader based on the unit size of the cell AND distance from them.
+	//Also copied into Obsidian vault for reference
 
 	FallingSandSubsystem::FallingSandSubsystem( Core::Registry & registry, Input::InputSystem & inputSystem )
 		: Core::Subsystem( registry )
@@ -96,7 +97,7 @@ namespace Game
 			mousePos.y = glm::floor( mousePos.y / CellSize );
 			mousePos.z = 0.f;
 			//Draw the mouse position as a cell, like a preview before we actually add a sand block.
-			Graphics::GraphicsDraw::DrawWorldPoint( mousePos, 30.f, Graphics::Colours::Green );
+			Graphics::GraphicsDraw::DrawWorldPoint( mousePos, 1.f, Graphics::Colours::Green );
 
 			if ( m_inputSystem.IsPressesd( PlayerInputActions::AddSand ) && m_inputSystem.IsMouseWithinViewport() )
 			{
@@ -120,7 +121,7 @@ namespace Game
 					glm::vec3 hsvColour( state, 255, 255 );
 				
 					glm::vec4 colour = { glm::rgbColor( hsvColour ), 1.f };
-					Graphics::GraphicsDraw::DrawWorldPoint( cellPosition, 30.f, colour );
+					Graphics::GraphicsDraw::DrawWorldPoint( cellPosition, 1.f, colour );
 				}
 			}
 		}
