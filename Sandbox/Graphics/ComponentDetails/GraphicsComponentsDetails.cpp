@@ -101,9 +101,10 @@ namespace Editor
 
 			glm::vec3 eulerRotation = glm::degrees( glm::eulerAngles( inComponent.RotationQuat ) );
 
-			ImGui::DragFloat3( "Rotation", &eulerRotation.x, FloatDragSpeed );
-
-			inComponent.RotationQuat = glm::quat( glm::radians( eulerRotation ) );
+			if ( ImGui::DragFloat3( "Rotation", &eulerRotation.x, FloatDragSpeed ) )
+			{
+				inComponent.RotationQuat = glm::quat( glm::radians( eulerRotation ) );
+			}
 		}
 	}
 

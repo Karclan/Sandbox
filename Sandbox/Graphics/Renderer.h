@@ -203,7 +203,7 @@ namespace Graphics
 		std::shared_ptr<VertexBuffer> m_worldPointVbo { nullptr };
 		std::shared_ptr<VertexArrayObject> m_worldPointVao { nullptr };
 
-		static constexpr unsigned int m_maxWorldPointsPerRender = 10000;
+		static constexpr unsigned int m_maxWorldPointsPerRender = 100000;
 
 		struct WorldPointVertex
 		{
