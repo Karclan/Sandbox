@@ -6,6 +6,7 @@
 #include "GameGridSubsystem.h"
 #include "GameBindings.h"
 #include "FallingSandSubsystem.h"
+#include "TestingPrototypeSystems/VectorMathExampleSubsystem.h"
 
 #include <memory>
 
@@ -30,7 +31,7 @@ namespace Game
 		Game::PlayerControllerSubsystem m_PlayerControllerSubsytem;
 		Game::GameGridSubsystem m_GridSubsystem;
 		Game::FallingSandSubsystem m_FallingSandSubsystem;
-
+		Game::VectorMathExampleSubsystem m_VectorMathExampleSubsystem;
 
 		std::shared_ptr<Input::DeviceBindings> KeyboardBindings;
 		std::shared_ptr<Input::DeviceBindings> MouseBindings;

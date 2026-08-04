@@ -34,7 +34,7 @@ namespace Game
 		{
 			PointAEntity = m_registry.CreateEntity();
 			Graphics::TransformComponent const transform{ PointA };
-			auto const Entity = PointAEntity;
+			auto  const Entity = PointAEntity;
 			m_registry.AddComponent<Graphics::TransformComponent>(Entity, transform);
 			m_registry.AddComponent<Graphics::MeshComponent>(Entity, Core::Resources::CreateOrLoadMesh(Graphics::PrimativeType::Cube));
 			m_registry.AddComponent<Graphics::ShaderComponent>(Entity, basicShaderComp);
@@ -147,41 +147,64 @@ namespace Game
 				Graphics::GraphicsDraw::DrawWorldLine(PointA, PointA + PointARight, Graphics::Colours::Red );
 				Graphics::GraphicsDraw::DrawWorldLine(PointA, PointA + up, Graphics::Colours::Green);
 
-				float const ADotB = glm::dot(PointARight, glm::normalize(AB));
-				float const ADotC = glm::dot(PointARight, glm::normalize(AC));
-				ImGui::Text("ADotB: %f", ADotB);
-				ImGui::Text("ADotC: %f", ADotC);
+				float const ADotBRight = glm::dot(PointARight, glm::normalize(AB));
+				float const ADotBUp = glm::dot( up, glm::normalize( AB ) );
 
-				if (ADotB < 0)
+				float const ADotCRight = glm::dot(PointARight, glm::normalize(AC));
+				float const ADotCUp = glm::dot( up, glm::normalize( AC ) );
+
+				if ( ADotBRight < 0)
 				{
-					BDirection = EDirection::Left;
-				}
-				else if (ADotB == 0)
-				{
-					BDirection = EDirection::Down;
+					BDirectionLR = EDirection::Left;
 				}
 				else
 				{
-					BDirection = EDirection::Right;
+					BDirectionLR = EDirection::Right;
 				}
 
-				if (ADotC < 0)
+				if ( ADotBUp < 0 )
 				{
-					CDirection = EDirection::Left;
-				}
-				else if (ADotC == 0)
-				{
-					CDirection = EDirection::Down;
+					BDirectionUD = EDirection::Down;
 				}
 				else
 				{
-					CDirection = EDirection::Right;
+					BDirectionUD = EDirection::Up;
 				}
 
-				std::string const bDir(magic_enum::enum_name(BDirection));
-				std::string const cDir(magic_enum::enum_name(CDirection));
-				ImGui::Text("BDirection : %s", bDir.c_str());
-				ImGui::Text("CDirection : %s", cDir.c_str());
+				if ( ADotCRight < 0)
+				{
+					CDirectionLR = EDirection::Left;
+				}
+				else
+				{
+					CDirectionLR = EDirection::Right;
+				}
+
+				if ( ADotCUp < 0 )
+				{
+					CDirectionUD = EDirection::Down;
+				}
+				else
+				{
+					CDirectionUD = EDirection::Up;
+				}
+
+				std::string const bDirLR( magic_enum::enum_name( BDirectionLR ) );
+				std::string const bDirUD( magic_enum::enum_name( BDirectionUD ) );
+				std::string const cDirLR( magic_enum::enum_name( CDirectionLR ) );
+				std::string const cDirUD( magic_enum::enum_name( CDirectionUD ) );
+
+				ImGui::Text( "ADotBRight: %f", ADotBRight );
+				ImGui::Text( "ADotBUp: %f", ADotBUp );
+				ImGui::Text( "B_UD: %s", bDirUD.c_str() );
+				ImGui::Text( "B_LR: %s", bDirLR.c_str() );
+
+				ImGui::Separator();
+
+				ImGui::Text( "ADotCRight: %f", ADotCRight );
+				ImGui::Text( "ADotCUp: %f", ADotCUp );
+				ImGui::Text( "C_UD : %s", cDirUD.c_str() );
+				ImGui::Text( "C_LR : %s", cDirLR.c_str() );
 				ImGui::Separator();
 			}
 			ImGui::End();

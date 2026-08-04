@@ -11,6 +11,7 @@ namespace Game
 		: m_PlayerControllerSubsytem( GetRegistry(), GetWindow(), GetInputSystem() )
 		, m_GridSubsystem( GetRegistry(), GetWindow() )
 		, m_FallingSandSubsystem( GetRegistry(), GetInputSystem()  )
+		, m_VectorMathExampleSubsystem( GetRegistry() )
 	{
 
 	}
@@ -19,9 +20,13 @@ namespace Game
 	{
 		GameClass::Init();
 
-		RegisterSubsystem( &m_PlayerControllerSubsytem );
+		/*RegisterSubsystem( &m_PlayerControllerSubsytem );
 		RegisterSubsystem( &m_GridSubsystem );
-		RegisterSubsystem( &m_FallingSandSubsystem );
+		RegisterSubsystem( &m_FallingSandSubsystem );*/
+
+		RegisterSubsystem( &m_VectorMathExampleSubsystem );
+
+		m_VectorMathExampleSubsystem.CreateComponents( GetWindow() );
 
 		MouseBindings = std::make_shared<GameMouseBindings>();
 		KeyboardBindings = std::make_shared<GameKeyboardBindings>();
@@ -57,9 +62,12 @@ namespace Game
 
 	void SpaceInvadersGame::DeInit()
 	{
-		DeregisterSubsystem( &m_GridSubsystem );
+		/*DeregisterSubsystem( &m_GridSubsystem );
 		DeregisterSubsystem( &m_PlayerControllerSubsytem );
-		DeregisterSubsystem( &m_FallingSandSubsystem );
+		DeregisterSubsystem( &m_FallingSandSubsystem );*/
+
+		DeregisterSubsystem( &m_VectorMathExampleSubsystem );
+
 		GameClass::DeInit();
 	}
 

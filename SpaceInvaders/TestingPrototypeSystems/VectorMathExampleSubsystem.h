@@ -40,8 +40,10 @@ namespace Game
 		glm::vec3 PointA{  0.f,  0.f,  0.f };
 		glm::vec3 PointB{  2.f,  2.f,  0.f };
 		glm::vec3 PointC{ -2.f, -2.f,  0.f };
-		EDirection BDirection{ EDirection::Unknown };
-		EDirection CDirection{ EDirection::Unknown };
+		EDirection BDirectionLR { EDirection::Unknown };
+		EDirection BDirectionUD { EDirection::Unknown };
+		EDirection CDirectionLR { EDirection::Unknown };
+		EDirection CDirectionUD { EDirection::Unknown };
 
 		glm::vec3 PointAForward { 0.f };
 		glm::vec3 PointARight { 0.f };
